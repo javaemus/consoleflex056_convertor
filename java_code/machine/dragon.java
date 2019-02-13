@@ -50,7 +50,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -709,32 +709,32 @@ public class dragon
 		}
 	}
 	
-	WRITE_HANDLER( coco_m6847_hs_w )
+	public static WriteHandlerPtr coco_m6847_hs_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		pia_0_ca1_w(0, data);
-	}
+	} };
 	
-	WRITE_HANDLER( coco_m6847_fs_w )
+	public static WriteHandlerPtr coco_m6847_fs_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		pia_0_cb1_w(0, !data);
-	}
+	} };
 	
-	WRITE_HANDLER( coco3_m6847_hs_w )
+	public static WriteHandlerPtr coco3_m6847_hs_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		if (data)
 			coco3_timer_hblank();
 		pia_0_ca1_w(0, data);
 		coco3_raise_interrupt(COCO3_INT_HBORD, !data);
-	}
+	} };
 	
-	WRITE_HANDLER( coco3_m6847_fs_w )
+	public static WriteHandlerPtr coco3_m6847_fs_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	#if LOG_VBORD
 		logerror("coco3_m6847_fs_w(): data=%i scanline=%i\n", data, rastertrack_scanline());
 	#endif
 		pia_0_cb1_w(0, !data);
 		coco3_raise_interrupt(COCO3_INT_VBORD, !data);
-	}
+	} };
 	
 	/***************************************************************************
 	  Joystick Abstractions
@@ -1013,23 +1013,23 @@ public class dragon
 	 * cycle, this would be prohibitively slow to emulate.  Thus we are only
 	 * going to pulse when the PIA is read from; which seems good enough (for now)
 	 */
-	READ_HANDLER( coco_pia_1_r )
+	public static ReadHandlerPtr coco_pia_1_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		if (cart_line == CARTLINE_Q) {
 			coco_setcartline(CARTLINE_CLEAR);
 			coco_setcartline(CARTLINE_Q);
 		}
 		return pia_1_r(offset);
-	}
+	} };
 	
-	READ_HANDLER( coco3_pia_1_r )
+	public static ReadHandlerPtr coco3_pia_1_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		if (cart_line == CARTLINE_Q) {
 			coco3_setcartline(CARTLINE_CLEAR);
 			coco3_setcartline(CARTLINE_Q);
 		}
 		return pia_1_r(offset);
-	}
+	} };
 	
 	/***************************************************************************
 	  PIA1 ($FF20-$FF3F) (Chip U4)
@@ -1089,7 +1089,7 @@ public class dragon
 	 * semigraphics modes
 	 */
 	
-	static WRITE_HANDLER( d_pia1_pb_w )
+	public static WriteHandlerPtr d_pia1_pb_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		m6847_ag_w(0,		data & 0x80);
 		m6847_gm2_w(0,		data & 0x40);
@@ -1108,13 +1108,13 @@ public class dragon
 	
 		 pia1_pb1 = ((data & 0x02) ? 127 : 0);
 		 dragon_sound_update();
-	}
+	} };
 	
-	static WRITE_HANDLER( coco3_pia1_pb_w )
+	public static WriteHandlerPtr coco3_pia1_pb_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		d_pia1_pb_w(0, data);
 		m6847_set_cannonical_row_height();
-	}
+	} };
 	
 	static WRITE_HANDLER ( d_pia1_ca2_w )
 	{
@@ -1124,7 +1124,7 @@ public class dragon
 		{
 			status = device_status(IO_CASSETTE, 0, -1);
 			status &= ~WAVE_STATUS_MOTOR_INHIBIT;
-			if (!data)
+			if (data == 0)
 				status |= WAVE_STATUS_MOTOR_INHIBIT;
 			device_status(IO_CASSETTE, 0, status);
 			tape_motor = data;
@@ -2225,7 +2225,7 @@ public class dragon
 		const char *mnemonic;
 	
 		mnemonic = getos9call(call);
-		if (!mnemonic)
+		if (mnemonic == 0)
 			mnemonic = "(unknown)";
 	
 		logerror("Logged OS9 Call Through SWI2 $%02x (%s): pc=$%04x\n", (void *) call, mnemonic, cpu_get_pc());

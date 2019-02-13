@@ -5,7 +5,7 @@
 ******************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -16,76 +16,80 @@ public class sym1
 	#define VERBOSE_DBG 0
 	
 	
-	static MEMORY_READ_START( readmem )
-		{ 0x0000, 0x03ff, MRA_RAM },
-		{ 0x8000, 0x8fff, MRA_ROM },
-		{ 0xa000, 0xa00f, via_0_r },
-		{ 0xa400, 0xa40f, riot_0_r },
-		{ 0xa600, 0xa67f, MRA_RAM },
-	//	{ 0xab00, 0xab0f, via_1_r },
-	//	{ 0xac00, 0xac0f, via_2_r },
-		{ 0xf000, 0xffff, MRA_ROM },
-	MEMORY_END
+	public static Memory_ReadAddress readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress( 0x0000, 0x03ff, MRA_RAM ),
+		new Memory_ReadAddress( 0x8000, 0x8fff, MRA_ROM ),
+		new Memory_ReadAddress( 0xa000, 0xa00f, via_0_r ),
+		new Memory_ReadAddress( 0xa400, 0xa40f, riot_0_r ),
+		new Memory_ReadAddress( 0xa600, 0xa67f, MRA_RAM ),
+	//	new Memory_ReadAddress( 0xab00, 0xab0f, via_1_r ),
+	//	new Memory_ReadAddress( 0xac00, 0xac0f, via_2_r ),
+		new Memory_ReadAddress( 0xf000, 0xffff, MRA_ROM ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( writemem )
-		{ 0x0000, 0x03ff, MWA_RAM },
-		{ 0x8000, 0x8fff, MWA_ROM },
-		{ 0xa000, 0xa00f, via_0_w },
-		{ 0xa400, 0xa40f, riot_0_w },
-		{ 0xa600, 0xa67f, MWA_RAM },
-	//	{ 0xab00, 0xab0f, via_1_w },
-	//	{ 0xac00, 0xac0f, via_2_w },
-		{ 0xf000, 0xffff, MWA_ROM },
-	MEMORY_END
+	public static Memory_WriteAddress writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x0000, 0x03ff, MWA_RAM ),
+		new Memory_WriteAddress( 0x8000, 0x8fff, MWA_ROM ),
+		new Memory_WriteAddress( 0xa000, 0xa00f, via_0_w ),
+		new Memory_WriteAddress( 0xa400, 0xa40f, riot_0_w ),
+		new Memory_WriteAddress( 0xa600, 0xa67f, MWA_RAM ),
+	//	new Memory_WriteAddress( 0xab00, 0xab0f, via_1_w ),
+	//	new Memory_WriteAddress( 0xac00, 0xac0f, via_2_w ),
+		new Memory_WriteAddress( 0xf000, 0xffff, MWA_ROM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
-	INPUT_PORTS_START( sym1 )
+	static InputPortPtr input_ports_sym1 = new InputPortPtr(){ public void handler() { 
 		PORT_START			/* IN0 */
-		PORT_BITX(0x01, 0x01, IPT_KEYBOARD, "0     USR0",	KEYCODE_0,      IP_JOY_NONE )
-		PORT_BITX(0x02, 0x02, IPT_KEYBOARD, "4     USR4",	KEYCODE_4,      IP_JOY_NONE )
-		PORT_BITX(0x04, 0x04, IPT_KEYBOARD, "8     JUMP",	KEYCODE_8,      IP_JOY_NONE )
-		PORT_BITX(0x08, 0x08, IPT_KEYBOARD, "C     CALC",	KEYCODE_C,      IP_JOY_NONE )
-		PORT_BITX(0x10, 0x10, IPT_KEYBOARD, "CR    S DBL",	KEYCODE_ENTER,  IP_JOY_NONE )
-		PORT_BITX(0x20, 0x20, IPT_KEYBOARD, "GO    LD P",	KEYCODE_F3,     IP_JOY_NONE )
-		PORT_BITX(0x40, 0x40, IPT_KEYBOARD, "LD 2  LD 1",	KEYCODE_F1,     IP_JOY_NONE )
-		PORT_BIT (0x80, 0x80, IPT_UNUSED )
+		PORT_BITX(0x01, 0x01, IPT_KEYBOARD, "0     USR0",	KEYCODE_0,      IP_JOY_NONE );
+		PORT_BITX(0x02, 0x02, IPT_KEYBOARD, "4     USR4",	KEYCODE_4,      IP_JOY_NONE );
+		PORT_BITX(0x04, 0x04, IPT_KEYBOARD, "8     JUMP",	KEYCODE_8,      IP_JOY_NONE );
+		PORT_BITX(0x08, 0x08, IPT_KEYBOARD, "C     CALC",	KEYCODE_C,      IP_JOY_NONE );
+		PORT_BITX(0x10, 0x10, IPT_KEYBOARD, "CR    S DBL",	KEYCODE_ENTER,  IP_JOY_NONE );
+		PORT_BITX(0x20, 0x20, IPT_KEYBOARD, "GO    LD P",	KEYCODE_F3,     IP_JOY_NONE );
+		PORT_BITX(0x40, 0x40, IPT_KEYBOARD, "LD 2  LD 1",	KEYCODE_F1,     IP_JOY_NONE );
+		PORT_BIT (0x80, 0x80, IPT_UNUSED );
 	
 		PORT_START			/* IN1 */
-		PORT_BITX(0x01, 0x01, IPT_KEYBOARD, "1     USR1",	KEYCODE_1,      IP_JOY_NONE )
-		PORT_BITX(0x02, 0x02, IPT_KEYBOARD, "5     USR5",	KEYCODE_5,      IP_JOY_NONE )
-		PORT_BITX(0x04, 0x04, IPT_KEYBOARD, "9     VER",	KEYCODE_9,      IP_JOY_NONE )
-		PORT_BITX(0x08, 0x08, IPT_KEYBOARD, "D     DEP",	KEYCODE_D,      IP_JOY_NONE )
-		PORT_BITX(0x10, 0x10, IPT_KEYBOARD, "-     +",		KEYCODE_MINUS,  IP_JOY_NONE )
-		PORT_BITX(0x20, 0x20, IPT_KEYBOARD, "REG   SAV P",	KEYCODE_F4,     IP_JOY_NONE )
-		PORT_BITX(0x40, 0x40, IPT_KEYBOARD, "SAV 2 SAV 1",	KEYCODE_F2,     IP_JOY_NONE )
-		PORT_BIT (0x80, 0x80, IPT_UNUSED )
+		PORT_BITX(0x01, 0x01, IPT_KEYBOARD, "1     USR1",	KEYCODE_1,      IP_JOY_NONE );
+		PORT_BITX(0x02, 0x02, IPT_KEYBOARD, "5     USR5",	KEYCODE_5,      IP_JOY_NONE );
+		PORT_BITX(0x04, 0x04, IPT_KEYBOARD, "9     VER",	KEYCODE_9,      IP_JOY_NONE );
+		PORT_BITX(0x08, 0x08, IPT_KEYBOARD, "D     DEP",	KEYCODE_D,      IP_JOY_NONE );
+		PORT_BITX(0x10, 0x10, IPT_KEYBOARD, "-     +",		KEYCODE_MINUS,  IP_JOY_NONE );
+		PORT_BITX(0x20, 0x20, IPT_KEYBOARD, "REG   SAV P",	KEYCODE_F4,     IP_JOY_NONE );
+		PORT_BITX(0x40, 0x40, IPT_KEYBOARD, "SAV 2 SAV 1",	KEYCODE_F2,     IP_JOY_NONE );
+		PORT_BIT (0x80, 0x80, IPT_UNUSED );
 	
 		PORT_START			/* IN2 */
-		PORT_BITX(0x01, 0x01, IPT_KEYBOARD, "2     USR2",	KEYCODE_2,      IP_JOY_NONE )
-		PORT_BITX(0x02, 0x02, IPT_KEYBOARD, "6     USR6",	KEYCODE_6,      IP_JOY_NONE )
-		PORT_BITX(0x04, 0x04, IPT_KEYBOARD, "A     ASCII",	KEYCODE_A,      IP_JOY_NONE )
-		PORT_BITX(0x08, 0x08, IPT_KEYBOARD, "E     EXEC",	KEYCODE_E,		IP_JOY_NONE )
-		PORT_BITX(0x10, 0x10, IPT_KEYBOARD, "Right Left",	KEYCODE_RIGHT,  KEYCODE_LEFT )
-		PORT_BITX(0x20, 0x20, IPT_KEYBOARD, "MEM   WP",		KEYCODE_F5,     IP_JOY_NONE )
-		PORT_BIT (0xc0, 0xc0, IPT_UNUSED )
+		PORT_BITX(0x01, 0x01, IPT_KEYBOARD, "2     USR2",	KEYCODE_2,      IP_JOY_NONE );
+		PORT_BITX(0x02, 0x02, IPT_KEYBOARD, "6     USR6",	KEYCODE_6,      IP_JOY_NONE );
+		PORT_BITX(0x04, 0x04, IPT_KEYBOARD, "A     ASCII",	KEYCODE_A,      IP_JOY_NONE );
+		PORT_BITX(0x08, 0x08, IPT_KEYBOARD, "E     EXEC",	KEYCODE_E,		IP_JOY_NONE );
+		PORT_BITX(0x10, 0x10, IPT_KEYBOARD, "Right Left",	KEYCODE_RIGHT,  KEYCODE_LEFT );
+		PORT_BITX(0x20, 0x20, IPT_KEYBOARD, "MEM   WP",		KEYCODE_F5,     IP_JOY_NONE );
+		PORT_BIT (0xc0, 0xc0, IPT_UNUSED );
 	
 		PORT_START			/* IN3 */
-		PORT_BITX(0x01, 0x01, IPT_KEYBOARD, "3     USR3",	KEYCODE_3,      IP_JOY_NONE )
-		PORT_BITX(0x02, 0x02, IPT_KEYBOARD, "7     USR7",	KEYCODE_7,      IP_JOY_NONE )
-		PORT_BITX(0x04, 0x04, IPT_KEYBOARD, "B     B MOV",	KEYCODE_B,      IP_JOY_NONE )
-		PORT_BITX(0x08, 0x08, IPT_KEYBOARD, "F     FILL",	KEYCODE_F,		IP_JOY_NONE )
-		PORT_BITX(0x10, 0x10, IPT_KEYBOARD, "SHIFT",		KEYCODE_LSHIFT,	KEYCODE_RSHIFT )
-		PORT_BIT (0xe0, 0xe0, IPT_UNUSED )
+		PORT_BITX(0x01, 0x01, IPT_KEYBOARD, "3     USR3",	KEYCODE_3,      IP_JOY_NONE );
+		PORT_BITX(0x02, 0x02, IPT_KEYBOARD, "7     USR7",	KEYCODE_7,      IP_JOY_NONE );
+		PORT_BITX(0x04, 0x04, IPT_KEYBOARD, "B     B MOV",	KEYCODE_B,      IP_JOY_NONE );
+		PORT_BITX(0x08, 0x08, IPT_KEYBOARD, "F     FILL",	KEYCODE_F,		IP_JOY_NONE );
+		PORT_BITX(0x10, 0x10, IPT_KEYBOARD, "SHIFT",		KEYCODE_LSHIFT,	KEYCODE_RSHIFT );
+		PORT_BIT (0xe0, 0xe0, IPT_UNUSED );
 	
 		PORT_START			/* IN4 */
-		PORT_BITX(0x80, 0x80, IPT_KEYBOARD, "DEBUG OFF",	KEYCODE_F6,     IP_JOY_NONE )
-		PORT_BITX(0x40, 0x40, IPT_KEYBOARD, "DEBUG ON",		KEYCODE_F7,     IP_JOY_NONE )
+		PORT_BITX(0x80, 0x80, IPT_KEYBOARD, "DEBUG OFF",	KEYCODE_F6,     IP_JOY_NONE );
+		PORT_BITX(0x40, 0x40, IPT_KEYBOARD, "DEBUG ON",		KEYCODE_F7,     IP_JOY_NONE );
 	
-		PORT_BITX(0x03, 0x03, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "RAM", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING( 0x00, "1 KBYTE")
-		PORT_DIPSETTING( 0x01, "2 KBYTE")
-		PORT_DIPSETTING( 0x02, "3 KBYTE")
-		PORT_DIPSETTING( 0x03, "4 KBYTE")
-	INPUT_PORTS_END
+		PORT_BITX(0x03, 0x03, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "RAM", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING( 0x00, "1 KBYTE");
+		PORT_DIPSETTING( 0x01, "2 KBYTE");
+		PORT_DIPSETTING( 0x02, "3 KBYTE");
+		PORT_DIPSETTING( 0x03, "4 KBYTE");
+	INPUT_PORTS_END(); }}; 
 	
 	static struct DACinterface dac_interface =
 	{
@@ -134,12 +138,12 @@ public class sym1
 	    }
 	};
 	
-	ROM_START(sym1)
-		ROM_REGION(0x10000,REGION_CPU1, 0)
-	//	ROM_LOAD("basicv11", 0xc000, 0x2000, 0x075b0bbd)
-		ROM_LOAD("sym1", 0x8000, 0x1000, 0x7a4b1e12)
-		ROM_RELOAD(0xf000, 0x1000)
-	ROM_END
+	static RomLoadPtr rom_sym1 = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x10000,REGION_CPU1, 0);
+	//	ROM_LOAD("basicv11", 0xc000, 0x2000, 0x075b0bbd);
+		ROM_LOAD("sym1", 0x8000, 0x1000, 0x7a4b1e12);
+		ROM_RELOAD(0xf000, 0x1000);
+	ROM_END(); }}; 
 	
 	static const struct IODevice io_sym1[] = {
 		IODEVICE_CBM_ROM("60\00080\0c0\0"),

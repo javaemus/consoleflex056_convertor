@@ -5,7 +5,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -37,325 +37,325 @@ public class pc8801
 	};
 	#define io_pc88srh io_pc88srl
 	
-	static struct GfxLayout char_layout_40L_h =
-	{
+	static GfxLayout char_layout_40L_h = new GfxLayout
+	(
 	        8, 4,           /* 16 x 4 graphics */
 	        1024,            /* 256 codes */
 	        1,                      /* 1 bit per pixel */
-	        { 0x1000*8 },          /* no bitplanes */
-	        { 0, 0, 1, 1, 2, 2, 3, 3 },
-	        { 0*8, 0*8, 1*8, 1*8 },
+	        new int[] { 0x1000*8 },          /* no bitplanes */
+	        new int[] { 0, 0, 1, 1, 2, 2, 3, 3 },
+	        new int[] { 0*8, 0*8, 1*8, 1*8 },
 	        8 * 2           /* code takes 8 times 8 bits */
-	};
+	);
 	
-	static struct GfxLayout char_layout_40R_h =
-	{
+	static GfxLayout char_layout_40R_h = new GfxLayout
+	(
 	        8, 4,           /* 16 x 4 graphics */
 	        1024,            /* 256 codes */
 	        1,                      /* 1 bit per pixel */
-	        { 0x1000*8 },          /* no bitplanes */
-	        { 4, 4, 5, 5, 6, 6, 7, 7 },
-	        { 0*8, 0*8, 1*8, 1*8 },
+	        new int[] { 0x1000*8 },          /* no bitplanes */
+	        new int[] { 4, 4, 5, 5, 6, 6, 7, 7 },
+	        new int[] { 0*8, 0*8, 1*8, 1*8 },
 	        8 * 2           /* code takes 8 times 8 bits */
-	};
+	);
 	
-	static struct GfxLayout char_layout_80_h =
-	{
+	static GfxLayout char_layout_80_h = new GfxLayout
+	(
 	        8, 4,           /* 16 x 4 graphics */
 	        1024,            /* 256 codes */
 	        1,                      /* 1 bit per pixel */
-	        { 0x1000*8 },          /* no bitplanes */
-	        { 0, 1, 2, 3, 4, 5, 6, 7 },
-	        { 0*8, 0*8, 1*8, 1*8 },
+	        new int[] { 0x1000*8 },          /* no bitplanes */
+	        new int[] { 0, 1, 2, 3, 4, 5, 6, 7 },
+	        new int[] { 0*8, 0*8, 1*8, 1*8 },
 	        8 * 2           /* code takes 8 times 8 bits */
-	};
+	);
 	
-	static struct GfxLayout char_layout_40L_l =
-	{
+	static GfxLayout char_layout_40L_l = new GfxLayout
+	(
 	        8, 2,           /* 16 x 4 graphics */
 	        1024,            /* 256 codes */
 	        1,                      /* 1 bit per pixel */
-	        { 0x1000*8 },          /* no bitplanes */
-	        { 0, 0, 1, 1, 2, 2, 3, 3 },
-	        { 0*8, 1*8 },
+	        new int[] { 0x1000*8 },          /* no bitplanes */
+	        new int[] { 0, 0, 1, 1, 2, 2, 3, 3 },
+	        new int[] { 0*8, 1*8 },
 	        8 * 2           /* code takes 8 times 8 bits */
-	};
+	);
 	
-	static struct GfxLayout char_layout_40R_l =
-	{
+	static GfxLayout char_layout_40R_l = new GfxLayout
+	(
 	        8, 2,           /* 16 x 4 graphics */
 	        1024,            /* 256 codes */
 	        1,                      /* 1 bit per pixel */
-	        { 0x1000*8 },          /* no bitplanes */
-	        { 4, 4, 5, 5, 6, 6, 7, 7 },
-	        { 0*8, 1*8 },
+	        new int[] { 0x1000*8 },          /* no bitplanes */
+	        new int[] { 4, 4, 5, 5, 6, 6, 7, 7 },
+	        new int[] { 0*8, 1*8 },
 	        8 * 2           /* code takes 8 times 8 bits */
-	};
+	);
 	
-	static struct GfxLayout char_layout_80_l =
-	{
+	static GfxLayout char_layout_80_l = new GfxLayout
+	(
 	        8, 2,           /* 16 x 4 graphics */
 	        1024,            /* 256 codes */
 	        1,                      /* 1 bit per pixel */
-	        { 0x1000*8 },          /* no bitplanes */
-	        { 0, 1, 2, 3, 4, 5, 6, 7 },
-	        { 0*8, 1*8 },
+	        new int[] { 0x1000*8 },          /* no bitplanes */
+	        new int[] { 0, 1, 2, 3, 4, 5, 6, 7 },
+	        new int[] { 0*8, 1*8 },
 	        8 * 2           /* code takes 8 times 8 bits */
-	};
+	);
 	
-	static struct GfxDecodeInfo gfxdecodeinfo[] =
+	static GfxDecodeInfo gfxdecodeinfo[] =
 	{
-	        { REGION_GFX1, 0, &char_layout_80_l, 0, 16 },
-	        { REGION_GFX1, 0, &char_layout_40L_l, 0, 16 },
-	        { REGION_GFX1, 0, &char_layout_40R_l, 0, 16 },
-	        { REGION_GFX1, 0, &char_layout_80_h, 0, 16 },
-	        { REGION_GFX1, 0, &char_layout_40L_h, 0, 16 },
-	        { REGION_GFX1, 0, &char_layout_40R_h, 0, 16 },
+	        new GfxDecodeInfo( REGION_GFX1, 0, char_layout_80_l, 0, 16 ),
+	        new GfxDecodeInfo( REGION_GFX1, 0, char_layout_40L_l, 0, 16 ),
+	        new GfxDecodeInfo( REGION_GFX1, 0, char_layout_40R_l, 0, 16 ),
+	        new GfxDecodeInfo( REGION_GFX1, 0, char_layout_80_h, 0, 16 ),
+	        new GfxDecodeInfo( REGION_GFX1, 0, char_layout_40L_h, 0, 16 ),
+	        new GfxDecodeInfo( REGION_GFX1, 0, char_layout_40R_h, 0, 16 ),
 	MEMORY_END       /* end of array */
 	
 	/* Macro for DIPSW-1 */
 	#define DIPSW_1_1 \
-		PORT_DIPNAME( 0x01, 0x01, "Terminal mode" ) \
-		PORT_DIPSETTING(    0x01, DEF_STR( Off ) ) \
-		PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+		PORT_DIPNAME( 0x01, 0x01, "Terminal mode" );\
+		PORT_DIPSETTING(    0x01, DEF_STR( "Off") ); \
+		PORT_DIPSETTING(    0x00, DEF_STR( "On") );
 	#define DIPSW_1_2 \
-		PORT_DIPNAME( 0x02, 0x00, "Text width" ) \
-		PORT_DIPSETTING(    0x02, "40 chars/line" ) \
-		PORT_DIPSETTING(    0x00, "80 chars/line" )
+		PORT_DIPNAME( 0x02, 0x00, "Text width" );\
+		PORT_DIPSETTING(    0x02, "40 chars/line" );\
+		PORT_DIPSETTING(    0x00, "80 chars/line" );
 	#define DIPSW_1_3 \
-		PORT_DIPNAME( 0x04, 0x00, "Text height" ) \
-		PORT_DIPSETTING(    0x04, "20 lines/screen" ) \
-		PORT_DIPSETTING(    0x00, "25 lines/screen" )
+		PORT_DIPNAME( 0x04, 0x00, "Text height" );\
+		PORT_DIPSETTING(    0x04, "20 lines/screen" );\
+		PORT_DIPSETTING(    0x00, "25 lines/screen" );
 	#define DIPSW_1_4 \
-		PORT_DIPNAME( 0x08, 0x08, "Enable S parameter" ) \
-		PORT_DIPSETTING(    0x08, DEF_STR( Off ) ) \
-		PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+		PORT_DIPNAME( 0x08, 0x08, "Enable S parameter" );\
+		PORT_DIPSETTING(    0x08, DEF_STR( "Off") ); \
+		PORT_DIPSETTING(    0x00, DEF_STR( "On") );
 	#define DIPSW_1_5 \
-		PORT_DIPNAME( 0x10, 0x00, "Enable DEL code" ) \
-		PORT_DIPSETTING(    0x10, DEF_STR( Off ) ) \
-		PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+		PORT_DIPNAME( 0x10, 0x00, "Enable DEL code" );\
+		PORT_DIPSETTING(    0x10, DEF_STR( "Off") ); \
+		PORT_DIPSETTING(    0x00, DEF_STR( "On") );
 	#define DIPSW_1_6 \
-		PORT_DIPNAME( 0x20, 0x20, "Memory wait" ) \
-		PORT_DIPSETTING(    0x20, DEF_STR( Off ) ) \
-		PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+		PORT_DIPNAME( 0x20, 0x20, "Memory wait" );\
+		PORT_DIPSETTING(    0x20, DEF_STR( "Off") ); \
+		PORT_DIPSETTING(    0x00, DEF_STR( "On") );
 	#define DIPSW_1_7 \
-		PORT_DIPNAME( 0x40, 0x40, "Disable CMD SING" ) \
-		PORT_DIPSETTING(    0x40, DEF_STR( Off ) ) \
-		PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+		PORT_DIPNAME( 0x40, 0x40, "Disable CMD SING" );\
+		PORT_DIPSETTING(    0x40, DEF_STR( "Off") ); \
+		PORT_DIPSETTING(    0x00, DEF_STR( "On") );
 	
 	/* Macro for DIPSW-2 */
 	#define DIPSW_2_1 \
-		PORT_DIPNAME( 0x01, 0x01, "Parity generate" ) \
-		PORT_DIPSETTING(    0x01, DEF_STR( Off ) ) \
-		PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+		PORT_DIPNAME( 0x01, 0x01, "Parity generate" );\
+		PORT_DIPSETTING(    0x01, DEF_STR( "Off") ); \
+		PORT_DIPSETTING(    0x00, DEF_STR( "On") );
 	#define DIPSW_2_2 \
-		PORT_DIPNAME( 0x02, 0x00, "Parity type" ) \
-		PORT_DIPSETTING(    0x00, "Even" ) \
-		PORT_DIPSETTING(    0x02, "Odd" )
+		PORT_DIPNAME( 0x02, 0x00, "Parity type" );\
+		PORT_DIPSETTING(    0x00, "Even" );\
+		PORT_DIPSETTING(    0x02, "Odd" );
 	#define DIPSW_2_3 \
-		PORT_DIPNAME( 0x04, 0x00, "Serial character length" ) \
-		PORT_DIPSETTING(    0x04, "7 bits/char" ) \
-		PORT_DIPSETTING(    0x00, "8 bits/char" )
+		PORT_DIPNAME( 0x04, 0x00, "Serial character length" );\
+		PORT_DIPSETTING(    0x04, "7 bits/char" );\
+		PORT_DIPSETTING(    0x00, "8 bits/char" );
 	#define DIPSW_2_4 \
-		PORT_DIPNAME( 0x08, 0x08, "Stop bit length" ) \
-		PORT_DIPSETTING(    0x08, "1" ) \
-		PORT_DIPSETTING(    0x00, "2" )
+		PORT_DIPNAME( 0x08, 0x08, "Stop bit length" );\
+		PORT_DIPSETTING(    0x08, "1" );\
+		PORT_DIPSETTING(    0x00, "2" );
 	#define DIPSW_2_5 \
-		PORT_DIPNAME( 0x10, 0x10, "Enable X parameter" ) \
-		PORT_DIPSETTING(    0x10, DEF_STR( Off ) ) \
-		PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+		PORT_DIPNAME( 0x10, 0x10, "Enable X parameter" );\
+		PORT_DIPSETTING(    0x10, DEF_STR( "Off") ); \
+		PORT_DIPSETTING(    0x00, DEF_STR( "On") );
 	#define DIPSW_2_6 \
-		PORT_DIPNAME( 0x20, 0x20, "Duplex mode" ) \
-		PORT_DIPSETTING(    0x20, "half duplex" ) \
-		PORT_DIPSETTING(    0x00, "full duplex" )
+		PORT_DIPNAME( 0x20, 0x20, "Duplex mode" );\
+		PORT_DIPSETTING(    0x20, "half duplex" );\
+		PORT_DIPSETTING(    0x00, "full duplex" );
 	#define DIPSW_2_7 \
-		PORT_DIPNAME( 0x40, 0x00, "Boot from internal FD" ) \
-		PORT_DIPSETTING(    0x10, DEF_STR( Off ) ) \
-		PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+		PORT_DIPNAME( 0x40, 0x00, "Boot from internal FD" );\
+		PORT_DIPSETTING(    0x10, DEF_STR( "Off") ); \
+		PORT_DIPSETTING(    0x00, DEF_STR( "On") );
 	#define DIPSW_2_8 \
-		PORT_DIPNAME( 0x80, 0x80, "Disable internal FD" ) \
-		PORT_DIPSETTING(    0x80, DEF_STR( Off ) ) \
-		PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+		PORT_DIPNAME( 0x80, 0x80, "Disable internal FD" );\
+		PORT_DIPSETTING(    0x80, DEF_STR( "Off") ); \
+		PORT_DIPSETTING(    0x00, DEF_STR( "On") );
 	
 	/* Macro for other switch */
 	#define SW_V1V2N \
-		PORT_DIPNAME( 0x03, 0x01, "Basic mode" ) \
-		PORT_DIPSETTING(    0x02, "N-BASIC" ) \
-		PORT_DIPSETTING(    0x03, "N88-BASIC (V1)" ) \
-		PORT_DIPSETTING(    0x01, "N88-BASIC (V2)" )
+		PORT_DIPNAME( 0x03, 0x01, "Basic mode" );\
+		PORT_DIPSETTING(    0x02, "N-BASIC" );\
+		PORT_DIPSETTING(    0x03, "N88-BASIC (V1); ) \
+		PORT_DIPSETTING(    0x01, "N88-BASIC (V2); )
 	
 	#define SW_HS \
-		PORT_DIPNAME( 0x04, 0x04, "Speed mode" ) \
-		PORT_DIPSETTING(    0x00, "slow" ) \
-		PORT_DIPSETTING(    0x04, "high" )
+		PORT_DIPNAME( 0x04, 0x04, "Speed mode" );\
+		PORT_DIPSETTING(    0x00, "slow" );\
+		PORT_DIPSETTING(    0x04, "high" );
 	
 	#define SW_8MHZ \
-		PORT_DIPNAME( 0x08, 0x00, "Main CPU clock" ) \
-		PORT_DIPSETTING(    0x00, "4MHz" ) \
-		PORT_DIPSETTING(    0x08, "8MHz" )
+		PORT_DIPNAME( 0x08, 0x00, "Main CPU clock" );\
+		PORT_DIPSETTING(    0x00, "4MHz" );\
+		PORT_DIPSETTING(    0x08, "8MHz" );
 	
 	#define SW_4MHZ_ONLY \
-		PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_UNUSED )
+		PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_UNUSED );
 	
 	#define SW_SERIAL \
-		PORT_DIPNAME( 0xf0, 0x80, "Serial speed" ) \
-		PORT_DIPSETTING(    0x10, "75bps" ) \
-		PORT_DIPSETTING(    0x20, "150bps" ) \
-		PORT_DIPSETTING(    0x30, "300bps" ) \
-		PORT_DIPSETTING(    0x40, "600bps" ) \
-		PORT_DIPSETTING(    0x50, "1200bps" ) \
-		PORT_DIPSETTING(    0x60, "2400bps" ) \
-		PORT_DIPSETTING(    0x70, "4800bps" ) \
-		PORT_DIPSETTING(    0x80, "9600bps" ) \
-		PORT_DIPSETTING(    0x90, "19200bps" )
+		PORT_DIPNAME( 0xf0, 0x80, "Serial speed" );\
+		PORT_DIPSETTING(    0x10, "75bps" );\
+		PORT_DIPSETTING(    0x20, "150bps" );\
+		PORT_DIPSETTING(    0x30, "300bps" );\
+		PORT_DIPSETTING(    0x40, "600bps" );\
+		PORT_DIPSETTING(    0x50, "1200bps" );\
+		PORT_DIPSETTING(    0x60, "2400bps" );\
+		PORT_DIPSETTING(    0x70, "4800bps" );\
+		PORT_DIPSETTING(    0x80, "9600bps" );\
+		PORT_DIPSETTING(    0x90, "19200bps" );
 	
 	#define SW_EXTMEM \
-		PORT_DIPNAME( 0x1f, 0x00, "Extension memory" ) \
-		PORT_DIPSETTING(    0x00, "none" ) \
-		PORT_DIPSETTING(    0x01, "32KB (PC-8012-02 x 1)" ) \
-		PORT_DIPSETTING(    0x02, "64KB (PC-8012-02 x 2)" ) \
-		PORT_DIPSETTING(    0x03, "128KB (PC-8012-02 x 4)" ) \
-		PORT_DIPSETTING(    0x04, "128KB (PC-8801-02N x 1)" ) \
-		PORT_DIPSETTING(    0x05, "256KB (PC-8801-02N x 2)" ) \
-		PORT_DIPSETTING(    0x06, "512KB (PC-8801-02N x 4)" ) \
-		PORT_DIPSETTING(    0x07, "1M (PIO-8234H-1M x 1)" ) \
-		PORT_DIPSETTING(    0x08, "2M (PIO-8234H-2M x 1)" ) \
-		PORT_DIPSETTING(    0x09, "4M (PIO-8234H-2M x 2)" ) \
-		PORT_DIPSETTING(    0x0a, "8M (PIO-8234H-2M x 4)" ) \
-		PORT_DIPSETTING(    0x0b, "1.1M (PIO-8234H-1M x 1 + PC-8801-02N x 1)" ) \
-		PORT_DIPSETTING(    0x0c, "2.1M (PIO-8234H-2M x 1 + PC-8801-02N x 1)" ) \
-		PORT_DIPSETTING(    0x0d, "4.1M (PIO-8234H-2M x 2 + PC-8801-02N x 1)" )
+		PORT_DIPNAME( 0x1f, 0x00, "Extension memory" );\
+		PORT_DIPSETTING(    0x00, "none" );\
+		PORT_DIPSETTING(    0x01, "32KB (PC-8012-02 x 1); ) \
+		PORT_DIPSETTING(    0x02, "64KB (PC-8012-02 x 2); ) \
+		PORT_DIPSETTING(    0x03, "128KB (PC-8012-02 x 4); ) \
+		PORT_DIPSETTING(    0x04, "128KB (PC-8801-02N x 1); ) \
+		PORT_DIPSETTING(    0x05, "256KB (PC-8801-02N x 2); ) \
+		PORT_DIPSETTING(    0x06, "512KB (PC-8801-02N x 4); ) \
+		PORT_DIPSETTING(    0x07, "1M (PIO-8234H-1M x 1); ) \
+		PORT_DIPSETTING(    0x08, "2M (PIO-8234H-2M x 1); ) \
+		PORT_DIPSETTING(    0x09, "4M (PIO-8234H-2M x 2); ) \
+		PORT_DIPSETTING(    0x0a, "8M (PIO-8234H-2M x 4); ) \
+		PORT_DIPSETTING(    0x0b, "1.1M (PIO-8234H-1M x 1 + PC-8801-02N x 1); ) \
+		PORT_DIPSETTING(    0x0c, "2.1M (PIO-8234H-2M x 1 + PC-8801-02N x 1); ) \
+		PORT_DIPSETTING(    0x0d, "4.1M (PIO-8234H-2M x 2 + PC-8801-02N x 1); )
 	
 	#define DUMMY_ROW \
 		PORT_START \
-		PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+		PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED );
 	
 	#define PC8801KEY_ROW0 \
 		PORT_START \
-	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad 0", KEYCODE_0_PAD, IP_JOY_NONE)	\
-	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad 1", KEYCODE_1_PAD, IP_JOY_NONE)	\
-	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad 2", KEYCODE_2_PAD, IP_JOY_NONE)	\
-	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad 3", KEYCODE_3_PAD, IP_JOY_NONE)	\
-	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad 4", KEYCODE_4_PAD, IP_JOY_NONE)	\
-	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad 5", KEYCODE_5_PAD, IP_JOY_NONE)	\
-	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad 6", KEYCODE_6_PAD, IP_JOY_NONE)	\
-	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad 7", KEYCODE_7_PAD, IP_JOY_NONE)
+	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad 0", KEYCODE_0_PAD, IP_JOY_NONE);\
+	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad 1", KEYCODE_1_PAD, IP_JOY_NONE);\
+	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad 2", KEYCODE_2_PAD, IP_JOY_NONE);\
+	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad 3", KEYCODE_3_PAD, IP_JOY_NONE);\
+	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad 4", KEYCODE_4_PAD, IP_JOY_NONE);\
+	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad 5", KEYCODE_5_PAD, IP_JOY_NONE);\
+	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad 6", KEYCODE_6_PAD, IP_JOY_NONE);\
+	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad 7", KEYCODE_7_PAD, IP_JOY_NONE);
 	
 	#define PC8801KEY_ROW1 \
 		PORT_START \
-	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad 8", KEYCODE_8_PAD, IP_JOY_NONE)	\
-	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad 9", KEYCODE_9_PAD, IP_JOY_NONE)	\
-	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad *", KEYCODE_ASTERISK, IP_JOY_NONE)	\
-	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad +", KEYCODE_PLUS_PAD, IP_JOY_NONE)	\
-	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad =", KEYCODE_END, IP_JOY_NONE /* BAD */)	\
-	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad ,", KEYCODE_NUMLOCK, IP_JOY_NONE /* BAD */)	\
-	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad .", KEYCODE_DEL_PAD, IP_JOY_NONE)	\
-	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad return", KEYCODE_ENTER, KEYCODE_ENTER_PAD)
+	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad 8", KEYCODE_8_PAD, IP_JOY_NONE);\
+	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad 9", KEYCODE_9_PAD, IP_JOY_NONE);\
+	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad *", KEYCODE_ASTERISK, IP_JOY_NONE);\
+	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad +", KEYCODE_PLUS_PAD, IP_JOY_NONE);\
+	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad =", KEYCODE_END, IP_JOY_NONE /* BAD */);\
+	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad ,", KEYCODE_NUMLOCK, IP_JOY_NONE /* BAD */);\
+	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad .", KEYCODE_DEL_PAD, IP_JOY_NONE);\
+	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "pad return", KEYCODE_ENTER, KEYCODE_ENTER_PAD);
 	
 	#define PC8801KEY_ROW2 \
 		PORT_START \
-	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "@ ~", KEYCODE_OPENBRACE, IP_JOY_NONE)    \
-	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "a A", KEYCODE_A, IP_JOY_NONE)    \
-	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "b B", KEYCODE_B, IP_JOY_NONE) \
-	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "c C", KEYCODE_C, IP_JOY_NONE)	\
-	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "d D", KEYCODE_D, IP_JOY_NONE)	\
-	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "e E", KEYCODE_E, IP_JOY_NONE)	\
-	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "f F", KEYCODE_F, IP_JOY_NONE)	\
-	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "g G", KEYCODE_G, IP_JOY_NONE)
+	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "@ ~", KEYCODE_OPENBRACE, IP_JOY_NONE);   \
+	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "a A", KEYCODE_A, IP_JOY_NONE);   \
+	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "b B", KEYCODE_B, IP_JOY_NONE);\
+	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "c C", KEYCODE_C, IP_JOY_NONE);\
+	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "d D", KEYCODE_D, IP_JOY_NONE);\
+	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "e E", KEYCODE_E, IP_JOY_NONE);\
+	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "f F", KEYCODE_F, IP_JOY_NONE);\
+	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "g G", KEYCODE_G, IP_JOY_NONE);
 	
 	#define PC8801KEY_ROW3 \
 		PORT_START \
-	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "h H", KEYCODE_H, IP_JOY_NONE)	\
-	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "i I", KEYCODE_I, IP_JOY_NONE)	\
-	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "j J", KEYCODE_J, IP_JOY_NONE)	\
-	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "k K", KEYCODE_K, IP_JOY_NONE)	\
-	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "l L", KEYCODE_L, IP_JOY_NONE)	\
-	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "m M", KEYCODE_M, IP_JOY_NONE)	\
-	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "n N", KEYCODE_N, IP_JOY_NONE)	\
-	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "o O", KEYCODE_O, IP_JOY_NONE)
+	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "h H", KEYCODE_H, IP_JOY_NONE);\
+	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "i I", KEYCODE_I, IP_JOY_NONE);\
+	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "j J", KEYCODE_J, IP_JOY_NONE);\
+	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "k K", KEYCODE_K, IP_JOY_NONE);\
+	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "l L", KEYCODE_L, IP_JOY_NONE);\
+	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "m M", KEYCODE_M, IP_JOY_NONE);\
+	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "n N", KEYCODE_N, IP_JOY_NONE);\
+	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "o O", KEYCODE_O, IP_JOY_NONE);
 	
 	#define PC8801KEY_ROW4 \
 		PORT_START \
-	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "p P", KEYCODE_P, IP_JOY_NONE)	\
-	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "q Q", KEYCODE_Q, IP_JOY_NONE)	\
-	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "r R", KEYCODE_R, IP_JOY_NONE)	\
-	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "s S", KEYCODE_S, IP_JOY_NONE)	\
-	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "t T", KEYCODE_T, IP_JOY_NONE)	\
-	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "u U", KEYCODE_U, IP_JOY_NONE)	\
-	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "v V", KEYCODE_V, IP_JOY_NONE)	\
-	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "w W", KEYCODE_W, IP_JOY_NONE)
+	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "p P", KEYCODE_P, IP_JOY_NONE);\
+	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "q Q", KEYCODE_Q, IP_JOY_NONE);\
+	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "r R", KEYCODE_R, IP_JOY_NONE);\
+	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "s S", KEYCODE_S, IP_JOY_NONE);\
+	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "t T", KEYCODE_T, IP_JOY_NONE);\
+	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "u U", KEYCODE_U, IP_JOY_NONE);\
+	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "v V", KEYCODE_V, IP_JOY_NONE);\
+	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "w W", KEYCODE_W, IP_JOY_NONE);
 	
 	#define PC8801KEY_ROW5 \
 		PORT_START \
-	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "x X", KEYCODE_X, IP_JOY_NONE)	\
-	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "y Y", KEYCODE_Y, IP_JOY_NONE)	\
-	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "z Z", KEYCODE_Z, IP_JOY_NONE)	\
-	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "[ {", KEYCODE_CLOSEBRACE, IP_JOY_NONE)	\
-	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "\\ |", KEYCODE_BACKSLASH2, IP_JOY_NONE)	\
-	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "] }", KEYCODE_BACKSLASH, IP_JOY_NONE)	\
-	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "^  ", KEYCODE_EQUALS, IP_JOY_NONE)   \
-	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "- =", KEYCODE_MINUS, IP_JOY_NONE)
+	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "x X", KEYCODE_X, IP_JOY_NONE);\
+	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "y Y", KEYCODE_Y, IP_JOY_NONE);\
+	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "z Z", KEYCODE_Z, IP_JOY_NONE);\
+	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "[ {", KEYCODE_CLOSEBRACE, IP_JOY_NONE);\
+	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "\\ |", KEYCODE_BACKSLASH2, IP_JOY_NONE);\
+	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "] }", KEYCODE_BACKSLASH, IP_JOY_NONE);\
+	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "^  ", KEYCODE_EQUALS, IP_JOY_NONE);  \
+	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "- =", KEYCODE_MINUS, IP_JOY_NONE);
 	
 	#define PC8801KEY_ROW6 \
 		PORT_START \
-	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "0  ", KEYCODE_0, IP_JOY_NONE)    \
-	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "1 !", KEYCODE_1, IP_JOY_NONE)    \
-	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "2 \"", KEYCODE_2, IP_JOY_NONE)    \
-	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "3 #", KEYCODE_3, IP_JOY_NONE)    \
-	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "4 $", KEYCODE_4, IP_JOY_NONE)    \
-	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "5 %", KEYCODE_5, IP_JOY_NONE)    \
-	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "6 &", KEYCODE_6, IP_JOY_NONE)    \
-	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "7 '", KEYCODE_7, IP_JOY_NONE)
+	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "0  ", KEYCODE_0, IP_JOY_NONE);   \
+	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "1 !", KEYCODE_1, IP_JOY_NONE);   \
+	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "2 \"", KEYCODE_2, IP_JOY_NONE);   \
+	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "3 #", KEYCODE_3, IP_JOY_NONE);   \
+	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "4 $", KEYCODE_4, IP_JOY_NONE);   \
+	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "5 %", KEYCODE_5, IP_JOY_NONE);   \
+	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "6 &", KEYCODE_6, IP_JOY_NONE);   \
+	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "7 '", KEYCODE_7, IP_JOY_NONE);
 	
 	#define PC8801KEY_ROW7 \
 		PORT_START \
-	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "8 (", KEYCODE_8, IP_JOY_NONE)	\
-	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "9 )", KEYCODE_9, IP_JOY_NONE)	\
-	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, ": *", KEYCODE_QUOTE, IP_JOY_NONE)    \
-	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "; +", KEYCODE_COLON, IP_JOY_NONE)    \
-	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, ", <", KEYCODE_COMMA, IP_JOY_NONE)    \
-	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, ". >", KEYCODE_STOP, IP_JOY_NONE)    \
-	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "/ ?", KEYCODE_SLASH, IP_JOY_NONE)    \
-	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "  _", KEYCODE_END, IP_JOY_NONE)
+	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "8 (", KEYCODE_8, IP_JOY_NONE);\
+	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "9 );, KEYCODE_9, IP_JOY_NONE)	\
+	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, ": *", KEYCODE_QUOTE, IP_JOY_NONE);   \
+	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "; +", KEYCODE_COLON, IP_JOY_NONE);   \
+	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, ", <", KEYCODE_COMMA, IP_JOY_NONE);   \
+	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, ". >", KEYCODE_STOP, IP_JOY_NONE);   \
+	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "/ ?", KEYCODE_SLASH, IP_JOY_NONE);   \
+	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "  _", KEYCODE_END, IP_JOY_NONE);
 	
 	#define PC8801KEY_ROW8 \
 		PORT_START \
-	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "HOME/CLR", KEYCODE_HOME, IP_JOY_NONE)	\
-	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "UP", KEYCODE_UP, IP_JOY_NONE)	\
-	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "RIGHT", KEYCODE_RIGHT, IP_JOY_NONE)    \
-	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "INS/DEL", KEYCODE_DEL, KEYCODE_INSERT)    \
-	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "GRPH", KEYCODE_LALT, KEYCODE_RALT)    \
-	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD | IPF_TOGGLE, "KANA", KEYCODE_SCRLOCK, IP_JOY_NONE /* BAD */)    \
-	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "SHIFT", KEYCODE_LSHIFT, KEYCODE_RSHIFT)    \
-	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "CTRL", KEYCODE_LCONTROL, KEYCODE_RCONTROL)
+	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "HOME/CLR", KEYCODE_HOME, IP_JOY_NONE);\
+	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "UP", KEYCODE_UP, IP_JOY_NONE);\
+	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "RIGHT", KEYCODE_RIGHT, IP_JOY_NONE);   \
+	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "INS/DEL", KEYCODE_DEL, KEYCODE_INSERT);   \
+	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "GRPH", KEYCODE_LALT, KEYCODE_RALT);   \
+	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD | IPF_TOGGLE, "KANA", KEYCODE_SCRLOCK, IP_JOY_NONE /* BAD */);   \
+	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "SHIFT", KEYCODE_LSHIFT, KEYCODE_RSHIFT);   \
+	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "CTRL", KEYCODE_LCONTROL, KEYCODE_RCONTROL);
 	
 	#define PC8801KEY_ROW9 \
 		PORT_START \
-	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "STOP", KEYCODE_PAUSE, IP_JOY_NONE)	\
-	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "F1", KEYCODE_F1, IP_JOY_NONE)	\
-	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "F2", KEYCODE_F2, IP_JOY_NONE)    \
-	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "F3", KEYCODE_F3, IP_JOY_NONE /* BAD */)    \
-	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "F4", KEYCODE_F4, IP_JOY_NONE /* BAD */)    \
-	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "F5", KEYCODE_F5, IP_JOY_NONE)    \
-	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "SPACE", KEYCODE_SPACE, IP_JOY_NONE)    \
-	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "ESC", KEYCODE_ESC, IP_JOY_NONE /* BAD */)
+	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "STOP", KEYCODE_PAUSE, IP_JOY_NONE);\
+	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "F1", KEYCODE_F1, IP_JOY_NONE);\
+	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "F2", KEYCODE_F2, IP_JOY_NONE);   \
+	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "F3", KEYCODE_F3, IP_JOY_NONE /* BAD */);   \
+	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "F4", KEYCODE_F4, IP_JOY_NONE /* BAD */);   \
+	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "F5", KEYCODE_F5, IP_JOY_NONE);   \
+	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "SPACE", KEYCODE_SPACE, IP_JOY_NONE);   \
+	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "ESC", KEYCODE_ESC, IP_JOY_NONE /* BAD */);
 	
 	#define PC8801KEY_ROW10 \
 		PORT_START \
-	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "TAB", KEYCODE_TAB, IP_JOY_NONE /* BAD */)	\
-	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "DOWN", KEYCODE_DOWN, IP_JOY_NONE)	\
-	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "LEFT", KEYCODE_LEFT, IP_JOY_NONE)    \
-	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "HELP", KEYCODE_END, IP_JOY_NONE /* BAD? */)    \
-	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "COPY", KEYCODE_PRTSCR, IP_JOY_NONE /* BAD? */)    \
-	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "-", KEYCODE_MINUS_PAD, IP_JOY_NONE)    \
-	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "/", KEYCODE_SLASH_PAD, IP_JOY_NONE)    \
-	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD | IPF_TOGGLE, "CAPS", KEYCODE_CAPSLOCK, IP_JOY_NONE /* BAD? */)
+	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "TAB", KEYCODE_TAB, IP_JOY_NONE /* BAD */);\
+	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "DOWN", KEYCODE_DOWN, IP_JOY_NONE);\
+	  PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "LEFT", KEYCODE_LEFT, IP_JOY_NONE);   \
+	  PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "HELP", KEYCODE_END, IP_JOY_NONE /* BAD? */);   \
+	  PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "COPY", KEYCODE_PRTSCR, IP_JOY_NONE /* BAD? */);   \
+	  PORT_BITX (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "-", KEYCODE_MINUS_PAD, IP_JOY_NONE);   \
+	  PORT_BITX (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "/", KEYCODE_SLASH_PAD, IP_JOY_NONE);   \
+	  PORT_BITX (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD | IPF_TOGGLE, "CAPS", KEYCODE_CAPSLOCK, IP_JOY_NONE /* BAD? */);
 	
 	#define PC8801KEY_ROW11 \
 		PORT_START \
-	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "ROLL UP", KEYCODE_PGUP, IP_JOY_NONE /* BAD? */)	\
-	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "ROLL DOWN", KEYCODE_PGDN, IP_JOY_NONE /* BAD? */)	\
-		PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNUSED )
+	  PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "ROLL UP", KEYCODE_PGUP, IP_JOY_NONE /* BAD? */);\
+	  PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "ROLL DOWN", KEYCODE_PGDN, IP_JOY_NONE /* BAD? */);\
+		PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNUSED );
 	
 	#define PC8801KEYBOARD \
 		PC8801KEY_ROW0	/* port 0x00 */ \
@@ -375,7 +375,7 @@ public class pc8801
 		DUMMY_ROW	/* port 0x0e */ \
 		DUMMY_ROW	/* port 0x0f */
 	
-	INPUT_PORTS_START( pc88sr )
+	static InputPortPtr input_ports_pc88sr = new InputPortPtr(){ public void handler() { 
 		PC8801KEYBOARD
 	
 		PORT_START		/* EXSWITCH */
@@ -406,7 +406,7 @@ public class pc8801
 		PORT_START		/* extension memory setting */
 		SW_EXTMEM
 	
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	
 	MEMORY_READ_START( pc8801_readmem )
@@ -561,34 +561,34 @@ public class pc8801
 	PORT_END
 	
 	ROM_START (pc88srl)
-		ROM_REGION(0x18000,REGION_CPU1,0)
-		ROM_LOAD ("n80.rom", 0x00000, 0x8000, 0x27e1857d)
-		ROM_LOAD ("n88.rom", 0x08000, 0x8000, 0xa0fc0473)
-		ROM_LOAD ("n88_0.rom", 0x10000, 0x2000, 0x710a63ec)
-		ROM_LOAD ("n88_1.rom", 0x12000, 0x2000, 0xc0bd2aa6)
-		ROM_LOAD ("n88_2.rom", 0x14000, 0x2000, 0xaf2b6efa)
-		ROM_LOAD ("n88_3.rom", 0x16000, 0x2000, 0x7713c519)
-		ROM_REGION(0x10000,REGION_CPU2,0)
-		ROM_LOAD ("disk.rom", 0x0000, 0x0800, 0x2158d307)
-		ROM_REGION(0x40000,REGION_GFX1,0)
-		ROM_LOAD ("kanji1.rom", 0x00000, 0x20000, 0x6178bd43)
-		ROM_LOAD ("kanji2.rom", 0x20000, 0x20000, 0x154803cc)
-	ROM_END
+		ROM_REGION(0x18000,REGION_CPU1,0);
+		ROM_LOAD ("n80.rom", 0x00000, 0x8000, 0x27e1857d);
+		ROM_LOAD ("n88.rom", 0x08000, 0x8000, 0xa0fc0473);
+		ROM_LOAD ("n88_0.rom", 0x10000, 0x2000, 0x710a63ec);
+		ROM_LOAD ("n88_1.rom", 0x12000, 0x2000, 0xc0bd2aa6);
+		ROM_LOAD ("n88_2.rom", 0x14000, 0x2000, 0xaf2b6efa);
+		ROM_LOAD ("n88_3.rom", 0x16000, 0x2000, 0x7713c519);
+		ROM_REGION(0x10000,REGION_CPU2,0);
+		ROM_LOAD ("disk.rom", 0x0000, 0x0800, 0x2158d307);
+		ROM_REGION(0x40000,REGION_GFX1,0);
+		ROM_LOAD ("kanji1.rom", 0x00000, 0x20000, 0x6178bd43);
+		ROM_LOAD ("kanji2.rom", 0x20000, 0x20000, 0x154803cc);
+	ROM_END(); }}; 
 	
 	ROM_START (pc88srh)
-		ROM_REGION(0x18000,REGION_CPU1,0)
-		ROM_LOAD ("n80.rom", 0x00000, 0x8000, 0x27e1857d)
-		ROM_LOAD ("n88.rom", 0x08000, 0x8000, 0xa0fc0473)
-		ROM_LOAD ("n88_0.rom", 0x10000, 0x2000, 0x710a63ec)
-		ROM_LOAD ("n88_1.rom", 0x12000, 0x2000, 0xc0bd2aa6)
-		ROM_LOAD ("n88_2.rom", 0x14000, 0x2000, 0xaf2b6efa)
-		ROM_LOAD ("n88_3.rom", 0x16000, 0x2000, 0x7713c519)
-		ROM_REGION(0x10000,REGION_CPU2,0)
-		ROM_LOAD ("disk.rom", 0x0000, 0x0800, 0x2158d307)
-		ROM_REGION(0x40000,REGION_GFX1,0)
-		ROM_LOAD ("kanji1.rom", 0x00000, 0x20000, 0x6178bd43)
-		ROM_LOAD ("kanji2.rom", 0x20000, 0x20000, 0x154803cc)
-	ROM_END
+		ROM_REGION(0x18000,REGION_CPU1,0);
+		ROM_LOAD ("n80.rom", 0x00000, 0x8000, 0x27e1857d);
+		ROM_LOAD ("n88.rom", 0x08000, 0x8000, 0xa0fc0473);
+		ROM_LOAD ("n88_0.rom", 0x10000, 0x2000, 0x710a63ec);
+		ROM_LOAD ("n88_1.rom", 0x12000, 0x2000, 0xc0bd2aa6);
+		ROM_LOAD ("n88_2.rom", 0x14000, 0x2000, 0xaf2b6efa);
+		ROM_LOAD ("n88_3.rom", 0x16000, 0x2000, 0x7713c519);
+		ROM_REGION(0x10000,REGION_CPU2,0);
+		ROM_LOAD ("disk.rom", 0x0000, 0x0800, 0x2158d307);
+		ROM_REGION(0x40000,REGION_GFX1,0);
+		ROM_LOAD ("kanji1.rom", 0x00000, 0x20000, 0x6178bd43);
+		ROM_LOAD ("kanji2.rom", 0x20000, 0x20000, 0x154803cc);
+	ROM_END(); }}; 
 	
 	static struct beep_interface pc8801_beep_interface =
 	{

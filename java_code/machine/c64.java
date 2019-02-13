@@ -13,7 +13,7 @@
  */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -448,7 +448,7 @@ public class c64
 			c64_bankswitch (0);
 	}
 	
-	WRITE_HANDLER( c64_write_io )
+	public static WriteHandlerPtr c64_write_io = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		if (offset < 0x400) {
 			vic2_port_w (offset & 0x3ff, data);
@@ -485,9 +485,9 @@ public class c64
 			else
 				DBG_LOG (1, "io write", ("%.3x %.2x\n", offset, data));
 		}
-	}
+	} };
 	
-	READ_HANDLER( c64_read_io )
+	public static ReadHandlerPtr c64_read_io  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		if (offset < 0x400)
 			return vic2_port_r (offset & 0x3ff);
@@ -501,7 +501,7 @@ public class c64
 			return cia6526_1_port_r (offset & 0xff);
 		DBG_LOG (1, "io read", ("%.3x\n", offset));
 		return 0xff;
-	}
+	} };
 	
 	/*
 	 * two devices access bus, cpu and vic
@@ -682,7 +682,7 @@ public class c64
 			c128_bankswitch_64 (0);
 		else if (c65)
 			c65_bankswitch();
-		else if (!ultimax)
+		else if (ultimax == 0)
 			c64_bankswitch (0);
 	}
 	
@@ -751,10 +751,10 @@ public class c64
 		return c64_colorram[offset & 0x3ff];
 	}
 	
-	WRITE_HANDLER( c64_colorram_write )
+	public static WriteHandlerPtr c64_colorram_write = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		c64_colorram[offset & 0x3ff] = data | 0xf0;
-	}
+	} };
 	
 	/*
 	 * only 14 address lines
@@ -789,7 +789,7 @@ public class c64
 	static void c64_common_driver_init (void)
 	{
 		/*    memset(c64_memory, 0, 0xfd00); */
-		if (!ultimax) {
+		if (ultimax == 0) {
 			c64_basic=memory_region(REGION_CPU1)+0x10000;
 			c64_kernal=memory_region(REGION_CPU1)+0x12000;
 			c64_chargen=memory_region(REGION_CPU1)+0x14000;
@@ -878,7 +878,7 @@ public class c64
 	
 	void c64_driver_shutdown (void)
 	{
-		if (!ultimax)
+		if (ultimax == 0)
 		{
 			cbm_drive_close ();
 		}
@@ -916,7 +916,7 @@ public class c64
 	
 		if (c128)
 			c128_bankswitch_64 (1);
-		if (!ultimax)
+		if (ultimax == 0)
 			c64_bankswitch (1);
 	}
 	

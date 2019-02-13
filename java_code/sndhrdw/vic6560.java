@@ -6,7 +6,7 @@
   main part in vidhrdw
 ***************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package sndhrdw;
@@ -230,7 +230,7 @@ public class vic6560
 		 * so we have enough data for min 5 second */
 		noisesize = NOISE_FREQUENCY_MAX * NOISE_BUFFER_SIZE_SEC;
 		noise = (INT8*)malloc (noisesize * sizeof (noise[0]));
-		if (!noise)
+		if (noise == 0)
 			return 1;
 		{
 			int noiseshift = 0x7ffff8;
@@ -265,7 +265,7 @@ public class vic6560
 		tonesize = options.samplerate / TONE_FREQUENCY_MIN;
 	
 		tone = (INT16*)malloc (tonesize * sizeof (tone[0]));
-		if (!tone)
+		if (tone == 0)
 		{
 			free (noise);
 			return 1;

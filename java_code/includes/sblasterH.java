@@ -13,7 +13,7 @@
 */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package includes;
@@ -21,8 +21,6 @@ package includes;
 public class sblasterH
 {
 	
-	READ_HANDLER( soundblaster_r );
-	WRITE_HANDLER( soundblaster_w );
 	
 	typedef struct {
 		int dma;

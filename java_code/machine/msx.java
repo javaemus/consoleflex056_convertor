@@ -13,7 +13,7 @@
 */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -108,7 +108,7 @@ public class msx
 	
 	    /* try to load it */
 	    F = image_fopen (IO_CARTSLOT, id, OSD_FILETYPE_IMAGE, 0);
-	    if (!F) return 1;
+	    if (F == 0) return 1;
 	    size = osd_fsize (F);
 	    if (size < 0x2000)
 	    {
@@ -139,7 +139,7 @@ public class msx
 	    while (size_aligned < size) size_aligned *= 2;
 	
 	    pmem = (UINT8*)malloc (size_aligned);
-	    if (!pmem)
+	    if (pmem == 0)
 	    {
 	        logerror("malloc () failed\n");
 	        osd_fclose (F);
@@ -170,11 +170,11 @@ public class msx
 	    }
 	
 	    /* mapper type 0 always needs 64kB */
-	    if (!type)
+	    if (type == 0)
 	    {
 	        size_aligned = 0x10000;
 	        pmem = realloc (pmem, 0x10000);
-	        if (!pmem)
+	        if (pmem == 0)
 	        {
 	            logerror("Realloc failed!\n");
 	            free (msx1.cart[id].mem); msx1.cart[id].mem = NULL;
@@ -267,7 +267,7 @@ public class msx
 	        break;
 	   case 1: /* msx-dos 2: extra blank page for page 2 */
 	        pmem = realloc (msx1.cart[id].mem, 0x12000);
-	        if (!pmem)
+	        if (pmem == 0)
 	        {
 	            free (msx1.cart[id].mem); msx1.cart[id].mem = NULL;
 	            return 1;
@@ -278,7 +278,7 @@ public class msx
 	        break;
 	   case 6: /* game master 2; try to load sram */
 	        pmem = realloc (msx1.cart[id].mem, 0x24000);
-	        if (!pmem)
+	        if (pmem == 0)
 	        {
 	            free (msx1.cart[id].mem); msx1.cart[id].mem = NULL;
 	            return 1;
@@ -326,7 +326,7 @@ public class msx
 	    case 2: /* Konami SCC */
 	        /* we want an extra page that looks like the SCC page */
 	        pmem = realloc (pmem, size_aligned + 0x2000);
-	        if (!pmem)
+	        if (pmem == 0)
 	        {
 	            free (msx1.cart[id].mem); msx1.cart[id].mem = NULL;
 	            return 1;
@@ -342,7 +342,7 @@ public class msx
 	        break;
 	   case 7: /* ASCII/8kB with SRAM */
 	        pmem = realloc (msx1.cart[id].mem, size_aligned + 0x2000);
-	        if (!pmem)
+	        if (pmem == 0)
 	        {
 	            free (msx1.cart[id].mem); msx1.cart[id].mem = NULL;
 	            return 1;
@@ -362,7 +362,7 @@ public class msx
 	        break;
 	   case 8: /* ASCII/16kB with SRAM */
 	        pmem = realloc (msx1.cart[id].mem, size_aligned + 0x4000);
-	        if (!pmem)
+	        if (pmem == 0)
 	        {
 	            free (msx1.cart[id].mem); msx1.cart[id].mem = NULL;
 	            return 1;
@@ -394,7 +394,7 @@ public class msx
 	    case 11: /* fm-pac */
 	        msx1.cart[id].pacsram = !strncmp ((char*)msx1.cart[id].mem + 0x18, "PAC2", 4);
 	        pmem = realloc (msx1.cart[id].mem, 0x18000);
-	        if (!pmem)
+	        if (pmem == 0)
 	        {
 	            free (msx1.cart[id].mem); msx1.cart[id].mem = NULL;
 	            return 1;
@@ -436,7 +436,7 @@ public class msx
 	        break;
 		case 15: /* disk rom */
 	        pmem = realloc (msx1.cart[id].mem, 0x8000);
-	        if (!pmem)
+	        if (pmem == 0)
 	        {
 	            free (msx1.cart[id].mem); msx1.cart[id].mem = NULL;
 	            return 1;
@@ -490,7 +490,7 @@ public class msx
 	            res = 1;
 	            F = osd_fopen (Machine->gamedrv->name, msx1.cart[id].sramfile,
 	                OSD_FILETYPE_MEMCARD, 1);
-	            if (!F) break;
+	            if (F == 0) break;
 	            size = strlen (PAC_HEADER);
 	            if (osd_fwrite (F, PAC_HEADER, size) != size)
 	                { osd_fclose (F); break; }
@@ -576,7 +576,7 @@ public class msx
 	    /* adjust z80 cycles for the M1 wait state */
 	    z80_table = malloc (0x500);
 	
-	    if (!z80_table)
+	    if (z80_table == 0)
 			logerror ("Cannot malloc z80 cycle table, using default values\n");
 		else
 			{
@@ -994,7 +994,7 @@ public class msx
 	    old_val = data;
 		}
 	
-	static READ_HANDLER( msx_ppi_port_b_r )
+	public static ReadHandlerPtr msx_ppi_port_b_r  = new ReadHandlerPtr() { public int handler(int offset)
 		{
 	    int row, data;
 	
@@ -1006,7 +1006,7 @@ public class msx
 			return data & 0xff;
 			}
 	    else return 0xff;
-		}
+		} };
 	
 	/*
 	** The memory functions
@@ -1125,7 +1125,7 @@ public class msx
 	
 	WRITE_HANDLER ( msx_writemem0 )
 		{
-		if (!offset)
+		if (offset == 0)
 			{
 			/*
 	         * Super Load Runner ignores the CS, it responds to any
@@ -1566,7 +1566,7 @@ public class msx
 		if (caslen < 9) return -1;
 	
 	    casdata = (UINT8*)malloc (caslen);
-	    if (!casdata)
+	    if (casdata == 0)
 		{
 	       	logerror ("cas2wav: out of memory!\n");
 	       	return -1;

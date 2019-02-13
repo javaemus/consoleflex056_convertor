@@ -16,7 +16,7 @@ merged Street Fighter Zero for MESS
 
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -44,7 +44,7 @@ public class cpschngr
 	
 	static int cps1_sound_fade_timer;
 	
-	static WRITE_HANDLER( cps1_snd_bankswitch_w )
+	public static WriteHandlerPtr cps1_snd_bankswitch_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		unsigned char *RAM = memory_region(REGION_CPU2);
 		int length = memory_region_length(REGION_CPU2) - 0x10000;
@@ -54,7 +54,7 @@ public class cpschngr
 		cpu_setbank(1,&RAM[0x10000 + bankaddr]);
 	
 		if (data & 0xfe) logerror("%04x: write %02x to f004\n",cpu_get_pc(),data);
-	}
+	} };
 	
 	static WRITE16_HANDLER( cps1_sound_fade_w )
 	{
@@ -62,10 +62,10 @@ public class cpschngr
 			cps1_sound_fade_timer = data & 0xff;
 	}
 	
-	static READ_HANDLER( cps1_snd_fade_timer_r )
+	public static ReadHandlerPtr cps1_snd_fade_timer_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return cps1_sound_fade_timer;
-	}
+	} };
 	
 	static WRITE16_HANDLER( cps1_sound_command_w )
 	{
@@ -194,7 +194,7 @@ public class cpschngr
 			qsound_sharedram2[offset] = data;
 	}
 	
-	static WRITE_HANDLER( qsound_banksw_w )
+	public static WriteHandlerPtr qsound_banksw_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		/*
 		Z80 bank register for music note data. It's odd that it isn't encrypted
@@ -208,7 +208,7 @@ public class cpschngr
 			bankaddress=0x10000;
 		}
 		cpu_setbank(1, &RAM[bankaddress]);
-	}
+	} };
 	
 	
 	/********************************************************************
@@ -318,52 +318,52 @@ public class cpschngr
 		{ 0xf000, 0xffff, MWA_RAM, &qsound_sharedram2 },
 	MEMORY_END
 	
-	INPUT_PORTS_START( sfzch )
+	static InputPortPtr input_ports_sfzch = new InputPortPtr(){ public void handler() { 
 		PORT_START      /* IN0 */
-		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 )
-		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER2 )
-		PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_SERVICE, "Pause", KEYCODE_F1, IP_JOY_NONE )	/* pause */
-		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE  )	/* pause */
-		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
-		PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
-		PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER1 )
-		PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER2  )
+		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER1 );
+		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON5 | IPF_PLAYER2 );
+		PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_SERVICE, "Pause", KEYCODE_F1, IP_JOY_NONE );/* pause */
+		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE  );/* pause */
+		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 );
+		PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 );
+		PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER1 );
+		PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON6 | IPF_PLAYER2  );
 	
 		PORT_START      /* DSWA */
-		PORT_DIPNAME( 0xff, 0xff, DEF_STR( Unknown ) )
-		PORT_DIPSETTING(    0xff, DEF_STR( Off ) )
-		PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+		PORT_DIPNAME( 0xff, 0xff, DEF_STR( "Unknown") );
+		PORT_DIPSETTING(    0xff, DEF_STR( "Off") );
+		PORT_DIPSETTING(    0x00, DEF_STR( "On") );
 	
 		PORT_START      /* DSWB */
-		PORT_DIPNAME( 0xff, 0xff, DEF_STR( Unknown ) )
-		PORT_DIPSETTING(    0xff, DEF_STR( Off ) )
-		PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+		PORT_DIPNAME( 0xff, 0xff, DEF_STR( "Unknown") );
+		PORT_DIPSETTING(    0xff, DEF_STR( "Off") );
+		PORT_DIPSETTING(    0x00, DEF_STR( "On") );
 	
 		PORT_START      /* DSWC */
-		PORT_DIPNAME( 0xff, 0xff, DEF_STR( Unknown ) )
-		PORT_DIPSETTING(    0xff, DEF_STR( Off ) )
-		PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+		PORT_DIPNAME( 0xff, 0xff, DEF_STR( "Unknown") );
+		PORT_DIPSETTING(    0xff, DEF_STR( "Off") );
+		PORT_DIPSETTING(    0x00, DEF_STR( "On") );
 	
 		PORT_START      /* Player 1 */
-		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 )
-		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER1 )
-		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER1 )
-		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER1 )
-		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 )
-		PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 )
-		PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 )
-		PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 )
+		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 );
+		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER1 );
+		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER1 );
+		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER1 );
+		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 );
+		PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 );
+		PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER1 );
+		PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER1 );
 	
 		PORT_START      /* Player 2 */
-		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 )
-		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER2 )
-		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER2 )
-		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER2 )
-		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 )
-		PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 )
-		PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 )
-		PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 )
-	INPUT_PORTS_END
+		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 );
+		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER2 );
+		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER2 );
+		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER2 );
+		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 );
+		PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 );
+		PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 | IPF_PLAYER2 );
+		PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4 | IPF_PLAYER2 );
+	INPUT_PORTS_END(); }}; 
 	
 	
 	
@@ -380,8 +380,8 @@ public class cpschngr
 	
 	#if DECODE_GFX
 	
-	static struct GfxLayout tilelayout8 =
-	{
+	static GfxLayout tilelayout8 = new GfxLayout
+	(
 		8,8,
 	#if DECODE_GFX
 		RGN_FRAC(1,1),
@@ -389,14 +389,14 @@ public class cpschngr
 		0,
 	#endif
 		4,
-		{ 24+32, 16+32, 8+32, 0+32 },
-		{ 0, 1, 2, 3, 4, 5, 6, 7 },
+		new int[] { 24+32, 16+32, 8+32, 0+32 },
+		new int[] { 0, 1, 2, 3, 4, 5, 6, 7 },
 		{ 0*64, 1*64, 2*64, 3*64, 4*64, 5*64, 6*64, 7*64 },
 		8*64
-	};
+	);
 	
-	static struct GfxLayout tilelayout16 =
-	{
+	static GfxLayout tilelayout16 = new GfxLayout
+	(
 		16,16,
 	#if DECODE_GFX
 		RGN_FRAC(1,1),
@@ -404,16 +404,16 @@ public class cpschngr
 		0,
 	#endif
 		4,
-		{ 24, 16, 8, 0 },
-		{ 0, 1, 2, 3, 4, 5, 6, 7,
+		new int[] { 24, 16, 8, 0 },
+		new int[] { 0, 1, 2, 3, 4, 5, 6, 7,
 			32+0, 32+1, 32+2, 32+3, 32+4, 32+5, 32+6, 32+7 },
 		{ 0*64, 1*64, 2*64, 3*64, 4*64, 5*64, 6*64, 7*64,
 				8*64, 9*64, 10*64, 11*64, 12*64, 13*64, 14*64, 15*64 },
 		16*64
-	};
+	);
 	
-	static struct GfxLayout tilelayout32 =
-	{
+	static GfxLayout tilelayout32 = new GfxLayout
+	(
 		32,32,
 	#if DECODE_GFX
 		RGN_FRAC(1,1),
@@ -421,8 +421,8 @@ public class cpschngr
 		0,
 	#endif
 		4,
-		{ 24, 16, 8, 0 },
-		{ 0, 1, 2, 3, 4, 5, 6, 7,
+		new int[] { 24, 16, 8, 0 },
+		new int[] { 0, 1, 2, 3, 4, 5, 6, 7,
 			32+0, 32+1, 32+2, 32+3, 32+4, 32+5, 32+6, 32+7,
 			2*32+0, 2*32+1, 2*32+2, 2*32+3, 2*32+4, 2*32+5, 2*32+6, 2*32+7,
 			3*32+0, 3*32+1, 3*32+2, 3*32+3, 3*32+4, 3*32+5, 3*32+6, 3*32+7 },
@@ -431,19 +431,19 @@ public class cpschngr
 				16*128, 17*128, 18*128, 19*128, 20*128, 21*128, 22*128, 23*128,
 				24*128, 25*128, 26*128, 27*128, 28*128, 29*128, 30*128, 31*128 },
 		32*128
-	};
+	);
 	
 	#endif
 	
-	struct GfxDecodeInfo cps1_gfxdecodeinfo[] =
+	static GfxDecodeInfo cps1_gfxdecodeinfo[] =
 	{
 	#if DECODE_GFX
-		{ REGION_GFX1, 0, &tilelayout16, 0x000, 32*8 },	/* sprites */
-		{ REGION_GFX1, 0, &tilelayout8,  0x000, 32*8 },	/* tiles 8x8 */
-		{ REGION_GFX1, 0, &tilelayout16, 0x000, 32*8 },	/* tiles 16x16 */
-		{ REGION_GFX1, 0, &tilelayout32, 0x000, 32*8 },	/* tiles 32x32 */
+		new GfxDecodeInfo( REGION_GFX1, 0, tilelayout16, 0x000, 32*8 ),	/* sprites */
+		new GfxDecodeInfo( REGION_GFX1, 0, tilelayout8,  0x000, 32*8 ),	/* tiles 8x8 */
+		new GfxDecodeInfo( REGION_GFX1, 0, tilelayout16, 0x000, 32*8 ),	/* tiles 16x16 */
+		new GfxDecodeInfo( REGION_GFX1, 0, tilelayout32, 0x000, 32*8 ),	/* tiles 32x32 */
 	#endif
-		{ -1 } /* end of array */
+		new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
 	static void cps1_irq_handler_mus(int irq)
@@ -549,14 +549,14 @@ public class cpschngr
 	#define CODE_SIZE 0x200000
 	
 	
-	ROM_START( sfzch )
-		ROM_REGION( CODE_SIZE, REGION_CPU1,0 )      /* 68000 code */
+	static RomLoadPtr rom_sfzch = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION( CODE_SIZE, REGION_CPU1,0 );     /* 68000 code */
 		ROM_LOAD16_WORD_SWAP( "sfzch23",        0x000000, 0x80000, 0x1140743f )
 		ROM_LOAD16_WORD_SWAP( "sfza22",         0x080000, 0x80000, 0x8d9b2480 )
 		ROM_LOAD16_WORD_SWAP( "sfzch21",        0x100000, 0x80000, 0x5435225d )
 		ROM_LOAD16_WORD_SWAP( "sfza20",         0x180000, 0x80000, 0x806e8f38 )
 	
-		ROM_REGION( 0x800000, REGION_GFX1, 0 )
+		ROM_REGION( 0x800000, REGION_GFX1, 0 );
 		ROMX_LOAD( "sfz01",         0x000000, 0x80000, 0x0dd53e62, ROM_GROUPWORD | ROM_SKIP(6) )
 		ROMX_LOAD( "sfz02",         0x000002, 0x80000, 0x94c31e3f, ROM_GROUPWORD | ROM_SKIP(6) )
 		ROMX_LOAD( "sfz03",         0x000004, 0x80000, 0x9584ac85, ROM_GROUPWORD | ROM_SKIP(6) )
@@ -575,14 +575,14 @@ public class cpschngr
 		ROMX_LOAD( "sfz17",         0x600006, 0x80000, 0x248b3b73, ROM_GROUPWORD | ROM_SKIP(6) )
 	
 	
-		ROM_REGION( 0x18000, REGION_CPU2,0 ) /* 64k for the audio CPU (+banks) */
-		ROM_LOAD( "sfz09",         0x00000, 0x08000, 0xc772628b )
-		ROM_CONTINUE(              0x10000, 0x08000 )
+		ROM_REGION( 0x18000, REGION_CPU2,0 );/* 64k for the audio CPU (+banks) */
+		ROM_LOAD( "sfz09",         0x00000, 0x08000, 0xc772628b );
+		ROM_CONTINUE(              0x10000, 0x08000 );
 	
-		ROM_REGION( 0x40000, REGION_SOUND1,0 )	/* Samples */
-		ROM_LOAD( "sfz18",         0x00000, 0x20000, 0x61022b2d )
-		ROM_LOAD( "sfz19",         0x20000, 0x20000, 0x3b5886d5 )
-	ROM_END
+		ROM_REGION( 0x40000, REGION_SOUND1,0 );/* Samples */
+		ROM_LOAD( "sfz18",         0x00000, 0x20000, 0x61022b2d );
+		ROM_LOAD( "sfz19",         0x20000, 0x20000, 0x3b5886d5 );
+	ROM_END(); }}; 
 	
 	
 	

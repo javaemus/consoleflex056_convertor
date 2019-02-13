@@ -9,7 +9,7 @@ ernesto@imagina.com
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -161,13 +161,13 @@ public class amiga
 																								\
 		if ( shiftA ) {																			\
 			dataA >>= shiftA;																	\
-			if ( !first )																		\
+			if (first == 0)																		\
 				dataA |= ( old_data[0] & ( ( 1 << shiftA ) - 1 ) ) << ( 16 - shiftA );			\
 		}																						\
 																								\
 		if ( shiftB ) {																			\
 			dataB >>= shiftB;																	\
-			if ( !first )																		\
+			if (first == 0)																		\
 				dataB |= ( old_data[1] & ( ( 1 << shiftB ) - 1 ) ) << ( 16 - shiftB );			\
 		}																						\
 																								\
@@ -216,13 +216,13 @@ public class amiga
 																								\
 		if ( shiftA ) {																			\
 			dataA <<= shiftA;																	\
-			if ( !first )																		\
+			if (first == 0)																		\
 				dataA |= ( old_data[0] >> ( 16 - shiftA ) ) & ( ( 1 << shiftA ) - 1 );			\
 		}																						\
 																								\
 		if ( shiftB ) {																			\
 			dataB <<= shiftB;																	\
-			if ( !first )																		\
+			if (first == 0)																		\
 				dataB |= ( old_data[1] >> ( 16 - shiftB ) ) & ( ( 1 << shiftB ) - 1 );			\
 		}																						\
 																								\
@@ -336,7 +336,7 @@ public class amiga
 					}
 				}
 	
-				if ( !sign ) {
+				if (sign == 0) {
 					ptr[0] += custom_regs.BLTxMOD[0];
 					if ( custom_regs.BLTCON1 & 0x0010 ) {
 						if ( custom_regs.BLTCON1 & 0x0008 ) { /* Decrement Y */

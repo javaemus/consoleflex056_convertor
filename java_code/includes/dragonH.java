@@ -2,7 +2,7 @@
 #define DRAGON_H
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package includes;
@@ -92,20 +92,14 @@ public class dragonH
 	extern WRITE_HANDLER ( coco3_cartridge_w );
 	extern int coco_floppy_init(int id);
 	extern void coco_floppy_exit(int id);
-	extern WRITE_HANDLER( coco_m6847_hs_w );
-	extern WRITE_HANDLER( coco_m6847_fs_w );
-	extern WRITE_HANDLER( coco3_m6847_hs_w );
-	extern WRITE_HANDLER( coco3_m6847_fs_w );
-	extern int coco3_mmu_translate(int block, int offset);
+	extern extern extern extern extern int coco3_mmu_translate(int block, int offset);
 	extern int dragon_floppy_init(int id);
 	extern int dragon_floppy_id(int id);
 	extern void dragon_floppy_exit(int id);
 	extern int coco_bitbanger_init (int id);
 	extern void coco_bitbanger_exit (int id);
 	extern void coco_bitbanger_output (int id, int data);
-	extern READ_HANDLER( coco_pia_1_r );
-	extern READ_HANDLER( coco3_pia_1_r );
-	extern void dragon_sound_update(void);
+	extern extern extern void dragon_sound_update(void);
 	
 	/* Returns whether a given piece of logical memory is contiguous or not */
 	extern int coco3_mmu_ismemorycontiguous(int logicaladdr, int len);

@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -212,7 +212,7 @@ public class ibmpc
 		pc_rtc.timer=timer_pulse(1.0,0,pc_rtc_timer);
 	}
 	
-	READ_HANDLER( pc_rtc_r )
+	public static ReadHandlerPtr pc_rtc_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int data;
 		switch (offset) {
@@ -221,16 +221,16 @@ public class ibmpc
 		}
 		logerror( "rtc read %.2x %.2x\n", offset, data);
 		return data;
-	}
+	} };
 	
-	WRITE_HANDLER( pc_rtc_w )
+	public static WriteHandlerPtr pc_rtc_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		logerror( "rtc write %.2x %.2x\n", offset, data);
 		switch(offset) {
 		default:
 			pc_rtc.data[offset]=data;
 		}
-	}
+	} };
 	
 	/*************************************************************************
 	 *

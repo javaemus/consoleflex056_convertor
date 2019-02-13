@@ -7,7 +7,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -133,12 +133,12 @@ public class a7800
 	
 	    /* Allocate memory for BIOS bank switching */
 	    a7800_bios_f000 = (UINT8*)malloc(0x1000);
-	    if (!a7800_bios_f000) {
+	    if (a7800_bios_f000 == 0) {
 	        logerror("Could not allocate ROM memory\n");
 	        return INIT_FAIL;
 	    }
 	    a7800_cart_f000 = (UINT8*)malloc(0x1000);
-	    if (!a7800_cart_f000) {
+	    if (a7800_cart_f000 == 0) {
 	        logerror("Could not allocate ROM memory\n");
 	        free(a7800_bios_f000);
 	        return INIT_FAIL;
@@ -202,7 +202,7 @@ public class a7800
 	
 	/******  TIA  *****************************************/
 	
-	READ_HANDLER( a7800_TIA_r ) {
+	public static ReadHandlerPtr a7800_TIA_r  = new ReadHandlerPtr() { public int handler(int offset) {
 	    switch (offset) {
 	        case 0x08:
 	              return ((input_port_1_r(0) & 0x02) << 6);
@@ -227,15 +227,15 @@ public class a7800
 	
 	    }
 	    return 0xFF;
-	}
+	} };
 	
-	WRITE_HANDLER( a7800_TIA_w ) {
+	public static WriteHandlerPtr a7800_TIA_w = new WriteHandlerPtr() {public void handler(int offset, int data) {
 	    switch(offset) {
 	        case 0x01:
 	            if (data & 0x01) {
 	                maria_flag=1;
 	            }
-	            if (!a7800_ctrl_lock) {
+	            if (a7800_ctrl_lock == 0) {
 	                a7800_ctrl_lock = data & 0x01;
 	                a7800_ctrl_reg = data;
 	                if (data & 0x04)
@@ -247,11 +247,11 @@ public class a7800
 	    }
 	    tia_w(offset,data);
 	    ROM[offset] = data;
-	}
+	} };
 	
 	/****** RIOT ****************************************/
 	
-	READ_HANDLER( a7800_RIOT_r ) {
+	public static ReadHandlerPtr a7800_RIOT_r  = new ReadHandlerPtr() { public int handler(int offset) {
 	    switch (offset) {
 	        case 0:
 	            if (a7800_stick_type == 0x01)
@@ -265,41 +265,41 @@ public class a7800
 	            logerror("undefined RIOT read %x\n",offset);
 	    }
 	    return 0xFF;
-	}
+	} };
 	
-	WRITE_HANDLER( a7800_RIOT_w ) {
-	}
+	public static WriteHandlerPtr a7800_RIOT_w = new WriteHandlerPtr() {public void handler(int offset, int data) {
+	} };
 	
 	
 	/****** RAM Mirroring ******************************/
 	
-	READ_HANDLER( a7800_MAINRAM_r ) {
+	public static ReadHandlerPtr a7800_MAINRAM_r  = new ReadHandlerPtr() { public int handler(int offset) {
 	    return ROM[0x2000 + offset];
-	}
+	} };
 	
-	WRITE_HANDLER( a7800_MAINRAM_w ) {
+	public static WriteHandlerPtr a7800_MAINRAM_w = new WriteHandlerPtr() {public void handler(int offset, int data) {
 	    ROM[0x2000 + offset] = data;
-	}
+	} };
 	
-	READ_HANDLER( a7800_RAM0_r ) {
+	public static ReadHandlerPtr a7800_RAM0_r  = new ReadHandlerPtr() { public int handler(int offset) {
 	    return ROM[0x2040 + offset];
-	}
+	} };
 	
-	WRITE_HANDLER( a7800_RAM0_w ) {
+	public static WriteHandlerPtr a7800_RAM0_w = new WriteHandlerPtr() {public void handler(int offset, int data) {
 	    ROM[0x2040 + offset] = data;
 	    ROM[0x40 + offset] = data;
-	}
+	} };
 	
-	READ_HANDLER( a7800_RAM1_r ) {
+	public static ReadHandlerPtr a7800_RAM1_r  = new ReadHandlerPtr() { public int handler(int offset) {
 	    return ROM[0x2140 + offset];
-	}
+	} };
 	
-	WRITE_HANDLER( a7800_RAM1_w ) {
+	public static WriteHandlerPtr a7800_RAM1_w = new WriteHandlerPtr() {public void handler(int offset, int data) {
 	    ROM[0x2140 + offset] = data;
-	}
+	} };
 	
 	
-	WRITE_HANDLER( a7800_cart_w ) {
+	public static WriteHandlerPtr a7800_cart_w = new WriteHandlerPtr() {public void handler(int offset, int data) {
 	
 	    if (offset < 0x4000) {
 	        if (a7800_cart_type & 0x04) {
@@ -319,6 +319,6 @@ public class a7800
 	/*            logerror("BANK SEL: %d\n",data); */
 	       }
 	    }
-	}
+	} };
 	
 }

@@ -14,7 +14,7 @@
 
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -315,7 +315,7 @@ public class .#a2600.c.1
 	  RIOT Reads.
 	
 	***************************************************************************/
-	READ_HANDLER( a2600_riot_r )
+	public static ReadHandlerPtr a2600_riot_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		UINT8 *ROM = memory_region(REGION_CPU1);
 		INT32 riotdiff = (global_tia_cycle + cpu_geticount()) - previous_tia_cycle;
@@ -341,14 +341,14 @@ public class .#a2600.c.1
 		}
 	
 		return ROM[offset];
-	}
+	} };
 	
 	/***************************************************************************
 	
 	  RIOT Writes.
 	
 	***************************************************************************/
-	WRITE_HANDLER( a2600_riot_w )
+	public static WriteHandlerPtr a2600_riot_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	
 		UINT8 *ROM = memory_region(REGION_CPU1);
@@ -398,7 +398,7 @@ public class .#a2600.c.1
 		}
 	
 		ROM[offset] = data;
-	}
+	} };
 	
 	
 	/***************************************************************************
@@ -406,7 +406,7 @@ public class .#a2600.c.1
 	  TIA Reads.
 	
 	***************************************************************************/
-	READ_HANDLER( a2600_TIA_r )
+	public static ReadHandlerPtr a2600_TIA_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		UINT8 *ROM = memory_region(REGION_CPU1);
 		unsigned int pc;
@@ -476,7 +476,7 @@ public class .#a2600.c.1
 		}
 		return ROM[offset];
 	
-	}
+	} };
 	
 	
 	/***************************************************************************
@@ -484,7 +484,7 @@ public class .#a2600.c.1
 	  TIA Writes.
 	
 	***************************************************************************/
-	WRITE_HANDLER( a2600_TIA_w )
+	public static WriteHandlerPtr a2600_TIA_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		UINT8 *ROM = memory_region(REGION_CPU1);
 	
@@ -816,7 +816,7 @@ public class .#a2600.c.1
 			/* all others */
 			ROM[offset] = data;
 		}
-	}
+	} };
 	
 	
 	/***************************************************************************
@@ -1071,7 +1071,7 @@ public class .#a2600.c.1
 	
 						if(TIA_pixel_clock == 4)
 						{
-							if(!PF_Ref)
+							if (PF_Ref == 0)
 							{
 								SHIFT_RIGHT20(TIA_pf_mask)
 							}
@@ -1097,12 +1097,12 @@ public class .#a2600.c.1
 			profiler_mark(PROFILER_USER3);
 	
 			/* Deal with the RIOT Timer */
-			if (!HSYNC_colour_clock)
+			if (HSYNC_colour_clock == 0)
 			{
 				if (TMR_Period)
 				{
 					TMR_tmp--;
-					if (!TMR_tmp)
+					if (TMR_tmp == 0)
 					{
 						TMR_tmp = TMR_Period;
 						TMR_Intim--;

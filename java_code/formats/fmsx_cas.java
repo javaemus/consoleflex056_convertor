@@ -1,6 +1,6 @@
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package formats;
@@ -51,7 +51,7 @@ public class fmsx_cas
 		cas_pos = 8;
 		samples_size = ALLOCATE_BLOCK * 2;
 		samples = (INT16*) malloc (samples_size);
-		if (!samples)
+		if (samples == 0)
 			return 2;
 	
 		samples_pos = 0;
@@ -64,7 +64,7 @@ public class fmsx_cas
 				{
 				samples_size += size;
 				nsamples = (INT16*) realloc (samples, samples_size * 2);
-				if (!nsamples)
+				if (nsamples == 0)
 					{
 					free (samples);
 					return 2;
@@ -104,7 +104,7 @@ public class fmsx_cas
 					{
 					samples_size += ALLOCATE_BLOCK;
 					nsamples = (INT16*) realloc (samples, samples_size * 2);
-					if (!nsamples)
+					if (nsamples == 0)
 						{
 						free (samples);
 						return 2;

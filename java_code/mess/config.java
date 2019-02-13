@@ -1,6 +1,6 @@
 /* Config file save/load functions */
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package mess;
@@ -150,7 +150,7 @@ public class config
 		if (!name || !*name)
 			return cfg;
 	    cfg = (struct config_hdl *) malloc(sizeof (struct config_hdl));
-		if (!cfg)
+		if (cfg == 0)
 		{
 			LOG(("config_create: memory problem\n"));
 			return cfg;
@@ -175,7 +175,7 @@ public class config
 			return cfg;
 	
 	    cfg = (struct config_hdl *) malloc(sizeof (struct config_hdl));
-		if (!cfg)
+		if (cfg == 0)
 		{
 			LOG(("config_open: memory problem\n"));
 			return cfg;
@@ -196,7 +196,7 @@ public class config
 	{
 		struct config_hdl *cfg = (struct config_hdl *) config;
 	
-		if (!cfg)
+		if (cfg == 0)
 			return;
 		config_free_section(cfg);
 		if (cfg->file)
@@ -447,9 +447,9 @@ public class config
 						return;
 	
 					p = strchr(buffer, '\n');
-					if (!p)
+					if (p == 0)
 						p = strchr(buffer, '\r');
-					if (!p)
+					if (p == 0)
 					{
 						LOG(("config_load_section: Line to long in section '%s'\n", searching));
 						return;
@@ -473,7 +473,7 @@ public class config
 	
 					/* find the config_var data */
 					p = strchr(buffer, '=');
-					if (!p)
+					if (p == 0)
 					{
 						LOG(("config_load_section: Line contains no '=' character\n"));
 						return;
@@ -495,7 +495,7 @@ public class config
 							v = cfg->list;
 							while (v && findstr(v->name, buffer))
 								v = v->next;
-							if (!v)
+							if (v == 0)
 							{
 								LOG(("config_load_section: Invalid variable continuation found '%s.%04X'\n", buffer, offs));
 								return;
@@ -529,7 +529,7 @@ public class config
 						cfg->end_of_list=cfg->list;
 						v = cfg->list;
 					}
-					if (!v)
+					if (v == 0)
 					{
 						LOG(("config_load_section: out of memory while reading '%s'\n", searching));
 						return;

@@ -189,7 +189,7 @@ when problems start with -log and look into error.log file
  */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -200,73 +200,81 @@ public class c64
 	#define VERBOSE_DBG 0
 	
 	
-	static MEMORY_READ_START( ultimax_readmem )
-		{0x0000, 0x0001, c64_m6510_port_r},
-		{0x0002, 0x0fff, MRA_RAM},
-		{0x8000, 0x9fff, MRA_ROM},
-		{0xd000, 0xd3ff, vic2_port_r},
-		{0xd400, 0xd7ff, sid6581_0_port_r},
-		{0xd800, 0xdbff, MRA_RAM},		   /* colorram  */
-		{0xdc00, 0xdcff, cia6526_0_port_r},
-		{0xe000, 0xffff, MRA_ROM},		   /* ram or kernel rom */
-	MEMORY_END
+	public static Memory_ReadAddress ultimax_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress(0x0000, 0x0001, c64_m6510_port_r),
+		new Memory_ReadAddress(0x0002, 0x0fff, MRA_RAM),
+		new Memory_ReadAddress(0x8000, 0x9fff, MRA_ROM),
+		new Memory_ReadAddress(0xd000, 0xd3ff, vic2_port_r),
+		new Memory_ReadAddress(0xd400, 0xd7ff, sid6581_0_port_r),
+		new Memory_ReadAddress(0xd800, 0xdbff, MRA_RAM),		   /* colorram  */
+		new Memory_ReadAddress(0xdc00, 0xdcff, cia6526_0_port_r),
+		new Memory_ReadAddress(0xe000, 0xffff, MRA_ROM),		   /* ram or kernel rom */
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( ultimax_writemem )
-		{0x0000, 0x0001, c64_m6510_port_w, &c64_memory},
-		{0x0002, 0x0fff, MWA_RAM},
-		{0x8000, 0x9fff, MWA_ROM, &c64_roml},
-		{0xd000, 0xd3ff, vic2_port_w},
-		{0xd400, 0xd7ff, sid6581_0_port_w},
-		{0xd800, 0xdbff, c64_colorram_write, &c64_colorram},
-		{0xdc00, 0xdcff, cia6526_0_port_w},
-		{0xe000, 0xffff, MWA_ROM, &c64_romh},
-	MEMORY_END
+	public static Memory_WriteAddress ultimax_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress(0x0000, 0x0001, c64_m6510_port_w, c64_memory),
+		new Memory_WriteAddress(0x0002, 0x0fff, MWA_RAM),
+		new Memory_WriteAddress(0x8000, 0x9fff, MWA_ROM, c64_roml),
+		new Memory_WriteAddress(0xd000, 0xd3ff, vic2_port_w),
+		new Memory_WriteAddress(0xd400, 0xd7ff, sid6581_0_port_w),
+		new Memory_WriteAddress(0xd800, 0xdbff, c64_colorram_write, c64_colorram),
+		new Memory_WriteAddress(0xdc00, 0xdcff, cia6526_0_port_w),
+		new Memory_WriteAddress(0xe000, 0xffff, MWA_ROM, c64_romh),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_READ_START( c64_readmem )
-		{0x0000, 0x0001, c64_m6510_port_r},
-		{0x0002, 0x7fff, MRA_RAM},
-		{0x8000, 0x9fff, MRA_BANK1},	   /* ram or external roml */
-		{0xa000, 0xbfff, MRA_BANK3},	   /* ram or basic rom or external romh */
-		{0xc000, 0xcfff, MRA_RAM},
+	public static Memory_ReadAddress c64_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress(0x0000, 0x0001, c64_m6510_port_r),
+		new Memory_ReadAddress(0x0002, 0x7fff, MRA_RAM),
+		new Memory_ReadAddress(0x8000, 0x9fff, MRA_BANK1),	   /* ram or external roml */
+		new Memory_ReadAddress(0xa000, 0xbfff, MRA_BANK3),	   /* ram or basic rom or external romh */
+		new Memory_ReadAddress(0xc000, 0xcfff, MRA_RAM),
 	#if 1
-		{0xd000, 0xdfff, MRA_BANK5},
+		new Memory_ReadAddress(0xd000, 0xdfff, MRA_BANK5),
 	#else
 	/* dram */
 	/* or character rom */
-		{0xd000, 0xd3ff, MRA_BANK9},
-		{0xd400, 0xd7ff, MRA_BANK10},
-		{0xd800, 0xdbff, MRA_BANK11},		   /* colorram  */
-		{0xdc00, 0xdcff, MRA_BANK12},
-		{0xdd00, 0xddff, MRA_BANK13},
-		{0xde00, 0xdeff, MRA_BANK14},		   /* csline expansion port */
-		{0xdf00, 0xdfff, MRA_BANK15},		   /* csline expansion port */
+		new Memory_ReadAddress(0xd000, 0xd3ff, MRA_BANK9),
+		new Memory_ReadAddress(0xd400, 0xd7ff, MRA_BANK10),
+		new Memory_ReadAddress(0xd800, 0xdbff, MRA_BANK11),		   /* colorram  */
+		new Memory_ReadAddress(0xdc00, 0xdcff, MRA_BANK12),
+		new Memory_ReadAddress(0xdd00, 0xddff, MRA_BANK13),
+		new Memory_ReadAddress(0xde00, 0xdeff, MRA_BANK14),		   /* csline expansion port */
+		new Memory_ReadAddress(0xdf00, 0xdfff, MRA_BANK15),		   /* csline expansion port */
 	#endif
-		{0xe000, 0xffff, MRA_BANK7},	   /* ram or kernel rom or external romh */
-	MEMORY_END
+		new Memory_ReadAddress(0xe000, 0xffff, MRA_BANK7),	   /* ram or kernel rom or external romh */
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( c64_writemem )
-		{0x0000, 0x0001, c64_m6510_port_w, &c64_memory},
-		{0x0002, 0x7fff, MWA_RAM},
-		{0x8000, 0x9fff, MWA_BANK2},
-		{0xa000, 0xcfff, MWA_RAM},
-	//	{0xa000, 0xcfff, MWA_BANK16},
+	public static Memory_WriteAddress c64_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress(0x0000, 0x0001, c64_m6510_port_w, c64_memory),
+		new Memory_WriteAddress(0x0002, 0x7fff, MWA_RAM),
+		new Memory_WriteAddress(0x8000, 0x9fff, MWA_BANK2),
+		new Memory_WriteAddress(0xa000, 0xcfff, MWA_RAM),
+	//	new Memory_WriteAddress(0xa000, 0xcfff, MWA_BANK16),
 	#if 1
-		{0xd000, 0xdfff, MWA_BANK6},
+		new Memory_WriteAddress(0xd000, 0xdfff, MWA_BANK6),
 	#else
 		/* or dram memory */
-		{0xd000, 0xd3ff, vic2_port_w},
-		{0xd400, 0xd7ff, sid6581_0_port_w},
-		{0xd800, 0xdbff, c64_colorram_write},
-		{0xdc00, 0xdcff, cia6526_0_port_w},
-		{0xdd00, 0xddff, cia6526_1_port_w},
-		{0xde00, 0xdeff, MWA_NOP},		   /* csline expansion port */
-		{0xdf00, 0xdfff, MWA_NOP},		   /* csline expansion port */
+		new Memory_WriteAddress(0xd000, 0xd3ff, vic2_port_w),
+		new Memory_WriteAddress(0xd400, 0xd7ff, sid6581_0_port_w),
+		new Memory_WriteAddress(0xd800, 0xdbff, c64_colorram_write),
+		new Memory_WriteAddress(0xdc00, 0xdcff, cia6526_0_port_w),
+		new Memory_WriteAddress(0xdd00, 0xddff, cia6526_1_port_w),
+		new Memory_WriteAddress(0xde00, 0xdeff, MWA_NOP),		   /* csline expansion port */
+		new Memory_WriteAddress(0xdf00, 0xdfff, MWA_NOP),		   /* csline expansion port */
 	#endif
-		{0xe000, 0xffff, MWA_BANK8},
-	MEMORY_END
+		new Memory_WriteAddress(0xe000, 0xffff, MWA_BANK8),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
 	#define DIPS_HELPER(bit, name, keycode) \
-	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, IP_JOY_NONE)
+	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, IP_JOY_NONE);
 	
 	#define C64_KEYBOARD \
 		PORT_START \
@@ -305,9 +313,9 @@ public class c64
 		DIPS_HELPER( 0x0001, "STOP RUN", KEYCODE_TAB)\
 		PORT_START \
 		PORT_BITX( 0x8000, IP_ACTIVE_HIGH, IPT_DIPSWITCH_NAME|IPF_TOGGLE,\
-			     "SHIFT-LOCK (switch)", KEYCODE_CAPSLOCK, IP_JOY_NONE)\
-		PORT_DIPSETTING(  0, DEF_STR( Off ) )\
-		PORT_DIPSETTING(	0x8000, DEF_STR( On ) )\
+			     "SHIFT-LOCK (switch);, KEYCODE_CAPSLOCK, IP_JOY_NONE)\
+		PORT_DIPSETTING(  0, DEF_STR( "Off") );\
+		PORT_DIPSETTING(	0x8000, DEF_STR( "On") );\
 		DIPS_HELPER( 0x4000, "A", KEYCODE_A)\
 		DIPS_HELPER( 0x2000, "S", KEYCODE_S)\
 		DIPS_HELPER( 0x1000, "D", KEYCODE_D)\
@@ -385,9 +393,9 @@ public class c64
 		DIPS_HELPER( 0x0001, "STOP RUN", KEYCODE_TAB)\
 		PORT_START \
 		PORT_BITX( 0x8000, IP_ACTIVE_HIGH, IPT_DIPSWITCH_NAME|IPF_TOGGLE,\
-			     "SHIFT-LOCK (switch)", KEYCODE_CAPSLOCK, IP_JOY_NONE)\
-		PORT_DIPSETTING(  0, DEF_STR( Off ) )\
-		PORT_DIPSETTING(	0x8000, DEF_STR( On ) )\
+			     "SHIFT-LOCK (switch);, KEYCODE_CAPSLOCK, IP_JOY_NONE)\
+		PORT_DIPSETTING(  0, DEF_STR( "Off") );\
+		PORT_DIPSETTING(	0x8000, DEF_STR( "On") );\
 		DIPS_HELPER( 0x4000, "A", KEYCODE_A)\
 		DIPS_HELPER( 0x2000, "S", KEYCODE_S)\
 		DIPS_HELPER( 0x1000, "D", KEYCODE_D)\
@@ -432,170 +440,170 @@ public class c64
 		 C64_DIPS
 		PORT_START
 		DIPS_HELPER( 0x8000, "Quickload", KEYCODE_F8)
-		PORT_DIPNAME   ( 0x4000, 0x4000, "Tape Drive/Device 1")
-		PORT_DIPSETTING(  0, DEF_STR( Off ) )
-		PORT_DIPSETTING(0x4000, DEF_STR( On ) )
-		PORT_DIPNAME   ( 0x2000, 0x00, " Tape Sound")
-		PORT_DIPSETTING(  0, DEF_STR( Off ) )
-		PORT_DIPSETTING(0x2000, DEF_STR( On ) )
+		PORT_DIPNAME   ( 0x4000, 0x4000, "Tape Drive/Device 1");
+		PORT_DIPSETTING(  0, DEF_STR( "Off") );
+		PORT_DIPSETTING(0x4000, DEF_STR( "On") );
+		PORT_DIPNAME   ( 0x2000, 0x00, " Tape Sound");
+		PORT_DIPSETTING(  0, DEF_STR( "Off") );
+		PORT_DIPSETTING(0x2000, DEF_STR( "On") );
 		DIPS_HELPER( 0x1000, "Tape Drive Play",       KEYCODE_F5)
 		DIPS_HELPER( 0x0800, "Tape Drive Record",     KEYCODE_F6)
 		DIPS_HELPER( 0x0400, "Tape Drive Stop",       KEYCODE_F7)
-		PORT_DIPNAME   ( 0x80, 0x00, "Sid Chip Type")
-		PORT_DIPSETTING(  0, "MOS6581" )
-		PORT_DIPSETTING(0x80, "MOS8580" )
-		 PORT_BIT (0x1c, 0x4, IPT_UNUSED)	   /* only ultimax cartridges */
-		 PORT_BIT (0x2, 0x0, IPT_UNUSED)		   /* no serial bus */
-		 PORT_BIT (0x1, 0x0, IPT_UNUSED)
+		PORT_DIPNAME   ( 0x80, 0x00, "Sid Chip Type");
+		PORT_DIPSETTING(  0, "MOS6581" );
+		PORT_DIPSETTING(0x80, "MOS8580" );
+		 PORT_BIT (0x1c, 0x4, IPT_UNUSED);   /* only ultimax cartridges */
+		 PORT_BIT (0x2, 0x0, IPT_UNUSED);	   /* no serial bus */
+		 PORT_BIT (0x1, 0x0, IPT_UNUSED);
 		 C64_KEYBOARD
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	INPUT_PORTS_START (c64gs)
 		 C64_DIPS
 		 PORT_START
-		 PORT_BIT (0xff00, 0x0, IPT_UNUSED)
-		PORT_DIPNAME   ( 0x80, 0x00, "Sid Chip Type")
-		PORT_DIPSETTING(  0, "MOS6581" )
-		PORT_DIPSETTING(0x80, "MOS8580" )
-		 PORT_DIPNAME (0x1c, 0x00, "Cartridge Type")
-		 PORT_DIPSETTING (0, "Automatic")
-		 PORT_DIPSETTING (4, "Ultimax (GAME)")
-		 PORT_DIPSETTING (8, "C64 (EXROM)")
+		 PORT_BIT (0xff00, 0x0, IPT_UNUSED);
+		PORT_DIPNAME   ( 0x80, 0x00, "Sid Chip Type");
+		PORT_DIPSETTING(  0, "MOS6581" );
+		PORT_DIPSETTING(0x80, "MOS8580" );
+		 PORT_DIPNAME (0x1c, 0x00, "Cartridge Type");
+		 PORT_DIPSETTING (0, "Automatic");
+		 PORT_DIPSETTING (4, "Ultimax (GAME);
+		 PORT_DIPSETTING (8, "C64 (EXROM);
 	#ifdef PET_TEST_CODE
-		 PORT_DIPSETTING (0x10, "CBM Supergames")
-		 PORT_DIPSETTING (0x14, "Ocean Robocop2")
+		 PORT_DIPSETTING (0x10, "CBM Supergames");
+		 PORT_DIPSETTING (0x14, "Ocean Robocop2");
 	#endif
-		 PORT_BIT (0x2, 0x0, IPT_UNUSED)		   /* no serial bus */
-		 PORT_BIT (0x1, 0x0, IPT_UNUSED)
+		 PORT_BIT (0x2, 0x0, IPT_UNUSED);	   /* no serial bus */
+		 PORT_BIT (0x1, 0x0, IPT_UNUSED);
 		 PORT_START /* no keyboard */
-		 PORT_BIT (0xffff, 0x0, IPT_UNUSED)
+		 PORT_BIT (0xffff, 0x0, IPT_UNUSED);
 		 PORT_START
-		 PORT_BIT (0xffff, 0x0, IPT_UNUSED)
+		 PORT_BIT (0xffff, 0x0, IPT_UNUSED);
 		 PORT_START
-		 PORT_BIT (0xffff, 0x0, IPT_UNUSED)
+		 PORT_BIT (0xffff, 0x0, IPT_UNUSED);
 		 PORT_START
-		 PORT_BIT (0xffff, 0x0, IPT_UNUSED)
+		 PORT_BIT (0xffff, 0x0, IPT_UNUSED);
 		 PORT_START
-		 PORT_BIT (0xf000, 0x0, IPT_UNUSED)
-	INPUT_PORTS_END
+		 PORT_BIT (0xf000, 0x0, IPT_UNUSED);
+	INPUT_PORTS_END(); }}; 
 	
 	INPUT_PORTS_START (c64)
 		 C64_DIPS
 		 PORT_START
 		 DIPS_HELPER( 0x8000, "Quickload", KEYCODE_F8)
-		 PORT_DIPNAME   ( 0x4000, 0x4000, "Tape Drive/Device 1")
-		 PORT_DIPSETTING(  0, DEF_STR( Off ) )
-		 PORT_DIPSETTING(0x4000, DEF_STR( On ) )
-		 PORT_DIPNAME   ( 0x2000, 0x00, " Tape Sound")
-		 PORT_DIPSETTING(  0, DEF_STR( Off ) )
-		 PORT_DIPSETTING(0x2000, DEF_STR( On ) )
+		 PORT_DIPNAME   ( 0x4000, 0x4000, "Tape Drive/Device 1");
+		 PORT_DIPSETTING(  0, DEF_STR( "Off") );
+		 PORT_DIPSETTING(0x4000, DEF_STR( "On") );
+		 PORT_DIPNAME   ( 0x2000, 0x00, " Tape Sound");
+		 PORT_DIPSETTING(  0, DEF_STR( "Off") );
+		 PORT_DIPSETTING(0x2000, DEF_STR( "On") );
 		 DIPS_HELPER( 0x1000, "Tape Drive Play",       KEYCODE_F5)
 		 DIPS_HELPER( 0x0800, "Tape Drive Record",     KEYCODE_F6)
 		 DIPS_HELPER( 0x0400, "Tape Drive Stop",       KEYCODE_F7)
-		PORT_DIPNAME   ( 0x80, 0x00, "Sid Chip Type")
-		PORT_DIPSETTING(  0, "MOS6581" )
-		PORT_DIPSETTING(0x80, "MOS8580" )
-		 PORT_DIPNAME (0x1c, 0x00, "Cartridge Type")
-		 PORT_DIPSETTING (0, "Automatic")
-		 PORT_DIPSETTING (4, "Ultimax (GAME)")
-		 PORT_DIPSETTING (8, "C64 (EXROM)")
+		PORT_DIPNAME   ( 0x80, 0x00, "Sid Chip Type");
+		PORT_DIPSETTING(  0, "MOS6581" );
+		PORT_DIPSETTING(0x80, "MOS8580" );
+		 PORT_DIPNAME (0x1c, 0x00, "Cartridge Type");
+		 PORT_DIPSETTING (0, "Automatic");
+		 PORT_DIPSETTING (4, "Ultimax (GAME);
+		 PORT_DIPSETTING (8, "C64 (EXROM);
 	#ifdef PET_TEST_CODE
-		 PORT_DIPSETTING (0x10, "CBM Supergames")
-		 PORT_DIPSETTING (0x14, "Ocean Robocop2")
+		 PORT_DIPSETTING (0x10, "CBM Supergames");
+		 PORT_DIPSETTING (0x14, "Ocean Robocop2");
 	#endif
-		 PORT_DIPNAME (0x02, 0x02, "Serial Bus/Device 8")
-		 PORT_DIPSETTING (0, "None")
-		 PORT_DIPSETTING (2, "VC1541 Floppy Drive")
-		 PORT_DIPNAME (0x01, 0x01, "Serial Bus/Device 9")
-		 PORT_DIPSETTING (0, "None")
-		 PORT_DIPSETTING (1, "VC1541 Floppy Drive")
+		 PORT_DIPNAME (0x02, 0x02, "Serial Bus/Device 8");
+		 PORT_DIPSETTING (0, "None");
+		 PORT_DIPSETTING (2, "VC1541 Floppy Drive");
+		 PORT_DIPNAME (0x01, 0x01, "Serial Bus/Device 9");
+		 PORT_DIPSETTING (0, "None");
+		 PORT_DIPSETTING (1, "VC1541 Floppy Drive");
 	     C64_KEYBOARD
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	INPUT_PORTS_START (vic64s)
 		 C64_DIPS
 		 PORT_START
 		 DIPS_HELPER( 0x8000, "Quickload", KEYCODE_F8)
-		 PORT_DIPNAME   ( 0x4000, 0x4000, "Tape Drive/Device 1")
-		 PORT_DIPSETTING(  0, DEF_STR( Off ) )
-		 PORT_DIPSETTING(0x4000, DEF_STR( On ) )
-		 PORT_DIPNAME   ( 0x2000, 0x00, " Tape Sound")
-		 PORT_DIPSETTING(  0, DEF_STR( Off ) )
-		 PORT_DIPSETTING(0x2000, DEF_STR( On ) )
+		 PORT_DIPNAME   ( 0x4000, 0x4000, "Tape Drive/Device 1");
+		 PORT_DIPSETTING(  0, DEF_STR( "Off") );
+		 PORT_DIPSETTING(0x4000, DEF_STR( "On") );
+		 PORT_DIPNAME   ( 0x2000, 0x00, " Tape Sound");
+		 PORT_DIPSETTING(  0, DEF_STR( "Off") );
+		 PORT_DIPSETTING(0x2000, DEF_STR( "On") );
 		 DIPS_HELPER( 0x1000, "Tape Drive Play",       KEYCODE_F5)
 		 DIPS_HELPER( 0x0800, "Tape Drive Record",     KEYCODE_F6)
 		 DIPS_HELPER( 0x0400, "Tape Drive Stop",       KEYCODE_F7)
-		PORT_DIPNAME   ( 0x80, 0x00, "Sid Chip Type")
-		PORT_DIPSETTING(  0, "MOS6581" )
-		PORT_DIPSETTING(0x80, "MOS8580" )
-		 PORT_DIPNAME (0x1c, 0x00, "Cartridge Type")
-		 PORT_DIPSETTING (0, "Automatic")
-		 PORT_DIPSETTING (4, "Ultimax (GAME)")
-		 PORT_DIPSETTING (8, "C64 (EXROM)")
+		PORT_DIPNAME   ( 0x80, 0x00, "Sid Chip Type");
+		PORT_DIPSETTING(  0, "MOS6581" );
+		PORT_DIPSETTING(0x80, "MOS8580" );
+		 PORT_DIPNAME (0x1c, 0x00, "Cartridge Type");
+		 PORT_DIPSETTING (0, "Automatic");
+		 PORT_DIPSETTING (4, "Ultimax (GAME);
+		 PORT_DIPSETTING (8, "C64 (EXROM);
 	#ifdef PET_TEST_CODE
-		 PORT_DIPSETTING (0x10, "CBM Supergames")
-		 PORT_DIPSETTING (0x14, "Ocean Robocop2")
+		 PORT_DIPSETTING (0x10, "CBM Supergames");
+		 PORT_DIPSETTING (0x14, "Ocean Robocop2");
 	#endif
-		 PORT_DIPNAME (0x02, 0x02, "Serial Bus/Device 8")
-		 PORT_DIPSETTING (0, "None")
-		 PORT_DIPSETTING (2, "VC1541 Floppy Drive")
-		 PORT_DIPNAME (0x01, 0x01, "Serial Bus/Device 9")
-		 PORT_DIPSETTING (0, "None")
-		 PORT_DIPSETTING (1, "VC1541 Floppy Drive")
+		 PORT_DIPNAME (0x02, 0x02, "Serial Bus/Device 8");
+		 PORT_DIPSETTING (0, "None");
+		 PORT_DIPSETTING (2, "VC1541 Floppy Drive");
+		 PORT_DIPNAME (0x01, 0x01, "Serial Bus/Device 9");
+		 PORT_DIPSETTING (0, "None");
+		 PORT_DIPSETTING (1, "VC1541 Floppy Drive");
 	     VIC64S_KEYBOARD
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	INPUT_PORTS_START (sx64)
 	     C64_DIPS
 		 PORT_START
 		 DIPS_HELPER( 0x8000, "Quickload", KEYCODE_F8)
-		 PORT_BIT (0x7f00, 0x0, IPT_UNUSED) /* no tape */
-		PORT_DIPNAME   ( 0x80, 0x00, "Sid Chip Type")
-		PORT_DIPSETTING(  0, "MOS6581" )
-		PORT_DIPSETTING(0x80, "MOS8580" )
-		 PORT_DIPNAME (0x1c, 0x00, "Cartridge Type")
-		 PORT_DIPSETTING (0, "Automatic")
-		 PORT_DIPSETTING (4, "Ultimax (GAME)")
-		 PORT_DIPSETTING (8, "C64 (EXROM)")
+		 PORT_BIT (0x7f00, 0x0, IPT_UNUSED);/* no tape */
+		PORT_DIPNAME   ( 0x80, 0x00, "Sid Chip Type");
+		PORT_DIPSETTING(  0, "MOS6581" );
+		PORT_DIPSETTING(0x80, "MOS8580" );
+		 PORT_DIPNAME (0x1c, 0x00, "Cartridge Type");
+		 PORT_DIPSETTING (0, "Automatic");
+		 PORT_DIPSETTING (4, "Ultimax (GAME);
+		 PORT_DIPSETTING (8, "C64 (EXROM);
 	#ifdef PET_TEST_CODE
-		 PORT_DIPSETTING (0x10, "CBM Supergames")
-		 PORT_DIPSETTING (0x14, "Ocean Robocop2")
+		 PORT_DIPSETTING (0x10, "CBM Supergames");
+		 PORT_DIPSETTING (0x14, "Ocean Robocop2");
 	#endif
 		 /* 1 vc1541 build in, device number selectable 8,9,10,11 */
-		 PORT_DIPNAME (0x02, 0x02, "Serial Bus/Device 8")
-		 PORT_DIPSETTING (0, "None")
-		 PORT_DIPSETTING (2, "VC1541 Floppy Drive")
-		 PORT_DIPNAME (0x01, 0x01, "Serial Bus/Device 9")
-		 PORT_DIPSETTING (0, "None")
-		 PORT_DIPSETTING (1, "VC1541 Floppy Drive")
+		 PORT_DIPNAME (0x02, 0x02, "Serial Bus/Device 8");
+		 PORT_DIPSETTING (0, "None");
+		 PORT_DIPSETTING (2, "VC1541 Floppy Drive");
+		 PORT_DIPNAME (0x01, 0x01, "Serial Bus/Device 9");
+		 PORT_DIPSETTING (0, "None");
+		 PORT_DIPSETTING (1, "VC1541 Floppy Drive");
 	     C64_KEYBOARD
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	INPUT_PORTS_START (vip64)
 		 C64_DIPS
 		 PORT_START
 		 DIPS_HELPER( 0x8000, "Quickload", KEYCODE_F8)
-		 PORT_BIT (0x7f00, 0x0, IPT_UNUSED) /* no tape */
-		PORT_DIPNAME   ( 0x80, 0x00, "Sid Chip Type")
-		PORT_DIPSETTING(  0, "MOS6581" )
-		PORT_DIPSETTING(0x80, "MOS8580" )
-		 PORT_DIPNAME (0x1c, 0x00, "Cartridge Type")
-		 PORT_DIPSETTING (0, "Automatic")
-		 PORT_DIPSETTING (4, "Ultimax (GAME)")
-		 PORT_DIPSETTING (8, "C64 (EXROM)")
+		 PORT_BIT (0x7f00, 0x0, IPT_UNUSED);/* no tape */
+		PORT_DIPNAME   ( 0x80, 0x00, "Sid Chip Type");
+		PORT_DIPSETTING(  0, "MOS6581" );
+		PORT_DIPSETTING(0x80, "MOS8580" );
+		 PORT_DIPNAME (0x1c, 0x00, "Cartridge Type");
+		 PORT_DIPSETTING (0, "Automatic");
+		 PORT_DIPSETTING (4, "Ultimax (GAME);
+		 PORT_DIPSETTING (8, "C64 (EXROM);
 	#ifdef PET_TEST_CODE
-		 PORT_DIPSETTING (0x10, "CBM Supergames")
-		 PORT_DIPSETTING (0x14, "Ocean Robocop2")
+		 PORT_DIPSETTING (0x10, "CBM Supergames");
+		 PORT_DIPSETTING (0x14, "Ocean Robocop2");
 	#endif
 		 /* 1 vc1541 build in, device number selectable 8,9,10,11 */
-		 PORT_DIPNAME (0x02, 0x02, "Serial Bus/Device 8")
-		 PORT_DIPSETTING (0, "None")
-		 PORT_DIPSETTING (2, "VC1541 Floppy Drive")
-		 PORT_DIPNAME (0x01, 0x01, "Serial Bus/Device 9")
-		 PORT_DIPSETTING (0, "None")
-		 PORT_DIPSETTING (1, "VC1541 Floppy Drive")
+		 PORT_DIPNAME (0x02, 0x02, "Serial Bus/Device 8");
+		 PORT_DIPSETTING (0, "None");
+		 PORT_DIPSETTING (2, "VC1541 Floppy Drive");
+		 PORT_DIPNAME (0x01, 0x01, "Serial Bus/Device 9");
+		 PORT_DIPSETTING (0, "None");
+		 PORT_DIPSETTING (1, "VC1541 Floppy Drive");
 		 VIC64S_KEYBOARD
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	static void c64_init_palette (unsigned char *sys_palette, unsigned short *sys_colortable, const unsigned char *color_prom)
 	{
@@ -611,91 +619,91 @@ public class c64
 	}
 	
 	ROM_START (ultimax)
-		ROM_REGION (0x10000, REGION_CPU1, 0)
-	ROM_END
+		ROM_REGION (0x10000, REGION_CPU1, 0);
+	ROM_END(); }}; 
 	
 	ROM_START (c64gs)
-		ROM_REGION (0x19400, REGION_CPU1, 0)
+		ROM_REGION (0x19400, REGION_CPU1, 0);
 		/* standard basic, modified kernel */
-		ROM_LOAD ("390852.01", 0x10000, 0x4000, 0xb0a9c2da)
-		ROM_LOAD ("901225.01", 0x14000, 0x1000, 0xec4272ee)
-	ROM_END
+		ROM_LOAD ("390852.01", 0x10000, 0x4000, 0xb0a9c2da);
+		ROM_LOAD ("901225.01", 0x14000, 0x1000, 0xec4272ee);
+	ROM_END(); }}; 
 	
 	ROM_START (c64)
-		ROM_REGION (0x19400, REGION_CPU1, 0)
-		ROM_LOAD ("901226.01", 0x10000, 0x2000, 0xf833d117)
-		ROM_LOAD( "901227.03",   0x12000, 0x2000, 0xdbe3e7c7 )
-		ROM_LOAD ("901225.01", 0x14000, 0x1000, 0xec4272ee)
-	ROM_END
+		ROM_REGION (0x19400, REGION_CPU1, 0);
+		ROM_LOAD ("901226.01", 0x10000, 0x2000, 0xf833d117);
+		ROM_LOAD( "901227.03",   0x12000, 0x2000, 0xdbe3e7c7 );
+		ROM_LOAD ("901225.01", 0x14000, 0x1000, 0xec4272ee);
+	ROM_END(); }}; 
 	
 	ROM_START (c64pal)
-		ROM_REGION (0x19400, REGION_CPU1, 0)
-		ROM_LOAD ("901226.01", 0x10000, 0x2000, 0xf833d117)
-		ROM_LOAD( "901227.03",   0x12000, 0x2000, 0xdbe3e7c7 )
-		ROM_LOAD ("901225.01", 0x14000, 0x1000, 0xec4272ee)
-	ROM_END
+		ROM_REGION (0x19400, REGION_CPU1, 0);
+		ROM_LOAD ("901226.01", 0x10000, 0x2000, 0xf833d117);
+		ROM_LOAD( "901227.03",   0x12000, 0x2000, 0xdbe3e7c7 );
+		ROM_LOAD ("901225.01", 0x14000, 0x1000, 0xec4272ee);
+	ROM_END(); }}; 
 	
 	ROM_START (vic64s)
-		ROM_REGION (0x19400, REGION_CPU1, 0)
-		ROM_LOAD ("901226.01", 0x10000, 0x2000, 0xf833d117)
-		ROM_LOAD( "kernel.swe",   0x12000, 0x2000, 0xf10c2c25 )
-		ROM_LOAD ("charswe.bin", 0x14000, 0x1000, 0xbee9b3fd)
-	ROM_END
+		ROM_REGION (0x19400, REGION_CPU1, 0);
+		ROM_LOAD ("901226.01", 0x10000, 0x2000, 0xf833d117);
+		ROM_LOAD( "kernel.swe",   0x12000, 0x2000, 0xf10c2c25 );
+		ROM_LOAD ("charswe.bin", 0x14000, 0x1000, 0xbee9b3fd);
+	ROM_END(); }}; 
 	
 	ROM_START (sx64)
-		ROM_REGION (0x19400, REGION_CPU1, 0)
-		ROM_LOAD ("901226.01", 0x10000, 0x2000, 0xf833d117)
-		ROM_LOAD( "251104.04",     0x12000, 0x2000, 0x2c5965d4 )
-		ROM_LOAD ("901225.01", 0x14000, 0x1000, 0xec4272ee)
+		ROM_REGION (0x19400, REGION_CPU1, 0);
+		ROM_LOAD ("901226.01", 0x10000, 0x2000, 0xf833d117);
+		ROM_LOAD( "251104.04",     0x12000, 0x2000, 0x2c5965d4 );
+		ROM_LOAD ("901225.01", 0x14000, 0x1000, 0xec4272ee);
 		VC1541_ROM (REGION_CPU2)
-	ROM_END
+	ROM_END(); }}; 
 	
 	ROM_START (dx64)
-		ROM_REGION (0x19400, REGION_CPU1, 0)
-	    ROM_LOAD ("901226.01", 0x10000, 0x2000, 0xf833d117)
-	    ROM_LOAD( "dx64kern.bin",     0x12000, 0x2000, 0x58065128 )
+		ROM_REGION (0x19400, REGION_CPU1, 0);
+	    ROM_LOAD ("901226.01", 0x10000, 0x2000, 0xf833d117);
+	    ROM_LOAD( "dx64kern.bin",     0x12000, 0x2000, 0x58065128 );
 	    // vc1541 roms were not included in submission
 	    VC1541_ROM (REGION_CPU2)
 	//    VC1541_ROM (REGION_CPU3)
-	ROM_END
+	ROM_END(); }}; 
 	
 	ROM_START (vip64)
-		ROM_REGION (0x19400, REGION_CPU1, 0)
-		ROM_LOAD ("901226.01", 0x10000, 0x2000, 0xf833d117)
-		ROM_LOAD( "kernelsx.swe",   0x12000, 0x2000, 0x7858d3d7 )
-		ROM_LOAD ("charswe.bin", 0x14000, 0x1000, 0xbee9b3fd)
+		ROM_REGION (0x19400, REGION_CPU1, 0);
+		ROM_LOAD ("901226.01", 0x10000, 0x2000, 0xf833d117);
+		ROM_LOAD( "kernelsx.swe",   0x12000, 0x2000, 0x7858d3d7 );
+		ROM_LOAD ("charswe.bin", 0x14000, 0x1000, 0xbee9b3fd);
 		VC1541_ROM (REGION_CPU2)
-	ROM_END
+	ROM_END(); }}; 
 	
 	ROM_START (pet64)
-		ROM_REGION (0x19400, REGION_CPU1, 0)
-		ROM_LOAD ("901226.01", 0x10000, 0x2000, 0xf833d117)
-		ROM_LOAD( "901246.01", 0x12000, 0x2000, 0x789c8cc5)
-		ROM_LOAD ("901225.01", 0x14000, 0x1000, 0xec4272ee)
-	ROM_END
+		ROM_REGION (0x19400, REGION_CPU1, 0);
+		ROM_LOAD ("901226.01", 0x10000, 0x2000, 0xf833d117);
+		ROM_LOAD( "901246.01", 0x12000, 0x2000, 0x789c8cc5);
+		ROM_LOAD ("901225.01", 0x14000, 0x1000, 0xec4272ee);
+	ROM_END(); }}; 
 	
 	#if 0
 	ROM_START (flash8)
-		ROM_REGION (0x1009400, REGION_CPU1, 0)
+		ROM_REGION (0x1009400, REGION_CPU1, 0);
 	#if 1
-	    ROM_LOAD ("flash8", 0x010000, 0x002000, 0x3c4fb703) // basic
-	    ROM_CONTINUE( 0x014000, 0x001000) // empty
-	    ROM_CONTINUE( 0x014000, 0x001000) // characterset
-	    ROM_CONTINUE( 0x012000, 0x002000) // c64 mode kernel
-	    ROM_CONTINUE( 0x015000, 0x002000) // kernel
+	    ROM_LOAD ("flash8", 0x010000, 0x002000, 0x3c4fb703);// basic
+	    ROM_CONTINUE( 0x014000, 0x001000);// empty
+	    ROM_CONTINUE( 0x014000, 0x001000);// characterset
+	    ROM_CONTINUE( 0x012000, 0x002000);// c64 mode kernel
+	    ROM_CONTINUE( 0x015000, 0x002000);// kernel
 	#else
-		ROM_LOAD ("flash8", 0x012000-0x6000, 0x008000, 0x3c4fb703)
+		ROM_LOAD ("flash8", 0x012000-0x6000, 0x008000, 0x3c4fb703);
 	#endif
-	ROM_END
+	ROM_END(); }}; 
 	#endif
 	
 	#if 0
 	     /* character rom */
-		 ROM_LOAD ("901225.01", 0x14000, 0x1000, 0xec4272ee)
-		 ROM_LOAD ("charswe.bin", 0x14000, 0x1000, 0xbee9b3fd)
+		 ROM_LOAD ("901225.01", 0x14000, 0x1000, 0xec4272ee);
+		 ROM_LOAD ("charswe.bin", 0x14000, 0x1000, 0xbee9b3fd);
 	
 		/* basic */
-		 ROM_LOAD ("901226.01", 0x10000, 0x2000, 0xf833d117)
+		 ROM_LOAD ("901226.01", 0x10000, 0x2000, 0xf833d117);
 	
 	/* in c16 and some other commodore machines:
 	   cbm version in kernel at 0xff80 (offset 0x3f80)
@@ -703,65 +711,65 @@ public class c64
 	
 		 /* scrap */
 	     /* modified for alec 64, not booting */
-		 ROM_LOAD( "alec64.e0",   0x12000, 0x2000, 0x2b1b7381 )
+		 ROM_LOAD( "alec64.e0",   0x12000, 0x2000, 0x2b1b7381 );
 	     /* unique copyright, else speeddos? */
-		 ROM_LOAD( "a.e0", 0x12000, 0x2000, 0xb8f49365 )
+		 ROM_LOAD( "a.e0", 0x12000, 0x2000, 0xb8f49365 );
 		 /* ? */
-		 ROM_LOAD( "kernelx.e0",  0x12000, 0x2000, 0xbeed6d49 )
-		 ROM_LOAD( "kernelx2.e0",  0x12000, 0x2000, 0xcfb58230 )
+		 ROM_LOAD( "kernelx.e0",  0x12000, 0x2000, 0xbeed6d49 );
+		 ROM_LOAD( "kernelx2.e0",  0x12000, 0x2000, 0xcfb58230 );
 		 /* basic x 2 */
-		 ROM_LOAD( "frodo.e0",    0x12000, 0x2000, 0x6ec94629 )
+		 ROM_LOAD( "frodo.e0",    0x12000, 0x2000, 0x6ec94629 );
 	
 	     /* commodore versions */
 		 /* 901227-01 */
-		 ROM_LOAD( "901227.01",  0x12000, 0x2000, 0xdce782fa )
+		 ROM_LOAD( "901227.01",  0x12000, 0x2000, 0xdce782fa );
 	     /* 901227-02 */
-		 ROM_LOAD( "901227.02", 0x12000, 0x2000, 0xa5c687b3 )
+		 ROM_LOAD( "901227.02", 0x12000, 0x2000, 0xa5c687b3 );
 	     /* 901227-03 */
-		 ROM_LOAD( "901227.03",   0x12000, 0x2000, 0xdbe3e7c7 )
+		 ROM_LOAD( "901227.03",   0x12000, 0x2000, 0xdbe3e7c7 );
 		 /* 901227-03? swedish  */
-		 ROM_LOAD( "kernel.swe",   0x12000, 0x2000, 0xf10c2c25 )
+		 ROM_LOAD( "kernel.swe",   0x12000, 0x2000, 0xf10c2c25 );
 		 /* c64c 901225-01 + 901227-03 */
-		 ROM_LOAD ("251913.01", 0x10000, 0x4000, 0x0010ec31)
+		 ROM_LOAD ("251913.01", 0x10000, 0x4000, 0x0010ec31);
 	     /* c64gs 901225-01 with other fillbyte, modified kernel */
-		 ROM_LOAD ("390852.01", 0x10000, 0x4000, 0xb0a9c2da)
+		 ROM_LOAD ("390852.01", 0x10000, 0x4000, 0xb0a9c2da);
 		 /* sx64 */
-		 ROM_LOAD( "251104.04",     0x12000, 0x2000, 0x2c5965d4 )
+		 ROM_LOAD( "251104.04",     0x12000, 0x2000, 0x2c5965d4 );
 	     /* 251104.04? swedish */
-		 ROM_LOAD( "kernel.swe",   0x12000, 0x2000, 0x7858d3d7 )
+		 ROM_LOAD( "kernel.swe",   0x12000, 0x2000, 0x7858d3d7 );
 		 /* 4064, Pet64, Educator 64 */
-		 ROM_LOAD( "901246.01",     0x12000, 0x2000, 0x789c8cc5 )
+		 ROM_LOAD( "901246.01",     0x12000, 0x2000, 0x789c8cc5 );
 	
 		 /* few differences to above versions */
-		 ROM_LOAD( "901227.02b",  0x12000, 0x2000, 0xf80eb87b )
-		 ROM_LOAD( "901227.03b",  0x12000, 0x2000, 0x8e5c500d )
-		 ROM_LOAD( "901227.03c",  0x12000, 0x2000, 0xc13310c2 )
+		 ROM_LOAD( "901227.02b",  0x12000, 0x2000, 0xf80eb87b );
+		 ROM_LOAD( "901227.03b",  0x12000, 0x2000, 0x8e5c500d );
+		 ROM_LOAD( "901227.03c",  0x12000, 0x2000, 0xc13310c2 );
 	
 	     /* 64er system v1
 	        ieee interface extension for c64 and vc1541!? */
-	     ROM_LOAD( "64ersys1.e0", 0x12000, 0x2000, 0x97d9a4df )
+	     ROM_LOAD( "64ersys1.e0", 0x12000, 0x2000, 0x97d9a4df );
 		 /* 64er system v3 */
-		 ROM_LOAD( "64ersys3.e0", 0x12000, 0x2000, 0x5096b3bd )
+		 ROM_LOAD( "64ersys3.e0", 0x12000, 0x2000, 0x5096b3bd );
 	
 		 /* exos v3 */
-		 ROM_LOAD( "exosv3.e0",   0x12000, 0x2000, 0x4e54d020 )
+		 ROM_LOAD( "exosv3.e0",   0x12000, 0x2000, 0x4e54d020 );
 	     /* 2 bytes different */
-		 ROM_LOAD( "exosv3.e0",   0x12000, 0x2000, 0x26f3339e )
+		 ROM_LOAD( "exosv3.e0",   0x12000, 0x2000, 0x26f3339e );
 	
 		 /* jiffydos v6.01 by cmd */
-		 ROM_LOAD( "jiffy.e0",    0x12000, 0x2000, 0x2f79984c )
+		 ROM_LOAD( "jiffy.e0",    0x12000, 0x2000, 0x2f79984c );
 	
 		 /* dolphin with dolphin vc1541 */
-		 ROM_LOAD( "mager.e0",    0x12000, 0x2000, 0xc9bb21bc )
-		 ROM_LOAD( "dos20.e0",    0x12000, 0x2000, 0xffaeb9bc )
+		 ROM_LOAD( "mager.e0",    0x12000, 0x2000, 0xc9bb21bc );
+		 ROM_LOAD( "dos20.e0",    0x12000, 0x2000, 0xffaeb9bc );
 	
 		 /* speeddos plus
 			parallel interface on userport to modified vc1541 !? */
-		 ROM_LOAD( "speeddos.e0", 0x12000, 0x2000, 0x8438e77b )
+		 ROM_LOAD( "speeddos.e0", 0x12000, 0x2000, 0x8438e77b );
 		 /* speeddos plus + */
-		 ROM_LOAD( "speeddos.e0", 0x12000, 0x2000, 0x10aee0ae )
+		 ROM_LOAD( "speeddos.e0", 0x12000, 0x2000, 0x10aee0ae );
 		 /* speeddos plus and 80 column text */
-		 ROM_LOAD( "rom80.e0",    0x12000, 0x2000, 0xe801dadc )
+		 ROM_LOAD( "rom80.e0",    0x12000, 0x2000, 0xe801dadc );
 	#endif
 	
 	static SID6581_interface ultimax_sound_interface =

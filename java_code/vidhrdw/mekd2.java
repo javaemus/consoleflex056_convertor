@@ -8,7 +8,7 @@
 
 ******************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -77,7 +77,7 @@ public class mekd2
 	{
 	    videoram_size = 6 * 2 + 24;
 	    videoram = (UINT8*)auto_malloc (videoram_size);
-		if (!videoram)
+		if (videoram == 0)
 	        return 1;
 	
 		{

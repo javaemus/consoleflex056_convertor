@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -353,7 +353,7 @@ public class intv
 	
 		UINT8 *memory = memory_region(REGION_CPU1);
 	
-		if(!rom_name)
+		if (rom_name == 0)
 		{
 			if (required)
 			{
@@ -469,7 +469,7 @@ public class intv
 		0x04, 0x16, 0x02, 0x13, 0x01, 0x19, 0x08, 0x1c
 	};
 	
-	READ_HANDLER( intv_right_control_r )
+	public static ReadHandlerPtr intv_right_control_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		UINT8 rv = 0x00;
 	
@@ -499,12 +499,12 @@ public class intv
 			}
 		}
 		return rv ^ 0xff;
-	}
+	} };
 	
-	READ_HANDLER( intv_left_control_r )
+	public static ReadHandlerPtr intv_left_control_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return 0xff;
-	}
+	} };
 	
 	/* Intellivision console + keyboard component */
 	
@@ -534,7 +534,7 @@ public class intv
 	
 			UINT8 *memory = memory_region(REGION_CPU2);
 	
-			if(!rom_name)
+			if (rom_name == 0)
 			{
 				printf("intvkbd cartridge slot empty - ok\n");
 				return INIT_PASS;

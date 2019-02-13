@@ -8,7 +8,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -130,15 +130,15 @@ public class cgenie
 				UINT16 size, entry = 0, block_len, block_ofs = 0;
 				void *cmd;
 	
-				if( !buff )
+				if (buff == 0)
 				{
 					logerror("failed to allocate 64K buff\n");
 					return address;
 				}
 				cmd = image_fopen(IO_CASSETTE, 0, OSD_FILETYPE_IMAGE, OSD_FOPEN_READ);
-				if( !cmd )
+				if (cmd == 0)
 					  cmd = image_fopen(IO_SNAPSHOT, 0, OSD_FILETYPE_IMAGE, OSD_FOPEN_READ);
-				if( !cmd )
+				if (cmd == 0)
 				{
 					logerror("failed to open '%s'\n", device_filename(IO_CASSETTE,0));
 				}
@@ -201,7 +201,7 @@ public class cgenie
 							case 0x78:
 								block_ofs = *s++;
 								block_ofs += 256 * *s++;
-								if( !entry )
+								if (entry == 0)
 									entry = block_ofs;
 								logerror( "cgenie_cmd_load entry ($%02X) at $%04X\n", data, entry);
 								size -= 3;
@@ -746,7 +746,7 @@ public class cgenie
 	 *******************************************************************/
 	static void tape_get_open(void)
 	{
-		if( !tape_get_file )
+		if (tape_get_file == 0)
 		{
 			char buffer[sizeof(TAPE_HEADER)];
 			UINT8 *ram = memory_region(REGION_CPU1);
@@ -847,7 +847,7 @@ public class cgenie
 	#define FF_BGD2 0x80		   /* background color select 2 */
 	#define FF_BGD	(FF_BGD0 | FF_BGD1 | FF_BGD2)
 	
-	WRITE_HANDLER( cgenie_port_ff_w )
+	public static WriteHandlerPtr cgenie_port_ff_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		int port_ff_changed = port_ff ^ data;
 	
@@ -932,9 +932,9 @@ public class cgenie
 		}
 	
 		port_ff = data;
-	}
+	} };
 	
-	READ_HANDLER( cgenie_port_ff_r )
+	public static ReadHandlerPtr cgenie_port_ff_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		/* virtual tape ? */
 	
@@ -942,7 +942,7 @@ public class cgenie
 			tape_get_bit();
 	
 		return port_ff;
-	}
+	} };
 	
 	int cgenie_port_xx_r( int offset )
 	{
@@ -960,10 +960,10 @@ public class cgenie
 	static UINT8 psg_a_inp = 0x00;
 	static UINT8 psg_b_inp = 0x00;
 	
-	READ_HANDLER( cgenie_psg_port_a_r )
+	public static ReadHandlerPtr cgenie_psg_port_a_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return psg_a_inp;
-	}
+	} };
 	
 	data8_t cgenie_psg_port_b_r(offs_t port)
 	{
@@ -1000,39 +1000,39 @@ public class cgenie
 		return psg_b_inp;
 	}
 	
-	WRITE_HANDLER( cgenie_psg_port_a_w )
+	public static WriteHandlerPtr cgenie_psg_port_a_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		psg_a_out = data;
-	}
+	} };
 	
-	WRITE_HANDLER( cgenie_psg_port_b_w )
+	public static WriteHandlerPtr cgenie_psg_port_b_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		psg_b_out = data;
-	}
+	} };
 	
-	READ_HANDLER( cgenie_status_r )
+	public static ReadHandlerPtr cgenie_status_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		/* If the floppy isn't emulated, return 0 */
 		if( (readinputport(0) & 0x80) == 0 )
 			return 0;
 		return wd179x_status_r(offset);
-	}
+	} };
 	
-	READ_HANDLER( cgenie_track_r )
+	public static ReadHandlerPtr cgenie_track_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		/* If the floppy isn't emulated, return 0xff */
 		if( (readinputport(0) & 0x80) == 0 )
 			return 0xff;
 		return wd179x_track_r(offset);
-	}
+	} };
 	
-	READ_HANDLER( cgenie_sector_r )
+	public static ReadHandlerPtr cgenie_sector_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		/* If the floppy isn't emulated, return 0xff */
 		if( (readinputport(0) & 0x80) == 0 )
 			return 0xff;
 		return wd179x_sector_r(offset);
-	}
+	} };
 	
 	READ_HANDLER(cgenie_data_r )
 	{
@@ -1042,45 +1042,45 @@ public class cgenie
 		return wd179x_data_r(offset);
 	}
 	
-	WRITE_HANDLER( cgenie_command_w )
+	public static WriteHandlerPtr cgenie_command_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		/* If the floppy isn't emulated, return immediately */
 		if( (readinputport(0) & 0x80) == 0 )
 			return;
 		wd179x_command_w(offset, data);
-	}
+	} };
 	
-	WRITE_HANDLER( cgenie_track_w )
+	public static WriteHandlerPtr cgenie_track_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		/* If the floppy isn't emulated, ignore the write */
 		if( (readinputport(0) & 0x80) == 0 )
 			return;
 		wd179x_track_w(offset, data);
-	}
+	} };
 	
-	WRITE_HANDLER( cgenie_sector_w )
+	public static WriteHandlerPtr cgenie_sector_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		/* If the floppy isn't emulated, ignore the write */
 		if( (readinputport(0) & 0x80) == 0 )
 			return;
 		wd179x_sector_w(offset, data);
-	}
+	} };
 	
-	WRITE_HANDLER( cgenie_data_w )
+	public static WriteHandlerPtr cgenie_data_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		/* If the floppy isn't emulated, ignore the write */
 		if( (readinputport(0) & 0x80) == 0 )
 			return;
 		wd179x_data_w(offset, data);
-	}
+	} };
 	
-	READ_HANDLER( cgenie_irq_status_r )
+	public static ReadHandlerPtr cgenie_irq_status_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 	int result = irq_status;
 	
 		irq_status &= ~(IRQ_TIMER | IRQ_FDC);
 		return result;
-	}
+	} };
 	
 	int cgenie_timer_interrupt(void)
 	{
@@ -1121,7 +1121,7 @@ public class cgenie
 		}
 	}
 	
-	WRITE_HANDLER( cgenie_motor_w )
+	public static WriteHandlerPtr cgenie_motor_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		UINT8 drive = 255;
 	
@@ -1147,12 +1147,12 @@ public class cgenie
 	
 		wd179x_set_drive(drive);
 		wd179x_set_side(head);
-	}
+	} };
 	
 	/*************************************
 	 *		Keyboard					 *
 	 *************************************/
-	READ_HANDLER( cgenie_keyboard_r )
+	public static ReadHandlerPtr cgenie_keyboard_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int result = 0;
 	
@@ -1177,7 +1177,7 @@ public class cgenie
 			result |= input_port_8_r(0);
 	
 		return result;
-	}
+	} };
 	
 	/*************************************
 	 *		Video RAM					 *
@@ -1188,21 +1188,21 @@ public class cgenie
 		return videoram[offset];
 	}
 	
-	WRITE_HANDLER( cgenie_videoram_w )
+	public static WriteHandlerPtr cgenie_videoram_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		/* write to video RAM */
 		if( data == videoram[offset] )
 			return; 			   /* no change */
 		videoram[offset] = data;
 		dirtybuffer[offset] = 1;
-	}
+	} };
 	
-	READ_HANDLER( cgenie_colorram_r )
+	public static ReadHandlerPtr cgenie_colorram_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return colorram[offset] | 0xf0;
-	}
+	} };
 	
-	WRITE_HANDLER( cgenie_colorram_w )
+	public static WriteHandlerPtr cgenie_colorram_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		int a;
 	
@@ -1219,14 +1219,14 @@ public class cgenie
 	/* mark every 1k of the frame buffer dirty */
 		for( a = offset; a < 0x4000; a += 0x400 )
 			dirtybuffer[a] = 1;
-	}
+	} };
 	
-	READ_HANDLER( cgenie_fontram_r )
+	public static ReadHandlerPtr cgenie_fontram_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return cgenie_fontram[offset];
-	}
+	} };
 	
-	WRITE_HANDLER( cgenie_fontram_w )
+	public static WriteHandlerPtr cgenie_fontram_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		UINT8 *dp;
 		int code;
@@ -1251,7 +1251,7 @@ public class cgenie
 		/* invalidate related character */
 		code = 0x80 + offset / 8;
 		cgenie_invalidate_range(code, code);
-	}
+	} };
 	
 	/*************************************
 	 *

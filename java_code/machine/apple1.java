@@ -10,7 +10,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -119,26 +119,26 @@ public class apple1
 	
 	/* || */
 	
-	READ_HANDLER( apple1_pia0_kbdin )
+	public static ReadHandlerPtr apple1_pia0_kbdin  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return (apple1_kbd_data | 0x80);
-	}
+	} };
 	
-	READ_HANDLER( apple1_pia0_dsprdy )
+	public static ReadHandlerPtr apple1_pia0_dsprdy  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return (0x00);					   /* Screen always ready */
-	}
+	} };
 	
-	READ_HANDLER( apple1_pia0_kbdrdy )
+	public static ReadHandlerPtr apple1_pia0_kbdrdy  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		if (apple1_kbd_data) return (1);	/* Key available */
 	
 		return (0x00);
-	}
+	} };
 	
-	WRITE_HANDLER( apple1_pia0_dspout )
+	public static WriteHandlerPtr apple1_pia0_dspout = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		apple1_vh_dsp_w(data);
-	}
+	} };
 	
 }

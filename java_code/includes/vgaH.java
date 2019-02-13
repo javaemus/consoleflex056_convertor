@@ -1,6 +1,6 @@
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package includes;
@@ -23,11 +23,11 @@ public class vgaH
 	   { 0xc0000, 0xc7fff, MWA_ROM }
 	
 		/* oti 037 chip */
-	    ROM_LOAD("oakvga.bin", 0xc0000, 0x8000, 0x318c5f43)
+	    ROM_LOAD("oakvga.bin", 0xc0000, 0x8000, 0x318c5f43);
 		/* tseng labs famous et4000 isa vga card (oem) */
-	    ROM_LOAD("et4000b.bin", 0xc0000, 0x8000, 0xa903540d)	
+	    ROM_LOAD("et4000b.bin", 0xc0000, 0x8000, 0xa903540d);
 		/* tseng labs famous et4000 isa vga card */
-	    ROM_LOAD("et4000.bin", 0xc0000, 0x8000, 0xf01e4be0)
+	    ROM_LOAD("et4000.bin", 0xc0000, 0x8000, 0xf01e4be0);
 	#endif
 	
 	extern unsigned char vga_palette[0x100][3];
@@ -43,19 +43,9 @@ public class vgaH
 	void vga_reset(void);
 	
 	// include in port access list
-	READ_HANDLER( ega_port_03b0_r );
-	READ_HANDLER( ega_port_03c0_r );
-	READ_HANDLER( ega_port_03d0_r );
 	
-	READ_HANDLER( paradise_ega_03c0_r );
 	
-	READ_HANDLER( vga_port_03b0_r );
-	READ_HANDLER( vga_port_03c0_r );
-	READ_HANDLER( vga_port_03d0_r );
 	
-	WRITE_HANDLER( vga_port_03b0_w );
-	WRITE_HANDLER( vga_port_03c0_w );
-	WRITE_HANDLER( vga_port_03d0_w );
 	
 	int ega_vh_start(void);
 	int vga_vh_start(void);
@@ -69,7 +59,7 @@ public class vgaH
 	  pega notes (paradise)
 	  build in amstrad pc1640
 	
-	  ROM_LOAD("40100", 0xc0000, 0x8000, 0xd2d1f1ae)
+	  ROM_LOAD("40100", 0xc0000, 0x8000, 0xd2d1f1ae);
 	
 	  4 additional dipswitches
 	  seems to have emulation modes at register level
@@ -102,7 +92,7 @@ public class vgaH
 	  oak vga (oti 037 chip)
 	  (below bios patch needed for running)
 	
-	  ROM_LOAD("oakvga.bin", 0xc0000, 0x8000, 0x318c5f43)
+	  ROM_LOAD("oakvga.bin", 0xc0000, 0x8000, 0x318c5f43);
 	*/
 	#if 0
 	        int i; 

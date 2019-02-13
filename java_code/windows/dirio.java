@@ -1,6 +1,6 @@
 #define WIN32_LEAN_AND_MEAN
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package windows;
@@ -162,16 +162,16 @@ public class dirio
 		char *s;
 	
 		dirname = resolve_path(dirname, buf, sizeof(buf) / sizeof(buf[0]));
-		if (!dirname)
+		if (dirname == 0)
 			goto error;
 	
 		pfd = malloc(sizeof(OSD_WIN32_FIND_DATA));
-		if (!pfd)
+		if (pfd == 0)
 			goto error;
 		memset(pfd, 0, sizeof(*pfd));
 	
 		tmpbuf = malloc(strlen(dirname) + strlen(filemask) + 2);
-		if (!tmpbuf)
+		if (tmpbuf == 0)
 			goto error;
 		strcpy(tmpbuf, dirname);
 		s = tmpbuf + strlen(tmpbuf);

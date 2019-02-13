@@ -47,7 +47,7 @@ In Memory Of Haruki Ikeda
 #endif
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -87,7 +87,7 @@ public class genesis
 	static WRITE_HANDLER ( genesis_ramlatch_w ) /* note value will be meaningless unless all bits are correctly set in */
 	{
 		if (offset !=0 ) return;
-		if (!z80running) logerror("undead Z80 latch write!\n");
+		if (z80running == 0) logerror("undead Z80 latch write!\n");
 	//	cpu_halt(0,0);
 		if (z80_latch_bitcount == 0) z80_68000_latch = 0;
 	/*	logerror("latch update\n");*/
@@ -110,7 +110,7 @@ public class genesis
 	static WRITE_HANDLER ( genesis_s_68000_ram_w )
 	{
 		unsigned int address = (z80_68000_latch) + (offset & 0x7fff);
-		if (!z80running) logerror("undead Z80->68000 write!\n");
+		if (z80running == 0) logerror("undead Z80->68000 write!\n");
 		if (z80_latch_bitcount != 0) logerror("writing whilst latch being set!\n");
 	
 		if (address > 0xff0000) genesis_sharedram[BYTE_XOR(offset)] = data;
@@ -121,7 +121,7 @@ public class genesis
 	{
 		int address = (z80_68000_latch) + (offset & 0x7fff);
 	
-		if (!z80running) logerror("undead Z80->68000 read!\n");
+		if (z80running == 0) logerror("undead Z80->68000 read!\n");
 	
 		if (z80_latch_bitcount != 0) logerror("reading whilst latch being set!\n");
 	
@@ -250,61 +250,61 @@ public class genesis
 	PORT_END
 	
 	
-	INPUT_PORTS_START( genesis )
+	static InputPortPtr input_ports_genesis = new InputPortPtr(){ public void handler() { 
 		PORT_START	/* IN0 player 1 controller */
-		PORT_BIT(	0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP )
-		PORT_BIT(	0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN )
-		PORT_BIT(	0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT )
-		PORT_BIT(	0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT )
-		PORT_BITX(	0x10, IP_ACTIVE_LOW, IPT_BUTTON2,	"Player 1 B",       KEYCODE_X,      JOYCODE_1_BUTTON3 )
-		PORT_BITX(	0x20, IP_ACTIVE_LOW, IPT_BUTTON3,	"Player 1 C",       KEYCODE_C,      JOYCODE_1_BUTTON2 )
+		PORT_BIT(	0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP );
+		PORT_BIT(	0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN );
+		PORT_BIT(	0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT );
+		PORT_BIT(	0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT );
+		PORT_BITX(	0x10, IP_ACTIVE_LOW, IPT_BUTTON2,	"Player 1 B",       KEYCODE_X,      JOYCODE_1_BUTTON3 );
+		PORT_BITX(	0x20, IP_ACTIVE_LOW, IPT_BUTTON3,	"Player 1 C",       KEYCODE_C,      JOYCODE_1_BUTTON2 );
 	
 		PORT_START	/* IN1 playter 1 controller, part 2 */
-		PORT_BITX(	0x10, IP_ACTIVE_LOW, IPT_BUTTON1,	"Player 1 A",       KEYCODE_Z,      JOYCODE_1_BUTTON4 )
+		PORT_BITX(	0x10, IP_ACTIVE_LOW, IPT_BUTTON1,	"Player 1 A",       KEYCODE_Z,      JOYCODE_1_BUTTON4 );
 	
-		PORT_BITX(	0x20, IP_ACTIVE_LOW, IPT_START1,	"Player 1 Start",   KEYCODE_LSHIFT, JOYCODE_1_BUTTON1 )
+		PORT_BITX(	0x20, IP_ACTIVE_LOW, IPT_START1,	"Player 1 Start",   KEYCODE_LSHIFT, JOYCODE_1_BUTTON1 );
 	
 		PORT_START	/* IN2 player 2 controller */
 	
-		PORT_BIT(	0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP	| IPF_PLAYER2 )
-		PORT_BIT(	0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN	| IPF_PLAYER2 )
-		PORT_BIT(	0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT	| IPF_PLAYER2 )
-		PORT_BIT(	0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT	| IPF_PLAYER2 )
-		PORT_BITX(	0x10, IP_ACTIVE_LOW, IPT_BUTTON2		| IPF_PLAYER2,	"Player 2 B",       KEYCODE_O,      JOYCODE_2_BUTTON3 )
-		PORT_BITX(	0x20, IP_ACTIVE_LOW, IPT_BUTTON3		| IPF_PLAYER2,	"Player 2 C",       KEYCODE_P,      JOYCODE_2_BUTTON2 )
+		PORT_BIT(	0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP	| IPF_PLAYER2 );
+		PORT_BIT(	0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN	| IPF_PLAYER2 );
+		PORT_BIT(	0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT	| IPF_PLAYER2 );
+		PORT_BIT(	0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT	| IPF_PLAYER2 );
+		PORT_BITX(	0x10, IP_ACTIVE_LOW, IPT_BUTTON2		| IPF_PLAYER2,	"Player 2 B",       KEYCODE_O,      JOYCODE_2_BUTTON3 );
+		PORT_BITX(	0x20, IP_ACTIVE_LOW, IPT_BUTTON3		| IPF_PLAYER2,	"Player 2 C",       KEYCODE_P,      JOYCODE_2_BUTTON2 );
 	
 		PORT_START	/* IN3 player 2 controller, part 2 */
-		PORT_BITX(	0x10, IP_ACTIVE_LOW, IPT_BUTTON1		| IPF_PLAYER2,	"Player 2 A",       KEYCODE_I,      JOYCODE_2_BUTTON4 )
+		PORT_BITX(	0x10, IP_ACTIVE_LOW, IPT_BUTTON1		| IPF_PLAYER2,	"Player 2 A",       KEYCODE_I,      JOYCODE_2_BUTTON4 );
 	
-		PORT_BITX(	0x20, IP_ACTIVE_LOW, IPT_START1 		| IPF_PLAYER2,	"Player 2 Start",   KEYCODE_U,      JOYCODE_2_BUTTON1 )
+		PORT_BITX(	0x20, IP_ACTIVE_LOW, IPT_START1 		| IPF_PLAYER2,	"Player 2 Start",   KEYCODE_U,      JOYCODE_2_BUTTON1 );
 	
 	
 	
 	
 		PORT_START	/* IN4 - finternal switches, and fake 'Auto' */
 	
-		PORT_DIPNAME( 0x03, 0x00, "Country")
+		PORT_DIPNAME( 0x03, 0x00, "Country");
 	
-		PORT_DIPSETTING(    0x00, "Auto" )
+		PORT_DIPSETTING(    0x00, "Auto" );
 	
-		PORT_DIPSETTING(    0x01, "USA" )
+		PORT_DIPSETTING(    0x01, "USA" );
 	
-		PORT_DIPSETTING(    0x02, "Japan" )
+		PORT_DIPSETTING(    0x02, "Japan" );
 	
-		PORT_DIPSETTING(    0x03, "Europe" )
-	INPUT_PORTS_END
+		PORT_DIPSETTING(    0x03, "Europe" );
+	INPUT_PORTS_END(); }}; 
 	
 	
 	
 	/* Genesis doesn't have a color PROM, it uses VDP 'CRAM' to generate colours */
 	/* and change them during the game. */
 	
-	static struct SN76496interface sn76496_interface =
-	{
+	static SN76496interface sn76496_interface = new SN76496interface
+	(
 		1,	/* 1 chip */
-		{53693100/10.40},
-		{ 255*2, 255*2 }
-	};
+		new int[] {53693100/10.40},
+		new int[] { 255*2, 255*2 }
+	);
 	
 	static struct YM2612interface ym2612_interface =
 	{
@@ -363,9 +363,9 @@ public class genesis
 	};
 	
 	
-	ROM_START(genesis)
-		ROM_REGION(0x415000,REGION_CPU1,0)
-	ROM_END
+	static RomLoadPtr rom_genesis = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x415000,REGION_CPU1,0);
+	ROM_END(); }}; 
 	
 	static const struct IODevice io_genesis[] = {
 		{

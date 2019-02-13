@@ -13,7 +13,7 @@
  *****************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -301,34 +301,34 @@ public class microtan
 	};
 	#endif
 	
-	READ_HANDLER( microtan_via_0_r )
+	public static ReadHandlerPtr microtan_via_0_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 	    int data = via_0_r(offset);
 	    LOG(("microtan_via_0_r %s -> %02X\n", via_name[offset], data));
 	    return data;
-	}
+	} };
 	
-	READ_HANDLER( microtan_via_1_r )
+	public static ReadHandlerPtr microtan_via_1_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 	    int data = via_1_r(offset);
 	    LOG(("microtan_via_1_r %s -> %02X\n", via_name[offset], data));
 	    return data;
-	}
+	} };
 	
 	/**************************************************************
 	 * VIA write wrappers
 	 **************************************************************/
-	WRITE_HANDLER( microtan_via_0_w )
+	public static WriteHandlerPtr microtan_via_0_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	    LOG(("via_0_w (%2d) %s <- %02X\n", offset, via_name[offset], data));
 	    via_0_w(offset,data);
-	}
+	} };
 	
-	WRITE_HANDLER( microtan_via_1_w )
+	public static WriteHandlerPtr microtan_via_1_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	    LOG(("via_1_w (%2d) %s <- %02X\n", offset, via_name[offset], data));
 	    via_1_w(offset,data);
-	}
+	} };
 	
 	/**************************************************************
 	 * VIA interface structure
@@ -365,32 +365,32 @@ public class microtan
 	        via_set_input_cb2(0,1);
 	}
 	
-	READ_HANDLER( microtan_sio_r )
+	public static ReadHandlerPtr microtan_sio_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 	    int data;
 		data = acia_6551_r(offset);
 	    LOG(("microtan_sio_r: %d -> %02x\n", offset, data));
 	    return data;
-	}
+	} };
 	
-	WRITE_HANDLER( microtan_sio_w )
+	public static WriteHandlerPtr microtan_sio_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	    LOG(("microtan_sio_w: %d <- %02x\n", offset, data));
 		acia_6551_w(offset,data);
-	}
+	} };
 	
 	
-	READ_HANDLER( microtan_sound_r )
+	public static ReadHandlerPtr microtan_sound_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 	    int data = 0xff;
 	    LOG(("microtan_sound_r: -> %02x\n", data));
 	    return data;
-	}
+	} };
 	
-	WRITE_HANDLER( microtan_sound_w )
+	public static WriteHandlerPtr microtan_sound_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	    LOG(("microtan_sound_w: <- %02x\n", data));
-	}
+	} };
 	
 	
 	READ_HANDLER ( microtan_bffx_r )
@@ -498,7 +498,7 @@ public class microtan
 	    {
 	        snapshot_size = osd_fsize(file);
 	        snapshot_buff = malloc(snapshot_size);
-	        if (!snapshot_buff)
+	        if (snapshot_buff == 0)
 	        {
 	            LOG(("microtan_snapshot_load: could not allocate %d bytes of buffer\n", snapshot_size));
 	            return INIT_FAIL;
@@ -705,7 +705,7 @@ public class microtan
 	
 	        snapshot_size = 8263;   /* magic size */
 	        snapshot_buff = malloc(snapshot_size);
-	        if (!snapshot_buff)
+	        if (snapshot_buff == 0)
 	        {
 	            LOG(("microtan_hexfile_load: could not allocate %d bytes of buffer\n", snapshot_size));
 	            return INIT_FAIL;
@@ -713,7 +713,7 @@ public class microtan
 	        memset(snapshot_buff, 0, snapshot_size);
 	
 	        buff = malloc(size + 1);
-	        if (!buff)
+	        if (buff == 0)
 	        {
 	            LOG(("microtan_hexfile_load: could not allocate %d bytes of buffer\n", size));
 	            return INIT_FAIL;
@@ -775,7 +775,7 @@ public class microtan
 	    if (readinputport(11) & 2) /* F6 tape start */
 	    {
 	        device_status(IO_CASSETTE,0,1);
-	        if (!microtan_timer)
+	        if (microtan_timer == 0)
 	            microtan_timer = timer_pulse(TIME_IN_HZ(11025), 0, microtan_read_cassette);
 	    }
 	    if (readinputport(11) & 4) /* F7 tape rewind */
@@ -786,15 +786,15 @@ public class microtan
 	    row = 9;
 	    new = readinputport(row);
 	    chg = keyrows[--row] ^ new;
-	    if (!chg) { new = readinputport(row); chg = keyrows[--row] ^ new; }
-	    if (!chg) { new = readinputport(row); chg = keyrows[--row] ^ new; }
-	    if (!chg) { new = readinputport(row); chg = keyrows[--row] ^ new; }
-	    if (!chg) { new = readinputport(row); chg = keyrows[--row] ^ new; }
-	    if (!chg) { new = readinputport(row); chg = keyrows[--row] ^ new; }
-	    if (!chg) { new = readinputport(row); chg = keyrows[--row] ^ new; }
-	    if (!chg) { new = readinputport(row); chg = keyrows[--row] ^ new; }
-	    if (!chg) { new = readinputport(row); chg = keyrows[--row] ^ new; }
-	    if (!chg) --row;
+	    if (chg == 0) { new = readinputport(row); chg = keyrows[--row] ^ new; }
+	    if (chg == 0) { new = readinputport(row); chg = keyrows[--row] ^ new; }
+	    if (chg == 0) { new = readinputport(row); chg = keyrows[--row] ^ new; }
+	    if (chg == 0) { new = readinputport(row); chg = keyrows[--row] ^ new; }
+	    if (chg == 0) { new = readinputport(row); chg = keyrows[--row] ^ new; }
+	    if (chg == 0) { new = readinputport(row); chg = keyrows[--row] ^ new; }
+	    if (chg == 0) { new = readinputport(row); chg = keyrows[--row] ^ new; }
+	    if (chg == 0) { new = readinputport(row); chg = keyrows[--row] ^ new; }
+	    if (chg == 0) --row;
 	
 	    if (row >= 0)
 	    {

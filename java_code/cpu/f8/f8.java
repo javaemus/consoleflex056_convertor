@@ -27,7 +27,7 @@
  */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package cpu.f8;
@@ -1937,15 +1937,15 @@ public class f8
 	}
 	
 	
-	WRITE_HANDLER( f8_internal_w )
+	public static WriteHandlerPtr f8_internal_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	    f8.r[ offset & 0x3f ] = data;
-	}
+	} };
 	
-	READ_HANDLER( f8_internal_r )
+	public static ReadHandlerPtr f8_internal_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 	    return f8.r[ offset & 0x3f ];
-	}
+	} };
 	
 	unsigned f8_get_reg(int regnum)
 	{
@@ -2025,7 +2025,7 @@ public class f8
 	
 		which = (which + 1) % 8;
 		buffer[which][0] = '\0';
-		if( !context )
+		if (context == 0)
 			r = &f8;
 	
 	    switch( regnum )

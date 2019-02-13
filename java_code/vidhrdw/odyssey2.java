@@ -5,7 +5,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -167,7 +167,7 @@ public class odyssey2
 	{
 	    odyssey2_vh_hpos = 0;
 		odyssey2_display = (UINT8 *)malloc(8 * 8 * 256);
-		if( !odyssey2_display )
+		if (odyssey2_display == 0)
 			return 1;
 		memset(odyssey2_display, 0, 8 * 8 * 256);
 	    return 0;

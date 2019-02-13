@@ -9,7 +9,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -755,7 +755,7 @@ public class c16
 		if (!c16_rom_id (id))
 			return 1;
 		fp = (FILE*)image_fopen (IO_CARTSLOT, id, OSD_FILETYPE_IMAGE, 0);
-		if (!fp)
+		if (fp == 0)
 		{
 			logerror("%s file not found\n", name);
 			return 1;

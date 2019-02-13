@@ -1,7 +1,7 @@
 #ifndef __LYNX_H__
 #define __LYNX_H__
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package includes;
@@ -37,7 +37,6 @@ public class lynxH
 		UINT8 data[0x100];
 	} MIKEY;
 	extern MIKEY mikey;
-	WRITE_HANDLER( lynx_memory_config );
 	WRITE_HANDLER(mikey_write);
 	READ_HANDLER(mikey_read);
 	WRITE_HANDLER(suzy_write);

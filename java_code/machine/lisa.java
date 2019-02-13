@@ -33,7 +33,7 @@
 */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -406,7 +406,7 @@ public class lisa
 		int keybuf;
 		UINT8 keycode;
 	
-		if (! COPS_force_unplug)
+		if (COPS_force_unplug == 0)
 			for (i=0; i<8; i++)
 			{
 				keybuf = readinputport(i+2);
@@ -830,7 +830,7 @@ public class lisa
 	{
 		int val = 0;
 	
-		if (! COPS_Ready)
+		if (COPS_Ready == 0)
 			val |= 0x40;
 	
 		if (FDIR)
@@ -854,7 +854,7 @@ public class lisa
 		}
 		else
 		{
-			if (! COPS_force_unplug)
+			if (COPS_force_unplug == 0)
 			{
 				COPS_force_unplug = TRUE;
 				unplug_keyboard();
@@ -924,7 +924,7 @@ public class lisa
 		size_t videoram_size = 32760;	/*max(720*364, 608*431)/8*/
 	
 		old_display = (UINT16 *) malloc(videoram_size);
-		if (! old_display)
+		if (old_display == 0)
 		{
 			return 1;
 		}
@@ -2105,9 +2105,9 @@ public class lisa
 	
 			case 0x3:	/* Status Register */
 				answer = 0;
-				if (! parity_error_pending)
+				if (parity_error_pending == 0)
 					answer |= 0x02;
-				if (! VTIR)
+				if (VTIR == 0)
 					answer |= 0x04;
 				/* huh... we need to emulate some other bits */
 				break;

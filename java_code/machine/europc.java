@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -164,7 +164,7 @@ public class europc
 		int port61; // bit 0,1 must be 0 for startup; reset?
 	} europc_pio= { 0 };
 	
-	WRITE_HANDLER( europc_pio_w )
+	public static WriteHandlerPtr europc_pio_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		switch (offset) {
 		case 1:
@@ -177,10 +177,10 @@ public class europc
 		}
 	
 		logerror("europc pio write %.2x %.2x\n",offset,data);
-	}
+	} };
 	
 	
-	READ_HANDLER( europc_pio_r )
+	public static ReadHandlerPtr europc_pio_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int data=0;
 		switch (offset) {
@@ -196,7 +196,7 @@ public class europc
 			break;
 		}
 		return data;
-	}
+	} };
 	
 	// realtime clock and nvram
 	static struct {
@@ -285,7 +285,7 @@ public class europc
 		europc_rtc.timer=timer_pulse(1.0,0,europc_rtc_timer);
 	}
 	
-	READ_HANDLER( europc_rtc_r )
+	public static ReadHandlerPtr europc_rtc_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int data=0;
 		switch (europc_rtc.state) {
@@ -300,9 +300,9 @@ public class europc
 			break;
 		}
 		return data;
-	}
+	} };
 	
-	WRITE_HANDLER( europc_rtc_w )
+	public static WriteHandlerPtr europc_rtc_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		switch (europc_rtc.state) {
 		case 0:
@@ -319,7 +319,7 @@ public class europc
 	//		logerror("rtc written %x %.2x\n",europc_rtc.reg, europc_rtc.data[europc_rtc.reg]);
 			break;
 		}
-	}
+	} };
 	
 	void europc_rtc_load_stream(void *file)
 	{

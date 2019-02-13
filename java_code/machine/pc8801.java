@@ -5,7 +5,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -80,7 +80,7 @@ public class pc8801
 	
 	static void calender_shift(void)
 	{
-	  if(!calender_hold) {
+	  if (calender_hold == 0) {
 	    calender_reg[0] = (calender_reg[0] >> 1) | ((calender_reg[1] << 7) & 0x80);
 	    calender_reg[1] = (calender_reg[1] >> 1) | ((calender_reg[2] << 7) & 0x80);
 	    calender_reg[2] = (calender_reg[2] >> 1) | ((calender_reg[3] << 7) & 0x80);

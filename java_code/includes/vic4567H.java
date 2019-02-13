@@ -2,7 +2,7 @@
 #define __VIC4567_H_
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package includes;
@@ -20,7 +20,6 @@ public class vic4567H
 	
 	/* to be called when writting to port */
 	extern WRITE_HANDLER ( vic3_port_w );
-	WRITE_HANDLER( vic3_palette_w );
 	
 	/* to be called when reading from port */
 	extern READ_HANDLER ( vic3_port_r );

@@ -40,7 +40,7 @@ icq3250a-d
  */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -61,21 +61,25 @@ public class comquest
 		logerror("comquest read %.4x %.2x\n",offset,data);
 	}
 	
-	static MEMORY_READ_START( comquest_readmem )
-	//	{ 0x0000, 0x7fff, MRA_BANK1 },
-		{ 0x0000, 0xffff, MRA_ROM },
-	//	{ 0x8000, 0xffff, MRA_RAM }, // batterie buffered
-	MEMORY_END
+	public static Memory_ReadAddress comquest_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+	//	new Memory_ReadAddress( 0x0000, 0x7fff, MRA_BANK1 ),
+		new Memory_ReadAddress( 0x0000, 0xffff, MRA_ROM ),
+	//	new Memory_ReadAddress( 0x8000, 0xffff, MRA_RAM ), // batterie buffered
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( comquest_writemem )
-		{ 0x0000, 0x7fff, MWA_ROM },
-		{ 0x8000, 0xffff, MWA_RAM },
-	MEMORY_END
+	public static Memory_WriteAddress comquest_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x0000, 0x7fff, MWA_ROM ),
+		new Memory_WriteAddress( 0x8000, 0xffff, MWA_RAM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
 	#define DIPS_HELPER(bit, name, keycode, r) \
-	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r)
+	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r);
 	
-	INPUT_PORTS_START( comquest )
+	static InputPortPtr input_ports_comquest = new InputPortPtr(){ public void handler() { 
 		PORT_START
 		DIPS_HELPER( 0x001, "EIN", CODE_DEFAULT, CODE_NONE)
 		DIPS_HELPER( 0x002, "Esc", KEYCODE_ESC, CODE_NONE)
@@ -175,16 +179,16 @@ public class comquest
 		DIPS_HELPER( 0x080, "", KEYCODE_7, CODE_NONE)
 	#endif
 	
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
-	static struct GfxLayout comquest_charlayout =
-	{
+	static GfxLayout comquest_charlayout = new GfxLayout
+	(
 	        8,8,
 	        256*8,                                    /* 256 characters */
 	        1,                      /* 1 bits per pixel */
-	        { 0 },                  /* no bitplanes; 1 bit per pixel */
+	        new int[] { 0 },                  /* no bitplanes; 1 bit per pixel */
 	        /* x offsets */
-	        {
+	        new int[] {
 				0,
 				1,
 				2,
@@ -195,7 +199,7 @@ public class comquest
 				7,
 	        },
 	        /* y offsets */
-	        {
+	        new int[] {
 				0,
 				8,
 				16,
@@ -206,11 +210,11 @@ public class comquest
 				56,
 			},
 	        8*8
-	};
+	);
 	
-	static struct GfxDecodeInfo comquest_gfxdecodeinfo[] = {
-		{ REGION_GFX1, 0x0000, &comquest_charlayout,                     0, 2 },
-	    { -1 } /* end of array */
+	static GfxDecodeInfo comquest_gfxdecodeinfo[] ={
+		new GfxDecodeInfo( REGION_GFX1, 0x0000, comquest_charlayout,                     0, 2 ),
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
 	static int comquest_frame_int(void)
@@ -310,11 +314,11 @@ public class comquest
 	    }
 	};
 	
-	ROM_START(comquest)
-	//	ROM_REGION(0x10000,REGION_CPU1,0)
-	//	ROM_REGION(0x80000,REGION_USER1,0)
-		ROM_REGION(0x100000,REGION_CPU1,0)
-		ROM_LOAD("comquest.bin", 0x00000, 0x80000, 0x2bf4b1a8)
+	static RomLoadPtr rom_comquest = new RomLoadPtr(){ public void handler(){ 
+	//	ROM_REGION(0x10000,REGION_CPU1,0);
+	//	ROM_REGION(0x80000,REGION_USER1,0);
+		ROM_REGION(0x100000,REGION_CPU1,0);
+		ROM_LOAD("comquest.bin", 0x00000, 0x80000, 0x2bf4b1a8);
 	/*
 	000 +16kbyte graphics data?
 	040 16kbyte code
@@ -339,10 +343,10 @@ public class comquest
 	7c0 16kb
 	 */
 	
-	//	ROM_REGION(0x100,REGION_GFX1,0)
-		ROM_REGION(0x80000,REGION_GFX1,0)
-		ROM_LOAD("comquest.bin", 0x00000, 0x80000, 0x2bf4b1a8)
-	ROM_END
+	//	ROM_REGION(0x100,REGION_GFX1,0);
+		ROM_REGION(0x80000,REGION_GFX1,0);
+		ROM_LOAD("comquest.bin", 0x00000, 0x80000, 0x2bf4b1a8);
+	ROM_END(); }}; 
 	
 	static const struct IODevice io_comquest[] = {
 	#if 0

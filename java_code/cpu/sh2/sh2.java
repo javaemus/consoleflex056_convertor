@@ -51,7 +51,7 @@
  *****************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package cpu.sh2;
@@ -2470,7 +2470,7 @@ public class sh2
 	  {0, NULL}
 	};
 	
-	WRITE_HANDLER( sh2_internal_w )
+	public static WriteHandlerPtr sh2_internal_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	  sh2.m[offset & 0x1ff] = data;
 	
@@ -2566,9 +2566,9 @@ public class sh2
 	      }
 	  }
 	#endif
-	}
+	} };
 	
-	READ_HANDLER( sh2_internal_r )
+	public static ReadHandlerPtr sh2_internal_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 	  UINT32 data;
 	  int cpu = cpu_getactivecpu();
@@ -2605,7 +2605,7 @@ public class sh2
 	#endif
 	
 	  return data;
-	}
+	} };
 	
 	unsigned sh2_get_reg(int regnum)
 	{
@@ -2718,7 +2718,7 @@ public class sh2
 	
 	  which = (which + 1) % 8;
 	  buffer[which][0] = '\0';
-	  if( !context )
+	  if (context == 0)
 	    r = &sh2;
 	
 	  switch( regnum )

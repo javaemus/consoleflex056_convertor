@@ -7,7 +7,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -64,7 +64,7 @@ public class advision
 	    d = advision_ram[advision_rambank + offset];
 	
 		/* the video hardware interprets reads as writes */
-	    if (!advision_videoenable) advision_vh_write(d);
+	    if (advision_videoenable == 0) advision_vh_write(d);
 	    return d;
 	}
 	

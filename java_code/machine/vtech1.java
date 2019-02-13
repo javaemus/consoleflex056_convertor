@@ -27,7 +27,7 @@
 ****************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -498,7 +498,7 @@ public class vtech1
 	#define PHI2(n) (((n)>>2)&1)
 	#define PHI3(n) (((n)>>3)&1)
 	
-	READ_HANDLER( vtech1_fdc_r )
+	public static ReadHandlerPtr vtech1_fdc_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 	    int data = 0xff;
 	    switch( offset )
@@ -540,9 +540,9 @@ public class vtech1
 	        break;
 	    }
 	    return data;
-	}
+	} };
 	
-	WRITE_HANDLER( vtech1_fdc_w )
+	public static WriteHandlerPtr vtech1_fdc_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		int drive;
 	
@@ -632,9 +632,9 @@ public class vtech1
 			vtech1_fdc_latch = data;
 			break;
 	    }
-	}
+	} };
 	
-	READ_HANDLER( vtech1_joystick_r )
+	public static ReadHandlerPtr vtech1_joystick_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 	    int data = 0xff;
 	
@@ -648,7 +648,7 @@ public class vtech1
 			data &= readinputport(13);
 	
 	    return data;
-	}
+	} };
 	
 	#define KEY_INV 0x80
 	#define KEY_RUB 0x40
@@ -659,7 +659,7 @@ public class vtech1
 	#define KEY_UP  0x02
 	#define KEY_INS 0x01
 	
-	READ_HANDLER( vtech1_keyboard_r )
+	public static ReadHandlerPtr vtech1_keyboard_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		static int cassette_bit = 0;
 		int level, data = 0xff;
@@ -726,7 +726,7 @@ public class vtech1
 		data &= ~cassette_bit;
 	
 	    return data;
-	}
+	} };
 	
 	/*************************************************
 	 * bit  function
@@ -738,7 +738,7 @@ public class vtech1
 	 * 1    cassette out (LSB)
 	 * 0    speaker A
 	 ************************************************/
-	WRITE_HANDLER( vtech1_latch_w )
+	public static WriteHandlerPtr vtech1_latch_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	    logerror("vtech1_latch_w $%02X\n", data);
 		/* cassette data bits toggle? */
@@ -773,7 +773,7 @@ public class vtech1
 		}
 	
 	    vtech1_latch = data;
-	}
+	} };
 	
 	int vtech1_interrupt(void)
 	{

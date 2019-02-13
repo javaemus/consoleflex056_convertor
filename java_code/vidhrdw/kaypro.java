@@ -78,7 +78,7 @@
  */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -144,7 +144,7 @@ public class kaypro
 			return 1;
 	
 		video_buffer = malloc(videoram_size * sizeof(short));
-		if (!video_buffer)
+		if (video_buffer == 0)
 			return 1;
 	
 		for (i = 0; i < videoram_size; i++)
@@ -898,7 +898,7 @@ public class kaypro
 			if( argcnt > 0 )
 			{
 				argval[--argcnt] = data - ' ';
-				if( !argcnt )
+				if (argcnt == 0)
 				{
 					int x0, y0, x1, y1;
 					x1 = argval[0];
@@ -917,7 +917,7 @@ public class kaypro
 			if( argcnt > 0 )
 			{
 				argval[--argcnt] = data - ' ';
-				if( !argcnt )
+				if (argcnt == 0)
 				{
 					int x0, y0, x1, y1;
 					x1 = argval[0];
@@ -936,7 +936,7 @@ public class kaypro
 			if( argcnt > 0 )
 			{
 				argval[--argcnt] = data - ' ';
-				if( !argcnt )
+				if (argcnt == 0)
 				{
 					int x0, y0;
 					x0 = argval[0];
@@ -953,7 +953,7 @@ public class kaypro
 			if( argcnt > 0 )
 			{
 				argval[--argcnt] = data - ' ';
-				if( !argcnt )
+				if (argcnt == 0)
 				{
 					int x0, y0;
 					x0 = argval[0];

@@ -2,7 +2,7 @@
  PeT mess@utanet.at 2000,2001
 ******************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -1126,7 +1126,7 @@ public class lynx
 	    }
 	}
 	
-	WRITE_HANDLER( lynx_memory_config )
+	public static WriteHandlerPtr lynx_memory_config = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	    // bit 7: hispeed, uses page mode accesses (4 instead of 5 cycles )
 	    // when these are safe in the cpu
@@ -1157,7 +1157,7 @@ public class lynx
 		memory_set_bankhandler_r(4, 0, MRA_BANK4);
 		cpu_setbank(4,memory_region(REGION_CPU1)+0x101fa);
 	    }
-	}
+	} };
 	
 	extern void lynx_machine_init(void)
 	{

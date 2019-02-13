@@ -11,7 +11,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -46,7 +46,12 @@ public class astrocde
 	
 	/* ======================================================================= */
 	
-	enum { FAKE_BLK,FAKE_YLW,FAKE_BLU,FAKE_RED,FAKE_WHT };
+	public static final int FAKE_BLK = 0;
+	public static final int FAKE_YLW = 1;
+	public static final int FAKE_BLU = 2;
+	public static final int FAKE_RED = 3;
+	public static final int FAKE_WHT = 4;
+	
 	
 	static unsigned short fake_colortable[] =
 	{

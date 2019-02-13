@@ -64,7 +64,7 @@ spctodo says sleep and standby modes cannot be used.
 /* ======================================================================== */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package cpu.spc700;
@@ -1460,7 +1460,7 @@ public class spc700
 	#if !SPC700_OPTIMIZE_SNES
 		if(state == CLEAR_LINE)
 			LINE_NMI = 0;
-		else if(!LINE_NMI)
+		else if (LINE_NMI == 0)
 		{
 			LINE_NMI = 1;
 			CLK(7);
@@ -1534,7 +1534,7 @@ public class spc700
 	
 		which = (which+1) % 16;
 		buffer[which][0] = '\0';
-		if(!context)
+		if (context == 0)
 			r = &spc700i_cpu;
 	
 		p =  ((r->flag_nz & 0x80)			|

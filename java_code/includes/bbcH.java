@@ -57,8 +57,6 @@ void check_disc_status(void);
 READ_HANDLER ( bbc_wd1770_read );
 WRITE_HANDLER ( bbc_wd1770_write );
 
-READ_HANDLER( bbc_i8271_read );
-WRITE_HANDLER( bbc_i8271_write );
 
 
 

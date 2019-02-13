@@ -9,7 +9,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -18,78 +18,82 @@ public class a7800
 {
 	
 	
-	static MEMORY_READ_START( readmem )
-	    { 0x0000, 0x001f, a7800_TIA_r },
-	    { 0x0020, 0x003f, a7800_MARIA_r },
-	    { 0x0040, 0x00FF, a7800_RAM0_r },
-	    { 0x0100, 0x011f, a7800_TIA_r },
-	    { 0x0120, 0x013f, a7800_MARIA_r },
-	    { 0x0140, 0x01FF, a7800_RAM1_r },
-	    { 0x0200, 0x021f, a7800_TIA_r },
-	    { 0x0220, 0x023f, a7800_MARIA_r },
-	    { 0x0280, 0x02FF, a7800_RIOT_r },
-	    { 0x0300, 0x031f, a7800_TIA_r },
-	    { 0x0320, 0x033f, a7800_MARIA_r },
-	    { 0x0480, 0x04ff, MRA_RAM },    /* RIOT RAM */
-	    { 0x1800, 0x27FF, MRA_RAM },
-	    { 0x2800, 0x2FFF, a7800_MAINRAM_r },
-	    { 0x3000, 0x37FF, a7800_MAINRAM_r },
-	    { 0x3800, 0x3FFF, a7800_MAINRAM_r },
-	    { 0x4000, 0x7FFF, MRA_ROM },
-	    { 0x8000, 0xBFFF, MRA_BANK1 },
-	    { 0xC000, 0xFFFF, MRA_ROM },
-	MEMORY_END
+	public static Memory_ReadAddress readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+	    new Memory_ReadAddress( 0x0000, 0x001f, a7800_TIA_r ),
+	    new Memory_ReadAddress( 0x0020, 0x003f, a7800_MARIA_r ),
+	    new Memory_ReadAddress( 0x0040, 0x00FF, a7800_RAM0_r ),
+	    new Memory_ReadAddress( 0x0100, 0x011f, a7800_TIA_r ),
+	    new Memory_ReadAddress( 0x0120, 0x013f, a7800_MARIA_r ),
+	    new Memory_ReadAddress( 0x0140, 0x01FF, a7800_RAM1_r ),
+	    new Memory_ReadAddress( 0x0200, 0x021f, a7800_TIA_r ),
+	    new Memory_ReadAddress( 0x0220, 0x023f, a7800_MARIA_r ),
+	    new Memory_ReadAddress( 0x0280, 0x02FF, a7800_RIOT_r ),
+	    new Memory_ReadAddress( 0x0300, 0x031f, a7800_TIA_r ),
+	    new Memory_ReadAddress( 0x0320, 0x033f, a7800_MARIA_r ),
+	    new Memory_ReadAddress( 0x0480, 0x04ff, MRA_RAM ),    /* RIOT RAM */
+	    new Memory_ReadAddress( 0x1800, 0x27FF, MRA_RAM ),
+	    new Memory_ReadAddress( 0x2800, 0x2FFF, a7800_MAINRAM_r ),
+	    new Memory_ReadAddress( 0x3000, 0x37FF, a7800_MAINRAM_r ),
+	    new Memory_ReadAddress( 0x3800, 0x3FFF, a7800_MAINRAM_r ),
+	    new Memory_ReadAddress( 0x4000, 0x7FFF, MRA_ROM ),
+	    new Memory_ReadAddress( 0x8000, 0xBFFF, MRA_BANK1 ),
+	    new Memory_ReadAddress( 0xC000, 0xFFFF, MRA_ROM ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( writemem )
-	    { 0x0000, 0x001f, a7800_TIA_w },
-	    { 0x0020, 0x003f, a7800_MARIA_w },
-	    { 0x0040, 0x00FF, a7800_RAM0_w },
-	    { 0x0100, 0x011f, a7800_TIA_w },
-	    { 0x0120, 0x013f, a7800_MARIA_w },
-	    { 0x0140, 0x01FF, a7800_RAM1_w },
-	    { 0x0200, 0x021f, a7800_TIA_w },
-	    { 0x0220, 0x023f, a7800_MARIA_w },
-	    { 0x0280, 0x02FF, a7800_RIOT_w },
-	    { 0x0300, 0x031f, a7800_TIA_w },
-	    { 0x0320, 0x033f, a7800_MARIA_w },
-	    { 0x0480, 0x04ff, MWA_RAM },  /* RIOT RAM */
-	    { 0x1800, 0x27FF, MWA_RAM },
-	    { 0x2800, 0x2FFF, a7800_MAINRAM_w },
-	    { 0x3000, 0x37FF, a7800_MAINRAM_w },
-	    { 0x3800, 0x3FFF, a7800_MAINRAM_w },
-	    { 0x4000, 0xFFFF, a7800_cart_w },
-	MEMORY_END
+	public static Memory_WriteAddress writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+	    new Memory_WriteAddress( 0x0000, 0x001f, a7800_TIA_w ),
+	    new Memory_WriteAddress( 0x0020, 0x003f, a7800_MARIA_w ),
+	    new Memory_WriteAddress( 0x0040, 0x00FF, a7800_RAM0_w ),
+	    new Memory_WriteAddress( 0x0100, 0x011f, a7800_TIA_w ),
+	    new Memory_WriteAddress( 0x0120, 0x013f, a7800_MARIA_w ),
+	    new Memory_WriteAddress( 0x0140, 0x01FF, a7800_RAM1_w ),
+	    new Memory_WriteAddress( 0x0200, 0x021f, a7800_TIA_w ),
+	    new Memory_WriteAddress( 0x0220, 0x023f, a7800_MARIA_w ),
+	    new Memory_WriteAddress( 0x0280, 0x02FF, a7800_RIOT_w ),
+	    new Memory_WriteAddress( 0x0300, 0x031f, a7800_TIA_w ),
+	    new Memory_WriteAddress( 0x0320, 0x033f, a7800_MARIA_w ),
+	    new Memory_WriteAddress( 0x0480, 0x04ff, MWA_RAM ),  /* RIOT RAM */
+	    new Memory_WriteAddress( 0x1800, 0x27FF, MWA_RAM ),
+	    new Memory_WriteAddress( 0x2800, 0x2FFF, a7800_MAINRAM_w ),
+	    new Memory_WriteAddress( 0x3000, 0x37FF, a7800_MAINRAM_w ),
+	    new Memory_WriteAddress( 0x3800, 0x3FFF, a7800_MAINRAM_w ),
+	    new Memory_WriteAddress( 0x4000, 0xFFFF, a7800_cart_w ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
 	
-	INPUT_PORTS_START( a7800 )
+	static InputPortPtr input_ports_a7800 = new InputPortPtr(){ public void handler() { 
 	    PORT_START      /* IN0 */
-	    PORT_BIT ( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER2 )
-	    PORT_BIT ( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2 )
-	    PORT_BIT ( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2 )
-	    PORT_BIT ( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
-	    PORT_BIT ( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_UP)
-	    PORT_BIT ( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN)
-	    PORT_BIT ( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT)
-	    PORT_BIT ( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT)
+	    PORT_BIT ( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER2 );
+	    PORT_BIT ( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2 );
+	    PORT_BIT ( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2 );
+	    PORT_BIT ( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 );
+	    PORT_BIT ( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_UP);
+	    PORT_BIT ( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN);
+	    PORT_BIT ( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT);
+	    PORT_BIT ( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT);
 	
 	    PORT_START      /* IN1 */
-	    PORT_BIT ( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER2 )
-	    PORT_BIT ( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON1 )
-	    PORT_BIT ( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER2 )
-	    PORT_BIT ( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON2 )
-	    PORT_BIT ( 0xF0, IP_ACTIVE_LOW, IPT_UNUSED )
+	    PORT_BIT ( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON1 | IPF_PLAYER2 );
+	    PORT_BIT ( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON1 );
+	    PORT_BIT ( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON2 | IPF_PLAYER2 );
+	    PORT_BIT ( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON2 );
+	    PORT_BIT ( 0xF0, IP_ACTIVE_LOW, IPT_UNUSED );
 	
 	    PORT_START      /* IN2 */
-	    PORT_BIT (0x7F, IP_ACTIVE_LOW, IPT_UNUSED)
-	    PORT_BIT (0x80, IP_ACTIVE_HIGH, IPT_VBLANK)
+	    PORT_BIT (0x7F, IP_ACTIVE_LOW, IPT_UNUSED);
+	    PORT_BIT (0x80, IP_ACTIVE_HIGH, IPT_VBLANK);
 	
 	    PORT_START      /* IN3 */
-	    PORT_BITX( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN, "Reset", KEYCODE_R, IP_JOY_DEFAULT)
-	    PORT_BITX( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN, "Start", KEYCODE_S, IP_JOY_DEFAULT)
-	    PORT_BIT ( 0xFC, IP_ACTIVE_LOW, IPT_UNUSED)
+	    PORT_BITX( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN, "Reset", KEYCODE_R, IP_JOY_DEFAULT);
+	    PORT_BITX( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN, "Start", KEYCODE_S, IP_JOY_DEFAULT);
+	    PORT_BIT ( 0xFC, IP_ACTIVE_LOW, IPT_UNUSED);
 	
 	
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	static UINT8 palette[256*3] =
 	{
@@ -204,27 +208,27 @@ public class a7800
 	}
 	
 	
-	static struct GfxDecodeInfo gfxdecodeinfo[] =
+	static GfxDecodeInfo gfxdecodeinfo[] =
 	{
 	MEMORY_END   /* end of array */
 	
 	static struct TIAinterface tia_interface =
-	{
+	new GfxDecodeInfo(
 	    31400,
 	    100,
 	    TIA_DEFAULT_GAIN,
-	};
+	);
 	
 	
-	static struct POKEYinterface pokey_interface = {
+	static struct POKEYinterface pokey_interface = new GfxDecodeInfo(
 	    1,
 	    1790000,
 	    { 100 },
-	};
+	);
 	
 	
 	static struct MachineDriver machine_driver_a7800 =
-	{
+	new GfxDecodeInfo(
 	    /* basic machine hardware */
 	    {
 	        {
@@ -258,15 +262,15 @@ public class a7800
 	    {
 	        {
 	            SOUND_TIA,
-	            &tia_interface
+	            tia_interface
 	        },
 	        {
 	            SOUND_POKEY,
-	            &pokey_interface
+	            pokey_interface
 	        }
 	    }
 	
-	};
+	);
 	
 	
 	/***************************************************************************
@@ -276,13 +280,13 @@ public class a7800
 	***************************************************************************/
 	
 	ROM_START (a7800)
-	    ROM_REGION(0x30000,REGION_CPU1,0)
-	    ROM_LOAD ("7800.rom", 0xf000, 0x1000, 0x649913e5)
-	//      ROM_LOAD ("7800a.rom", 0xc000, 0x4000, 0x649913e5)
+	    ROM_REGION(0x30000,REGION_CPU1,0);
+	    ROM_LOAD ("7800.rom", 0xf000, 0x1000, 0x649913e5);
+	//      ROM_LOAD ("7800a.rom", 0xc000, 0x4000, 0x649913e5);
 	
-	ROM_END
+	ROM_END(); }}; 
 	
-	static const struct IODevice io_a7800[] = {
+	static const struct IODevice io_a7800[] = new GfxDecodeInfo(
 	    {
 	        IO_CARTSLOT,        /* type */
 	        1,                  /* count */
@@ -304,18 +308,18 @@ public class a7800
 	        a7800_partialcrc,   /* partial CRC */
 	    },
 	    { IO_END }
-	};
+	);
 	
 	/*    YEAR  NAME      PARENT    MACHINE   INPUT     INIT      COMPANY   FULLNAME */
 	CONS( 1986, a7800,    0,        a7800,    a7800,    0,        "Atari",  "Atari 7800" )
 	
 	#ifdef RUNTIME_LOADER
 	extern void a7800_runtime_loader_init(void)
-	{
+	new GfxDecodeInfo(
 		int i;
 		for (i=0; drivers[i]; i++) {
-			if ( strcmp(drivers[i]->name,"a7800")==0) drivers[i]=&driver_a7800;
+			if ( strcmp(drivers[i]->name,"a7800")==0) drivers[i]=driver_a7800;
 		}
-	}
+	)
 	#endif
 }

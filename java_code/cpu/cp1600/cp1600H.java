@@ -21,7 +21,7 @@
 #define _CP1600_H
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package cpu.cp1600;
@@ -61,9 +61,7 @@ public class cp1600H
 	extern const char *cp1600_info(void *context, int regnum);
 	extern unsigned cp1600_dasm(char *buffer, unsigned pc);
 	
-	/* WRITE_HANDLER( cp1600_internal_w ); */
-	/* READ_HANDLER( cp1600_internal_r ); */
-	
+	/* /* 
 	#ifdef MAME_DEBUG
 	extern unsigned DasmCP1600( char *dst, unsigned pc );
 	#endif

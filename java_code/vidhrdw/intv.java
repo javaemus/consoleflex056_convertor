@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -352,7 +352,7 @@ public class intv
 	/* initialized to non-zero, because we divide by it */
 	static UINT8 tms9927_num_rows = 25;
 	
-	READ_HANDLER( intvkbd_tms9927_r )
+	public static ReadHandlerPtr intvkbd_tms9927_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		UINT8 rv;
 		switch (offset)
@@ -372,9 +372,9 @@ public class intv
 				rv = 0;
 		}
 		return rv;
-	}
+	} };
 	
-	WRITE_HANDLER( intvkbd_tms9927_w )
+	public static WriteHandlerPtr intvkbd_tms9927_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		switch (offset)
 		{
@@ -395,7 +395,7 @@ public class intv
 				tms9927_cursor_row = data;
 				break;
 		}
-	}
+	} };
 	
 	void intvkbd_vh_screenrefresh(struct mame_bitmap *bitmap, int full_refresh)
 	{
@@ -407,7 +407,7 @@ public class intv
 		intv_vh_screenrefresh(bitmap, full_refresh);
 	
 		/* if the intvkbd text is not blanked, overlay it */
-		if (!intvkbd_text_blanked)
+		if (intvkbd_text_blanked == 0)
 		{
 			current_row = (tms9927_last_row + 1) % tms9927_num_rows;
 			for(y=0;y<24;y++)

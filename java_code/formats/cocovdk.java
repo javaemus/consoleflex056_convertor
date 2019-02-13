@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package formats;
@@ -135,10 +135,10 @@ public class cocovdk
 			return INIT_FAIL;
 		}
 		image_file = image_fopen(IO_FLOPPY, id, OSD_FILETYPE_IMAGE, OSD_FOPEN_RW);
-		if( !image_file )
+		if (image_file == 0)
 		{
 			image_file = image_fopen(IO_FLOPPY, id, OSD_FILETYPE_IMAGE, OSD_FOPEN_READ);
-			if( !image_file )
+			if (image_file == 0)
 			{
 				/* VDK creation not supported */
 				logerror("VDK disk creation not supported");

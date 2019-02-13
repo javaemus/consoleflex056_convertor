@@ -7,7 +7,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -33,11 +33,11 @@ public class galaxy
 		generic_vh_stop();
 	}
 	
-	WRITE_HANDLER( galaxy_vh_charram_w )
+	public static WriteHandlerPtr galaxy_vh_charram_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	    galaxy_charram[offset] = data;
 	    dirtybuffer[offset]	= 1;
-	}
+	} };
 	
 	void galaxy_vh_screenrefresh (struct mame_bitmap *bitmap, int full_refresh)
 	{
@@ -47,7 +47,7 @@ public class galaxy
 		static int fast_mode = FALSE;
 		
 	
-		if (!galaxy_interrupts_enabled)
+		if (galaxy_interrupts_enabled == 0)
 		{
 			black_area.min_x = 0;
 			black_area.max_x = 32*8-1;

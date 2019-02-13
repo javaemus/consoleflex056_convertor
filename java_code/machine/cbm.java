@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -51,7 +51,7 @@ public class cbm
 		quick.specified = 1;
 	
 		fp = (FILE*)image_fopen (IO_QUICKLOAD, id, OSD_FILETYPE_IMAGE, 0);
-		if (!fp)
+		if (fp == 0)
 			return INIT_FAIL;
 	
 		quick.length = osd_fsize (fp);
@@ -254,7 +254,7 @@ public class cbm
 		dev=cbm_rom_find_device();
 	
 		fp = (FILE*)image_fopen (IO_CARTSLOT, id, OSD_FILETYPE_IMAGE, 0);
-		if (!fp)
+		if (fp == 0)
 		{
 			logerror("%s file not found\n", device_filename(IO_CARTSLOT,id));
 			return INIT_FAIL;

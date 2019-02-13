@@ -23,7 +23,7 @@
 
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -676,7 +676,7 @@ public class mac
 	{
 		hold_keyboard_reply = FALSE;
 	
-		if (! inquiry_in_progress)
+		if (inquiry_in_progress == 0)
 		{
 	#if LOG_KEYBOARD
 			logerror("keyboard reply sent 0x%X\n", keyboard_reply);

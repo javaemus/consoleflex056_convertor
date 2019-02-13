@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -343,33 +343,33 @@ public class cbmdrive
 		strcpy(n,(char*)name);
 		fp = (FILE*)osd_fopen (Machine->gamedrv->name, n, OSD_FILETYPE_IMAGE, 0);
 	
-		if (!fp)
+		if (fp == 0)
 		{
 			for (i = 0; n[i] != 0; i++)
 				n[i] = tolower (n[i]);
 			fp = (FILE*)osd_fopen (Machine->gamedrv->name, n, OSD_FILETYPE_IMAGE, 0);
 		}
-		if (!fp)
+		if (fp == 0)
 		{
 			strcpy(n, (char*)name);
 			strcat ((char *) n, ".prg");
 	
 			fp = (FILE*)osd_fopen (Machine->gamedrv->name, n, OSD_FILETYPE_IMAGE, 0);
 		}
-		if (!fp)
+		if (fp == 0)
 		{
 			for (i = 0; n[i] != 0; i++)
 				n[i] = tolower (n[i]);
 			fp = (FILE*)osd_fopen (Machine->gamedrv->name, n, OSD_FILETYPE_IMAGE, 0);
 		}
-		if (!fp)
+		if (fp == 0)
 		{
 			type=1;
 			strcpy(n,(char*)name);
 			strcat(n,".p00");
 			fp = (FILE*)osd_fopen (Machine->gamedrv->name, n, OSD_FILETYPE_IMAGE, 0);
 		}
-		if (!fp)
+		if (fp == 0)
 		{
 			for (i = 0; n[i] != 0; i++)
 				n[i] = tolower (n[i]);
@@ -526,7 +526,7 @@ public class cbmdrive
 				if (type == 'P')
 					rc = c1551_fs_command (drive, name);
 			}
-			if (!rc)
+			if (rc == 0)
 			{
 				drive->state = OPEN;
 				drive->pos = 0;

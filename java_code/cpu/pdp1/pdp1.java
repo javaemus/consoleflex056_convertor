@@ -313,7 +313,7 @@
  */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package cpu.pdp1;
@@ -582,7 +582,7 @@ public class pdp1
 	
 		which = (which + 1) % 16;
 		buffer[which][0] = '\0';
-		if (!context)
+		if (context == 0)
 			r = &pdp1;
 	
 		switch (regnum)
@@ -821,7 +821,7 @@ public class pdp1
 				}
 				else
 				{
-					if (!cond)
+					if (cond == 0)
 						PC++;
 				}
 				if ((Y & 01000) == 01000)

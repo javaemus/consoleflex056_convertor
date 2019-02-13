@@ -54,7 +54,7 @@
 */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -1260,7 +1260,7 @@ public class vic6567
 		if (first < 0)
 			first = 0;
 	
-		if (!SCREENON)
+		if (SCREENON == 0)
 		{
 	/*		if (Machine->color_depth == 8)
 			{

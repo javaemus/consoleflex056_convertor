@@ -9,7 +9,7 @@
 ******************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -247,7 +247,7 @@ public class bbc
 			tt_flash=0;
 	
 			// only check the double height stuff if at the first row of a new line
-			if (!tt_linecount)
+			if (tt_linecount == 0)
 			{
 				tt_double_height_offset=((!tt_double_height_set)||tt_double_height_offset)?0:10;
 				tt_double_height_set=0;

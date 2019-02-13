@@ -36,7 +36,7 @@
  * we only display 240 of them.
  */
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -194,7 +194,7 @@ public class dragon
 		}
 	
 		paletteram = malloc(16 * sizeof(int));
-		if (!paletteram)
+		if (paletteram == 0)
 			return 1;
 	
 		memset(paletteram, 0, 16 * sizeof(int));
@@ -799,7 +799,7 @@ public class dragon
 		/* Features marked with '!' are not yet implemented */
 	
 		xorval = coco3_gimevhreg[offset] ^ data;
-		if (!xorval)
+		if (xorval == 0)
 			return;
 	
 		switch(offset) {

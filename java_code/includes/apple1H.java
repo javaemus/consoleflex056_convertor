@@ -3,11 +3,7 @@
 extern void apple1_init_machine (void);
 extern void apple1_stop_machine (void);
 extern int apple1_interrupt (void);
-extern READ_HANDLER( apple1_pia0_kbdin );
-extern READ_HANDLER( apple1_pia0_dsprdy );
-extern READ_HANDLER( apple1_pia0_kbdrdy );
-extern WRITE_HANDLER( apple1_pia0_dspout );
-
+extern extern extern extern 
 /* vidhrdw/apple1.c */
 
 extern int apple1_vh_start (void);

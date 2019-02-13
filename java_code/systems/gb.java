@@ -36,7 +36,7 @@ Priority:  Todo:                                                  Done:
 
 ***************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -67,24 +67,24 @@ public class gb
 		{ 0xff00, 0xffff, gb_w_io },	        /* gb io */
 	MEMORY_END
 	
-	static struct GfxDecodeInfo gfxdecodeinfo[] =
+	static GfxDecodeInfo gfxdecodeinfo[] =
 	{
-		{ -1 } /* end of array */
+		new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
-	INPUT_PORTS_START( gameboy )
+	static InputPortPtr input_ports_gameboy = new InputPortPtr(){ public void handler() { 
 		PORT_START	/* IN0 */
-	    PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT)
-	    PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT )
-	    PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP   )
-	    PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN )
-	    PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1       )
-	    PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2       )
-		/*PORT_BITX( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN, "Select", KEYCODE_LSHIFT, IP_JOY_DEFAULT ) */
-		/*PORT_BITX( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN, "Start",  KEYCODE_Z,      IP_JOY_DEFAULT ) */
-		PORT_BITX( 0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "Select", KEYCODE_5, IP_JOY_DEFAULT )
-		PORT_BITX( 0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "Start",  KEYCODE_1, IP_JOY_DEFAULT )
-	INPUT_PORTS_END
+	    PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT);
+	    PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT );
+	    PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP   );
+	    PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN );
+	    PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1       );
+	    PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2       );
+		/*PORT_BITX( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN, "Select", KEYCODE_LSHIFT, IP_JOY_DEFAULT );*/
+		/*PORT_BITX( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN, "Start",  KEYCODE_Z,      IP_JOY_DEFAULT );*/
+		PORT_BITX( 0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "Select", KEYCODE_5, IP_JOY_DEFAULT );
+		PORT_BITX( 0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "Start",  KEYCODE_1, IP_JOY_DEFAULT );
+	INPUT_PORTS_END(); }}; 
 	
 	static unsigned char palette[] =
 	{

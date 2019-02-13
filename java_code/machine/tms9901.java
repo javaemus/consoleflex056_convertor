@@ -8,7 +8,7 @@
 */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -180,7 +180,7 @@ public class tms9901
 	{
 		int bit = 0;
 	
-		if (! value)
+		if (value == 0)
 			return -1;
 	
 	#if 0
@@ -397,7 +397,7 @@ public class tms9901
 			{	/* timer mode */
 	
 				answer = (latchedtimer & 0x3F80) >> 7;
-				if (! int_pending)
+				if (int_pending == 0)
 					answer |= 0x80;
 			}
 			else
@@ -536,7 +536,7 @@ public class tms9901
 		case 0x0F:
 			if (mode9901)
 			{	/* clock mode */
-				if (! data)
+				if (data == 0)
 				{	/* TMS9901 soft reset */
 					/* all output pins are input pins again */
 					pio_direction = 0;

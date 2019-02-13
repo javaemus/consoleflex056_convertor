@@ -8,7 +8,7 @@
 #define __MACHINE_GB_C
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -99,7 +99,7 @@ public class gb
 		if (MBCType && ((offset & 0x0100) == 0))
 			return;
 		data &= ROMMask;
-		if (!data)
+		if (data == 0)
 			data = 1;
 		if (ROMMask && (data != ROMBank))
 		{

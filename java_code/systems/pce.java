@@ -9,7 +9,7 @@
 ****************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -127,62 +127,62 @@ public class pce
 	PORT_END
 	
 	/* todo: alternate forms of input (multitap, mouse, etc.) */
-	INPUT_PORTS_START( pce )
+	static InputPortPtr input_ports_pce = new InputPortPtr(){ public void handler() { 
 	
 	    PORT_START  /* Player 1 controls */
-	    PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON2 ) /* button I */
-	    PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 ) /* button II */
-	    PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON4 ) /* select */
-	    PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON3 ) /* run */
-	    PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_UP )
-	    PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN )
-	    PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT )
-	    PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT )
+	    PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON2 );/* button I */
+	    PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 );/* button II */
+	    PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON4 );/* select */
+	    PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON3 );/* run */
+	    PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_UP );
+	    PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN );
+	    PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT );
+	    PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT );
 	#if 0
 	    PORT_START  /* Fake dipswitches for system config */
-	    PORT_DIPNAME( 0x01, 0x01, "Console type")
-	    PORT_DIPSETTING(    0x00, "Turbo-Grafx 16")
-	    PORT_DIPSETTING(    0x01, "PC-Engine")
+	    PORT_DIPNAME( 0x01, 0x01, "Console type");
+	    PORT_DIPSETTING(    0x00, "Turbo-Grafx 16");
+	    PORT_DIPSETTING(    0x01, "PC-Engine");
 	
-	    PORT_DIPNAME( 0x01, 0x01, "Joystick type")
-	    PORT_DIPSETTING(    0x00, "2 Button")
-	    PORT_DIPSETTING(    0x01, "6 Button")
+	    PORT_DIPNAME( 0x01, 0x01, "Joystick type");
+	    PORT_DIPSETTING(    0x00, "2 Button");
+	    PORT_DIPSETTING(    0x01, "6 Button");
 	#endif
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	
 	#if 0
-	static struct GfxLayout pce_bg_layout =
-	{
+	static GfxLayout pce_bg_layout = new GfxLayout
+	(
 	        8, 8,
 	        2048,
 	        4,
-	        {0x00*8, 0x01*8, 0x10*8, 0x11*8 },
-	        {0, 1, 2, 3, 4, 5, 6, 7 },
-	        { 0*8, 2*8, 4*8, 6*8, 8*8, 10*8, 12*8, 14*8 },
+	        new int[] {0x00*8, 0x01*8, 0x10*8, 0x11*8 },
+	        new int[] {0, 1, 2, 3, 4, 5, 6, 7 },
+	        new int[] { 0*8, 2*8, 4*8, 6*8, 8*8, 10*8, 12*8, 14*8 },
 	        32*8,
-	};
+	);
 	
-	static struct GfxLayout pce_obj_layout =
-	{
+	static GfxLayout pce_obj_layout = new GfxLayout
+	(
 	        16, 16,
 	        512,
 	        4,
-	        {0x00*8, 0x20*8, 0x40*8, 0x60*8},
-	        {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15},
-	        { 0*16, 1*16, 2*16, 3*16, 4*16, 5*16, 6*16, 7*16, 8*16, 9*16, 10*16, 11*16, 12*16, 13*16, 14*16, 15*16 },
+	        new int[] {0x00*8, 0x20*8, 0x40*8, 0x60*8},
+	        new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15},
+	        new int[] { 0*16, 1*16, 2*16, 3*16, 4*16, 5*16, 6*16, 7*16, 8*16, 9*16, 10*16, 11*16, 12*16, 13*16, 14*16, 15*16 },
 	        128*8,
-	};
+	);
 	
-	static struct GfxDecodeInfo pce_gfxdecodeinfo[] =
+	static GfxDecodeInfo pce_gfxdecodeinfo[] =
 	{
-	   { 1, 0x0000, &pce_bg_layout, 0, 0x10 },
-	   { 1, 0x0000, &pce_obj_layout, 0x100, 0x10 },
+	   new GfxDecodeInfo( 1, 0x0000, pce_bg_layout, 0, 0x10 ),
+	   new GfxDecodeInfo( 1, 0x0000, pce_obj_layout, 0x100, 0x10 ),
 	MEMORY_END
 	#endif
 	
 	static struct MachineDriver machine_driver_pce =
-	{
+	new GfxDecodeInfo(
 	    {
 	        {
 	            CPU_H6280,
@@ -207,9 +207,9 @@ public class pce
 	    pce_vh_stop,
 	    pce_vh_screenrefresh,
 	    0, 0, 0, 0
-	};
+	);
 	
-	static const struct IODevice io_pce[] = {
+	static const struct IODevice io_pce[] = new GfxDecodeInfo(
 	    {
 			IO_CARTSLOT,		/* type */
 			1,					/* count */
@@ -230,7 +230,7 @@ public class pce
 			NULL                /* output_chunk */
 		},
 		{ IO_END }
-	};
+	);
 	
 	#define rom_pce NULL
 	

@@ -86,7 +86,7 @@
    so ui disabled */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -1538,19 +1538,19 @@ public class pcw16
 	
 	}
 	
-	INPUT_PORTS_START(pcw16)
+	static InputPortPtr input_ports_pcw16 = new InputPortPtr(){ public void handler() { 
 		PORT_START
 		/* vblank */
-		PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_VBLANK)
+		PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_VBLANK);
 		/* power switch - default is on */
-		PORT_BITX(0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Power Switch/Suspend", IP_KEY_NONE, IP_JOY_NONE)
-		PORT_DIPSETTING(0x0, DEF_STR( Off) )
-		PORT_DIPSETTING(0x40, DEF_STR( On) )
+		PORT_BITX(0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Power Switch/Suspend", IP_KEY_NONE, IP_JOY_NONE);
+		PORT_DIPSETTING(0x0, DEF_STR( "Off"));
+		PORT_DIPSETTING(0x40, DEF_STR( "On"));
 	
 		INPUT_MOUSE_SYSTEMS
 	
 		AT_KEYBOARD
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	static struct beep_interface pcw16_beep_interface =
 	{
@@ -1617,10 +1617,10 @@ public class pcw16
 	
 	/* the lower 64k of the flash-file memory is write protected. This contains the boot
 		rom. The boot rom is also on the OS rescue disc. Handy! */
-	ROM_START(pcw16)
-		ROM_REGION((0x010000+524288), REGION_CPU1,0)
-		ROM_LOAD("pcw045.sys",0x10000, 524288, 0xc642f498)
-	ROM_END
+	static RomLoadPtr rom_pcw16 = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION((0x010000+524288); REGION_CPU1,0)
+		ROM_LOAD("pcw045.sys",0x10000, 524288, 0xc642f498);
+	ROM_END(); }}; 
 	
 	static const struct IODevice io_pcw16[] =
 	{

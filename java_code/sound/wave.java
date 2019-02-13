@@ -7,7 +7,7 @@
 
 ****************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package sound;
@@ -700,7 +700,7 @@ public class wave
 	
 				/* allocate a buffer for the binary data */
 				data = malloc(wa->chunk_size);
-				if( !data )
+				if (data == 0)
 				{
 					free(w->data);
 					/* zap the wave structure */

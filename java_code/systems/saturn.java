@@ -104,7 +104,7 @@
 */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -1334,7 +1334,7 @@ public class saturn
 	  pal = ((pal * 0x200) / 4);
 	  memt = &color_ram_base[pal]; /* &mem[SATURN_COLOR_RAM_BASE/4 + pal]; */
 	
-	  if(!trans)
+	  if (trans == 0)
 	    {
 	      for(loopy = 0;loopy < 512;loopy++)
 		{
@@ -1860,12 +1860,12 @@ public class saturn
 	static MEMORY_WRITE32_START( saturn_writemem )
 	MEMORY_END
 	
-	INPUT_PORTS_START( saturn )
+	static InputPortPtr input_ports_saturn = new InputPortPtr(){ public void handler() { 
 	
 	     PORT_START /* DIP switches */
-	     PORT_BIT(0xff, 0xff, IPT_UNUSED)
+	     PORT_BIT(0xff, 0xff, IPT_UNUSED);
 	
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	static MEMORY_READ16_START( readmem_68k )
 	MEMORY_END
@@ -1947,19 +1947,19 @@ public class saturn
 	  0,0,0,0
 	};
 	
-	ROM_START(saturn)
-	     ROM_REGION(0x00421000, REGION_CPU1,0)
-	     /*ROM_LOAD("sega_100.bin", 0x00000000, 0x00080000, 0x2ABA43C2) */
-	     ROM_LOAD("sega_101.bin", 0x00000000, 0x00080000, 0x224b752c)
-	     /*ROM_LOAD("sega_eur.bin", 0x00000000, 0x00080000, 0x4AFCF0FA) */
+	static RomLoadPtr rom_saturn = new RomLoadPtr(){ public void handler(){ 
+	     ROM_REGION(0x00421000, REGION_CPU1,0);
+	     /*ROM_LOAD("sega_100.bin", 0x00000000, 0x00080000, 0x2ABA43C2);*/
+	     ROM_LOAD("sega_101.bin", 0x00000000, 0x00080000, 0x224b752c);
+	     /*ROM_LOAD("sega_eur.bin", 0x00000000, 0x00080000, 0x4AFCF0FA);*/
 	     /*Make sure you set the PAL define to 1 otherwise euro bios will lock badly */
 	
 	     /* STV Bios Note these are in correct endian order. not byte swapped versions */
-	     /* ROM_LOAD("mp17951a.s", 0x00000000, 0x00080000, 0x574FD2C3)*/
-	     /*ROM_LOAD("mp17952a.s", 0x00000000, 0x00080000, 0xBF7DBDD7) */
-	     ROM_REGION(0x00080000, REGION_CPU2,0)
-	     ROM_REGION(0x00080000, REGION_CPU3,0)
-	ROM_END
+	     /* ROM_LOAD("mp17951a.s", 0x00000000, 0x00080000, 0x574FD2C3);/
+	     /*ROM_LOAD("mp17952a.s", 0x00000000, 0x00080000, 0xBF7DBDD7);*/
+	     ROM_REGION(0x00080000, REGION_CPU2,0);
+	     ROM_REGION(0x00080000, REGION_CPU3,0);
+	ROM_END(); }}; 
 	
 	static const struct IODevice io_saturn[] = {
 	  { IO_END }

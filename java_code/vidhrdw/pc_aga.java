@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -7,59 +7,59 @@ package vidhrdw;
 public class pc_aga
 {
 	
-	struct GfxLayout europc_cga_charlayout =
-	{
+	static GfxLayout europc_cga_charlayout = new GfxLayout
+	(
 		8,16,					/* 8 x 32 characters */
 	    256,                    /* 256 characters */
 	    1,                      /* 1 bits per pixel */
-	    { 0 },                  /* no bitplanes; 1 bit per pixel */
+	    new int[] { 0 },                  /* no bitplanes; 1 bit per pixel */
 	    /* x offsets */
-	    { 0,1,2,3,4,5,6,7 },
+	    new int[] { 0,1,2,3,4,5,6,7 },
 	    /* y offsets */
-		{ 0*8,1*8,2*8,3*8,
+		new int[] { 0*8,1*8,2*8,3*8,
 		  4*8,5*8,6*8,7*8,
 		  8*8,9*8,10*8,11*8,
 		  12*8,13*8,14*8,15*8 },
 	    8*16                     /* every char takes 8 bytes */
-	};
+	);
 	
-	struct GfxLayout europc_mda_charlayout =
-	{
+	static GfxLayout europc_mda_charlayout = new GfxLayout
+	(
 		9,32,					/* 9 x 32 characters (9 x 15 is the default, but..) */
 		256,					/* 256 characters */
 		1,                      /* 1 bits per pixel */
-		{ 0 },                  /* no bitplanes; 1 bit per pixel */
+		new int[] { 0 },                  /* no bitplanes; 1 bit per pixel */
 		/* x offsets */
-		{ 0,1,2,3,4,5,6,7,7 },	/* pixel 7 repeated only for char code 176 to 223 */
+		new int[] { 0,1,2,3,4,5,6,7,7 },	/* pixel 7 repeated only for char code 176 to 223 */
 		/* y offsets */
-		{
+		new int[] {
 			0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8,
 			8*8, 9*8, 10*8, 11*8, 12*8, 13*8, 14*8, 15*8,
 			0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8,
 			8*8, 9*8, 10*8, 11*8, 12*8, 13*8, 14*8, 15*8
 		},
 		8*16
+	);
+	
+	static GfxDecodeInfo europc_gfxdecodeinfo[] =
+	{
+		new GfxDecodeInfo( 1, 0x0000, europc_cga_charlayout,	   0, 256 ),   /* single width */
+		new GfxDecodeInfo( 1, 0x2000, CGA_gfxlayout_1bpp,	   256*2,  16 ),   /* 640x400x1 gfx */
+		new GfxDecodeInfo( 1, 0x2000, CGA_gfxlayout_2bpp, 256*2+16*2,   2 ),   /* 320x200x4 gfx */
+		new GfxDecodeInfo( 1, 0x1000, europc_mda_charlayout,	   256*2+16*2+2*4, 256 ),   /* single width */
+		new GfxDecodeInfo( 1, 0x2000, pc_mda_gfxlayout_1bpp,256*2+16*2+2*4+256*2,	 1 ),	/* 640x400x1 gfx */
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
-	struct GfxDecodeInfo europc_gfxdecodeinfo[] =
+	static GfxDecodeInfo aga_gfxdecodeinfo[] =
 	{
-		{ 1, 0x0000, &europc_cga_charlayout,	   0, 256 },   /* single width */
-		{ 1, 0x2000, &CGA_gfxlayout_1bpp,	   256*2,  16 },   /* 640x400x1 gfx */
-		{ 1, 0x2000, &CGA_gfxlayout_2bpp, 256*2+16*2,   2 },   /* 320x200x4 gfx */
-		{ 1, 0x1000, &europc_mda_charlayout,	   256*2+16*2+2*4, 256 },   /* single width */
-		{ 1, 0x2000, &pc_mda_gfxlayout_1bpp,256*2+16*2+2*4+256*2,	 1 },	/* 640x400x1 gfx */
-	    { -1 } /* end of array */
-	};
-	
-	struct GfxDecodeInfo aga_gfxdecodeinfo[] =
-	{
-		{ 1, 0x0800, &CGA_charlayout,			   0, 256 },   /* single width */
-		{ 1, 0x2000, &CGA_gfxlayout_1bpp,	   256*2,  16 },   /* 640x400x1 gfx */
-		{ 1, 0x2000, &CGA_gfxlayout_2bpp, 256*2+16*2,   2 },   /* 320x200x4 gfx */
-		{ 1, 0x1000, &pc_mda_charlayout,			   256*2+16*2+2*4, 256 },   /* single width */
-		{ 1, 0x2000, &pc_mda_gfxlayout_1bpp, 256*2+16*2+2*4+2*256,	 1 },	/* 640x400x1 gfx */
-		{ 1, 0x0000, &CGA_charlayout,			   0, 256 },   /* thin cga charset */
-	    { -1 } /* end of array */
+		new GfxDecodeInfo( 1, 0x0800, CGA_charlayout,			   0, 256 ),   /* single width */
+		new GfxDecodeInfo( 1, 0x2000, CGA_gfxlayout_1bpp,	   256*2,  16 ),   /* 640x400x1 gfx */
+		new GfxDecodeInfo( 1, 0x2000, CGA_gfxlayout_2bpp, 256*2+16*2,   2 ),   /* 320x200x4 gfx */
+		new GfxDecodeInfo( 1, 0x1000, pc_mda_charlayout,			   256*2+16*2+2*4, 256 ),   /* single width */
+		new GfxDecodeInfo( 1, 0x2000, pc_mda_gfxlayout_1bpp, 256*2+16*2+2*4+2*256,	 1 ),	/* 640x400x1 gfx */
+		new GfxDecodeInfo( 1, 0x0000, CGA_charlayout,			   0, 256 ),   /* thin cga charset */
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
 	/* Initialise the cga palette */
@@ -155,7 +155,7 @@ public class pc_aga
 		}
 	}
 	
-	READ_HANDLER( pc_aga_videoram_r )
+	public static ReadHandlerPtr pc_aga_videoram_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		switch (aga.mode) {
 		case AGA_COLOR: 
@@ -166,7 +166,7 @@ public class pc_aga
 		case AGA_OFF: break;
 		}
 		return 0;
-	}
+	} };
 	
 	extern WRITE_HANDLER ( pc200_videoram_w )
 	{
@@ -180,7 +180,7 @@ public class pc_aga
 		}
 	}
 	
-	READ_HANDLER( pc200_videoram_r )
+	public static ReadHandlerPtr pc200_videoram_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		switch (PC200_MODE) {
 		default: 
@@ -190,7 +190,7 @@ public class pc_aga
 			return videoram[offset];
 		}
 		return 0;
-	}
+	} };
 	
 	
 	extern WRITE_HANDLER ( pc_aga_mda_w )
@@ -225,7 +225,7 @@ public class pc_aga
 	
 	// in reality it is of course only 1 graphics adapter,
 	// but now cga and mda are splitted in mess
-	extern WRITE_HANDLER( pc200_cga_w )
+	extern public static WriteHandlerPtr pc200_cga_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		switch(offset) {
 		case 4:
@@ -244,7 +244,7 @@ public class pc_aga
 		default:
 			pc_CGA_w(offset,data);
 		}
-	}
+	} };
 	
 	extern READ_HANDLER ( pc200_cga_r )
 	{

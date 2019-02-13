@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package mess;
@@ -784,7 +784,7 @@ public class filemngr
 				}
 			}
 			/* osd code won't handle it, lets use our clunky interface */
-			else if (!UI_SHIFT_PRESSED)
+			else if (UI_SHIFT_PRESSED == 0)
 			{
 				/* save selection and switch to fileselect() */
 				previous_sel = sel;

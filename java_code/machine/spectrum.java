@@ -24,7 +24,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -1035,7 +1035,7 @@ public class spectrum
 	/*	quick.name = name; */
 	
 		fp = image_fopen(IO_QUICKLOAD, id, OSD_FILETYPE_IMAGE, 0);
-		if (!fp)
+		if (fp == 0)
 			return INIT_FAIL;
 	
 		quick.length = osd_fsize(fp);
@@ -1166,7 +1166,7 @@ public class spectrum
 			case 0x00:	logerror ("DOCK cart\n");
 					timex_cart_type = TIMEX_CART_DOCK;
 					timex_cart_data = (UINT8*) malloc (0x10000);
-					if (!timex_cart_data)
+					if (timex_cart_data == 0)
 					{
 						free (file_data);
 						logerror ("Memory allocate error\n");

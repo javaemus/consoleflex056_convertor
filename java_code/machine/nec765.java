@@ -19,7 +19,7 @@
 	while idle)
 ***************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -2197,7 +2197,7 @@ public class nec765
 	
 			}
 	
-			if (!a_drive_is_ready)
+			if (a_drive_is_ready == 0)
 			{
 				fdc.nec765_status[0] |= 0x08;
 			}

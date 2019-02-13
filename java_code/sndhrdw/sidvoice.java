@@ -1,6 +1,6 @@
 #define VERBOSE_DBG 0
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package sndhrdw;
@@ -41,7 +41,7 @@ public class sidvoice
 		filterAmpl = 0.7;
 	
 		ampMod1x8=(INT8*)malloc(256*256);
-		if (!ampMod1x8) {
+		if (ampMod1x8 == 0) {
 			printf("out of memory\n");exit(1);
 		}
 	

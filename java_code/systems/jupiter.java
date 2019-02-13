@@ -29,7 +29,7 @@ Ports:
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -86,119 +86,119 @@ public class jupiter
 	
 	/* graphics output */
 	
-	struct GfxLayout jupiter_charlayout =
-	{
+	static GfxLayout jupiter_charlayout = new GfxLayout
+	(
 		8, 8,	/* 8x8 characters */
 		128,	/* 128 characters */
 		1,		/* 1 bits per pixel */
-		{0},	/* no bitplanes; 1 bit per pixel */
-		{0, 1, 2, 3, 4, 5, 6, 7},
-		{0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8},
+		new int[] {0},	/* no bitplanes; 1 bit per pixel */
+		new int[] {0, 1, 2, 3, 4, 5, 6, 7},
+		new int[] {0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8},
 		8*8 	/* each character takes 8 consecutive bytes */
-	};
+	);
 	
-	static struct GfxDecodeInfo jupiter_gfxdecodeinfo[] =
+	static GfxDecodeInfo jupiter_gfxdecodeinfo[] =
 	{
-		{REGION_CPU1, 0x2c00, &jupiter_charlayout, 0, 2},
+		new GfxDecodeInfo(REGION_CPU1, 0x2c00, jupiter_charlayout, 0, 2),
 	MEMORY_END								   /* end of array */
 	
 	static unsigned char jupiter_palette[] =
-	{
+	new GfxDecodeInfo(
 		0x00, 0x00, 0x00,	/* Black */
 		0xff, 0xff, 0xff	/* White */
-	};
+	);
 	
 	static unsigned short jupiter_colortable[] =
-	{
+	new GfxDecodeInfo(
 		0, 1,
 		1, 0
-	};
+	);
 	
 	static void jupiter_init_palette (unsigned char *sys_palette, unsigned short *sys_colortable, const unsigned char *color_prom)
-	{
+	new GfxDecodeInfo(
 		memcpy (sys_palette, jupiter_palette, sizeof (jupiter_palette));
 		memcpy (sys_colortable, jupiter_colortable, sizeof (jupiter_colortable));
-	}
+	)
 	
 	/* keyboard input */
 	
 	INPUT_PORTS_START (jupiter)
 		PORT_START	/* 0: 0xFEFE */
-		PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "SHIFT", KEYCODE_RSHIFT, IP_JOY_NONE)
-		PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "SYM SHFT", KEYCODE_LSHIFT, IP_JOY_NONE)
-		PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "Z", KEYCODE_Z, IP_JOY_NONE)
-		PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "X", KEYCODE_X, IP_JOY_NONE)
-		PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "C", KEYCODE_C, IP_JOY_NONE)
+		PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "SHIFT", KEYCODE_RSHIFT, IP_JOY_NONE);
+		PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "SYM SHFT", KEYCODE_LSHIFT, IP_JOY_NONE);
+		PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "Z", KEYCODE_Z, IP_JOY_NONE);
+		PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "X", KEYCODE_X, IP_JOY_NONE);
+		PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "C", KEYCODE_C, IP_JOY_NONE);
 	
 		PORT_START	/* 1: 0xFDFE */
-		PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "A", KEYCODE_A, IP_JOY_NONE)
-		PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "S", KEYCODE_S, IP_JOY_NONE)
-		PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "D", KEYCODE_D, IP_JOY_NONE)
-		PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "F", KEYCODE_F, IP_JOY_NONE)
-		PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "G", KEYCODE_G, IP_JOY_NONE)
+		PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "A", KEYCODE_A, IP_JOY_NONE);
+		PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "S", KEYCODE_S, IP_JOY_NONE);
+		PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "D", KEYCODE_D, IP_JOY_NONE);
+		PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "F", KEYCODE_F, IP_JOY_NONE);
+		PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "G", KEYCODE_G, IP_JOY_NONE);
 	
 		PORT_START	/* 2: 0xFBFE */
-		PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "Q", KEYCODE_Q, IP_JOY_NONE)
-		PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "W", KEYCODE_W, IP_JOY_NONE)
-		PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "E", KEYCODE_E, IP_JOY_NONE)
-		PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "R", KEYCODE_R, IP_JOY_NONE)
-		PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "T", KEYCODE_T, IP_JOY_NONE)
+		PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "Q", KEYCODE_Q, IP_JOY_NONE);
+		PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "W", KEYCODE_W, IP_JOY_NONE);
+		PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "E", KEYCODE_E, IP_JOY_NONE);
+		PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "R", KEYCODE_R, IP_JOY_NONE);
+		PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "T", KEYCODE_T, IP_JOY_NONE);
 	
 		PORT_START	/* 3: 0xF7FE */
-		PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "1", KEYCODE_1, IP_JOY_NONE)
-		PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "2", KEYCODE_2, IP_JOY_NONE)
-		PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "3", KEYCODE_3, IP_JOY_NONE)
-		PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "4", KEYCODE_4, IP_JOY_NONE)
-		PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "5", KEYCODE_5, IP_JOY_NONE)
+		PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "1", KEYCODE_1, IP_JOY_NONE);
+		PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "2", KEYCODE_2, IP_JOY_NONE);
+		PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "3", KEYCODE_3, IP_JOY_NONE);
+		PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "4", KEYCODE_4, IP_JOY_NONE);
+		PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "5", KEYCODE_5, IP_JOY_NONE);
 	
 		PORT_START	/* 4: 0xEFFE */
-		PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "0", KEYCODE_0, IP_JOY_NONE)
-		PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "9", KEYCODE_9, IP_JOY_NONE)
-		PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "8", KEYCODE_8, IP_JOY_NONE)
-		PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "7", KEYCODE_7, IP_JOY_NONE)
-		PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "6", KEYCODE_6, IP_JOY_NONE)
+		PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "0", KEYCODE_0, IP_JOY_NONE);
+		PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "9", KEYCODE_9, IP_JOY_NONE);
+		PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "8", KEYCODE_8, IP_JOY_NONE);
+		PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "7", KEYCODE_7, IP_JOY_NONE);
+		PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "6", KEYCODE_6, IP_JOY_NONE);
 	
 		PORT_START	/* 5: 0xDFFE */
-		PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "P", KEYCODE_P, IP_JOY_NONE)
-		PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "O", KEYCODE_O, IP_JOY_NONE)
-		PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "I", KEYCODE_I, IP_JOY_NONE)
-		PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "U", KEYCODE_U, IP_JOY_NONE)
-		PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "Y", KEYCODE_Y, IP_JOY_NONE)
+		PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "P", KEYCODE_P, IP_JOY_NONE);
+		PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "O", KEYCODE_O, IP_JOY_NONE);
+		PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "I", KEYCODE_I, IP_JOY_NONE);
+		PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "U", KEYCODE_U, IP_JOY_NONE);
+		PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "Y", KEYCODE_Y, IP_JOY_NONE);
 	
 		PORT_START	/* 6: 0xBFFE */
-		PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "ENTER", KEYCODE_ENTER, IP_JOY_NONE)
-		PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "L", KEYCODE_L, IP_JOY_NONE)
-		PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "K", KEYCODE_K, IP_JOY_NONE)
-		PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "J", KEYCODE_J, IP_JOY_NONE)
-		PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "H", KEYCODE_H, IP_JOY_NONE)
+		PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "ENTER", KEYCODE_ENTER, IP_JOY_NONE);
+		PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "L", KEYCODE_L, IP_JOY_NONE);
+		PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "K", KEYCODE_K, IP_JOY_NONE);
+		PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "J", KEYCODE_J, IP_JOY_NONE);
+		PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "H", KEYCODE_H, IP_JOY_NONE);
 	
 		PORT_START	/* 7: 0x7FFE */
-		PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "SPACE", KEYCODE_SPACE, IP_JOY_NONE)
-		PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "M", KEYCODE_M, IP_JOY_NONE)
-		PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "N", KEYCODE_N, IP_JOY_NONE)
-		PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "B", KEYCODE_B, IP_JOY_NONE)
-		PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "V", KEYCODE_V, IP_JOY_NONE)
+		PORT_BITX (0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "SPACE", KEYCODE_SPACE, IP_JOY_NONE);
+		PORT_BITX (0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "M", KEYCODE_M, IP_JOY_NONE);
+		PORT_BITX (0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "N", KEYCODE_N, IP_JOY_NONE);
+		PORT_BITX (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "B", KEYCODE_B, IP_JOY_NONE);
+		PORT_BITX (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "V", KEYCODE_V, IP_JOY_NONE);
 		PORT_START	/* 8: machine config */
-		PORT_DIPNAME( 0x03, 2, "RAM Size")
-		PORT_DIPSETTING(0, "3Kb")
-		PORT_DIPSETTING(1, "19Kb")
-		PORT_DIPSETTING(2, "49Kb")
-	INPUT_PORTS_END
+		PORT_DIPNAME( 0x03, 2, "RAM Size");
+		PORT_DIPSETTING(0, "3Kb");
+		PORT_DIPSETTING(1, "19Kb");
+		PORT_DIPSETTING(2, "49Kb");
+	INPUT_PORTS_END(); }}; 
 	
 	/* Sound output */
 	
 	static struct Speaker_interface speaker_interface =
-	{
+	new GfxDecodeInfo(
 		1,			/* one speaker */
 		{ 100 },	/* mixing levels */
 		{ 0 },		/* optional: number of different levels */
 		{ NULL }	/* optional: level lookup table */
-	};
+	);
 	
 	/* machine definition */
 	
 	static	struct MachineDriver machine_driver_jupiter =
-	{
+	new GfxDecodeInfo(
 		/* basic machine hardware */
 		{
 			{
@@ -234,18 +234,18 @@ public class jupiter
 		{
 			{
 				SOUND_SPEAKER,
-				&speaker_interface
+				speaker_interface
 	        }
 	    }
-	};
+	);
 	
 	ROM_START (jupiter)
-	ROM_REGION (0x10000, REGION_CPU1,0)
-	ROM_LOAD ("jupiter.lo", 0x0000, 0x1000, 0xdc8438a5)
-	ROM_LOAD ("jupiter.hi", 0x1000, 0x1000, 0x4009f636)
-	ROM_END
+	ROM_REGION (0x10000, REGION_CPU1,0);
+	ROM_LOAD ("jupiter.lo", 0x0000, 0x1000, 0xdc8438a5);
+	ROM_LOAD ("jupiter.hi", 0x1000, 0x1000, 0x4009f636);
+	ROM_END(); }}; 
 	
-	static const struct IODevice io_jupiter[] = {
+	static const struct IODevice io_jupiter[] = new GfxDecodeInfo(
 	    {
 			IO_CARTSLOT,		/* type */
 			1,					/* count */
@@ -285,7 +285,7 @@ public class jupiter
 	        NULL                /* output_chunk */
 	    },
 	    { IO_END }
-	};
+	);
 	
 	/*    YEAR  NAME      PARENT    MACHINE   INPUT     INIT      COMPANY   FULLNAME */
 	COMP( 1981, jupiter,  0,		jupiter,  jupiter,	0,		  "Cantab",  "Jupiter Ace" )

@@ -99,7 +99,7 @@ INLINE void lh5801_and_mem(int addr, UINT8 data)
 {
 	data&=cpu_readmem17(addr);
 	lh5801.t&=~Z;
-	if (!data) lh5801.t|=Z;
+	if (data == 0) lh5801.t|=Z;
 	cpu_writemem17(addr,data);	
 }
 
@@ -127,7 +127,7 @@ INLINE void lh5801_ora_mem(int addr, UINT8 data)
 {
 	data|=cpu_readmem17(addr);
 	lh5801.t&=~Z;
-	if (!data) lh5801.t|=Z;
+	if (data == 0) lh5801.t|=Z;
 	cpu_writemem17(addr,data);	
 }
 

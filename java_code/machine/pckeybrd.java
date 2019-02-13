@@ -8,7 +8,7 @@
 */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -383,7 +383,7 @@ public class pckeybrd
 				a 1:1 correspondance for the scancodes */
 				scancode = our_code;
 			
-				if (!pressed)
+				if (pressed == 0)
 				{
 					/* adjust code for break code */
 					scancode|=0x080;
@@ -397,7 +397,7 @@ public class pckeybrd
 				/* lookup scancode */
 				scancode = at_keyboard_scancode_set_2_3[our_code];
 	
-				if (!pressed)
+				if (pressed == 0)
 				{
 					/* break code */
 					at_keyboard_queue_insert(0x0f0);

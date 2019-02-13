@@ -39,11 +39,8 @@ extern WRITE_HANDLER ( odyssey2_video_w );
 extern READ_HANDLER ( odyssey2_bus_r );
 extern WRITE_HANDLER ( odyssey2_bus_w );
 
-extern READ_HANDLER( odyssey2_getp1 );
-extern WRITE_HANDLER ( odyssey2_putp1 );
+extern extern WRITE_HANDLER ( odyssey2_putp1 );
 
-extern READ_HANDLER( odyssey2_getp2 );
-extern WRITE_HANDLER ( odyssey2_putp2 );
+extern extern WRITE_HANDLER ( odyssey2_putp2 );
 
-extern READ_HANDLER( odyssey2_getbus );
-extern WRITE_HANDLER ( odyssey2_putbus );
+extern extern WRITE_HANDLER ( odyssey2_putbus );

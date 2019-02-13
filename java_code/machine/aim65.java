@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -25,17 +25,17 @@ public class aim65
 		}
 	}
 	
-	static WRITE_HANDLER( aim65_pia_a_w)
+	public static WriteHandlerPtr aim65_pia_a_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		pia_a=data;
 		aim65_pia();
-	}
+	} };
 	
-	static WRITE_HANDLER( aim65_pia_b_w)
+	public static WriteHandlerPtr aim65_pia_b_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		pia_b=data;
 		aim65_pia();
-	}
+	} };
 	
 	static struct pia6821_interface pia= {
 		0,//mem_read_handler in_a_func,
@@ -175,7 +175,7 @@ public class aim65
 	
 	WRITE_HANDLER(aim65_printer_on)
 	{
-		if (!data) {
+		if (data == 0) {
 			if (!printer.timer) printer.timer=timer_pulse(1000e-6, 0, aim65_printer_timer);
 		} else {
 			if (printer.timer) timer_remove(printer.timer);
@@ -183,10 +183,10 @@ public class aim65
 		}
 	}
 	
-	static READ_HANDLER( aim65_via0_b_r)
+	public static ReadHandlerPtr aim65_via0_b_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return readinputport(4);
-	}
+	} };
 	
 	static struct via6522_interface via0={
 		0,//mem_read_handler in_a_func;

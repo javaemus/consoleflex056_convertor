@@ -5,7 +5,7 @@ needs it ;-)
 */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package windows;
@@ -147,7 +147,7 @@ public class messwin
 			printf("Complete Emulated System List\n");
 			printf("=============================\n");
 			printf("Here is the list of systems supported by MESS %s\n",build_version);
-			if (!listclones)
+			if (listclones == 0)
 				printf("Variants of the same system are not included, you can use the -listclones command\n"
 					"to get a list of the alternate versions of a given system.\n");
 			printf("\n"

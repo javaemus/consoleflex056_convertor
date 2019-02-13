@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package includes;
@@ -11,9 +11,9 @@ public class pc_cgaH
 		// cutted from some aga char rom
 		// 256 8x8 thick chars
 		// 256 8x8 thin chars
-	    ROM_LOAD("cga.chr",     0x00000, 0x01000, 0x42009069)
+	    ROM_LOAD("cga.chr",     0x00000, 0x01000, 0x42009069);
 		// first font of above
-	    ROM_LOAD("cga2.chr", 0x00000, 0x800, 0xa362ffe6)
+	    ROM_LOAD("cga2.chr", 0x00000, 0x800, 0xa362ffe6);
 	#endif
 	
 	

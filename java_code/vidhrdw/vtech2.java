@@ -8,7 +8,7 @@
 ****************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -57,7 +57,7 @@ public class vtech2
 	{
 		videoram_size = 0x04000;
 		dirtybuffer = (UINT8*)malloc(videoram_size);
-		if (!dirtybuffer)
+		if (dirtybuffer == 0)
 			return 1;
 		return 0;
 	}
@@ -359,7 +359,7 @@ public class vtech2
 		}
 	}
 	
-	WRITE_HANDLER( laser_bg_mode_w )
+	public static WriteHandlerPtr laser_bg_mode_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	    if (laser_bg_mode != data)
 	    {
@@ -367,9 +367,9 @@ public class vtech2
 	        laser_bg_mode = data;
 			logerror("laser border:$%X mode:$%X\n", data >> 4, data & 15);
 	    }
-	}
+	} };
 	
-	WRITE_HANDLER( laser_two_color_w )
+	public static WriteHandlerPtr laser_two_color_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		if (laser_two_color != data)
 		{
@@ -377,7 +377,7 @@ public class vtech2
 			laser_two_color = data;
 			logerror("laser foreground:$%X background:$%X\n", data >> 4, data & 15);
 	    }
-	}
+	} };
 	
 	
 }

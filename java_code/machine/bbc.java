@@ -9,7 +9,7 @@
 ******************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -444,7 +444,7 @@ public class bbc
 		b7_shift_lock_led=0x01;
 	}
 	
-	static WRITE_HANDLER( bbcb_via_system_write_porta )
+	public static WriteHandlerPtr bbcb_via_system_write_porta = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		via_system_porta=data;
 		if (b0_sound==0)
@@ -464,10 +464,10 @@ public class bbc
 			via_system_porta=bbc_keyboard(via_system_porta);
 		}
 	
-	}
+	} };
 	
 	
-	static WRITE_HANDLER( bbcb_via_system_write_portb )
+	public static WriteHandlerPtr bbcb_via_system_write_portb = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		int bit,value;
 		bit=data & 0x07;
@@ -574,62 +574,62 @@ public class bbc
 			}
 		}
 	
-	}
+	} };
 	
-	static READ_HANDLER( bbcb_via_system_read_porta )
+	public static ReadHandlerPtr bbcb_via_system_read_porta  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 	  return via_system_porta;
-	}
+	} };
 	
 	
 	// D4 of portb is joystick fire button 1
 	// D5 of portb is joystick fire button 2
-	static READ_HANDLER( bbcb_via_system_read_portb )
+	public static ReadHandlerPtr bbcb_via_system_read_portb  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 	  return (0xcf | readinputport(16));
-	}
+	} };
 	
 	/* vertical sync pulse from video circuit */
-	static READ_HANDLER( bbcb_via_system_read_ca1 )
+	public static ReadHandlerPtr bbcb_via_system_read_ca1  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 	  return 0x01;
-	}
+	} };
 	
 	
 	/* joystick EOC */
-	static READ_HANDLER( bbcb_via_system_read_cb1 )
+	public static ReadHandlerPtr bbcb_via_system_read_cb1  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 	  return uPD7002_EOC_r(0);
-	}
+	} };
 	
 	
 	/* keyboard pressed detect */
-	static READ_HANDLER( bbcb_via_system_read_ca2 )
+	public static ReadHandlerPtr bbcb_via_system_read_ca2  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 	  return 0x01;
-	}
+	} };
 	
 	
 	/* light pen strobe detect (not emulated) */
-	static READ_HANDLER( bbcb_via_system_read_cb2 )
+	public static ReadHandlerPtr bbcb_via_system_read_cb2  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 	  return 0x01;
-	}
+	} };
 	
 	
 	/* this is wired as in input port so writing to this port would be bad */
 	
-	static WRITE_HANDLER( bbcb_via_system_write_ca2 )
+	public static WriteHandlerPtr bbcb_via_system_write_ca2 = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	  //if( errorlog ) fprintf(errorlog, "via_system_write_ca2: $%02X\n", data);
-	}
+	} };
 	
 	/* this is wired as in input port so writing to this port would be bad */
 	
-	static WRITE_HANDLER( bbcb_via_system_write_cb2 )
+	public static WriteHandlerPtr bbcb_via_system_write_cb2 = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	  //if( errorlog ) fprintf(errorlog, "via_system_write_cb2: $%02X\n", data);
-	}
+	} };
 	
 	
 	
@@ -676,33 +676,33 @@ public class bbc
 	
 	/* USER VIA 6522 port A is buffered as an output through IC70 so
 	reading from this port will always return 0xff */
-	static READ_HANDLER( bbcb_via_user_read_porta )
+	public static ReadHandlerPtr bbcb_via_user_read_porta  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return 0xff;
-	}
+	} };
 	
 	/* USER VIA 6522 port B is connected to the BBC user port */
-	static READ_HANDLER( bbcb_via_user_read_portb )
+	public static ReadHandlerPtr bbcb_via_user_read_portb  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return 0xff;
-	}
+	} };
 	
-	static READ_HANDLER( bbcb_via_user_read_ca1 )
+	public static ReadHandlerPtr bbcb_via_user_read_ca1  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return bbc_printer_ca1;
-	}
+	} };
 	
-	static READ_HANDLER( bbcb_via_user_read_ca2 )
+	public static ReadHandlerPtr bbcb_via_user_read_ca2  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return 1;
-	}
+	} };
 	
-	static WRITE_HANDLER( bbcb_via_user_write_porta )
+	public static WriteHandlerPtr bbcb_via_user_write_porta = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		bbc_printer_porta=data;
-	}
+	} };
 	
-	static WRITE_HANDLER( bbcb_via_user_write_ca2 )
+	public static WriteHandlerPtr bbcb_via_user_write_ca2 = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		/* write value to printer on rising edge of ca2 */
 		if ((bbc_printer_ca2==0) && (data==1))
@@ -715,7 +715,7 @@ public class bbc
 		by just linking the strobe output into the acknowledge input */
 		bbc_printer_ca1=data;
 		via_1_ca1_w(0,data);
-	}
+	} };
 	
 	static void bbc_via_user_irq(int level)
 	{
@@ -830,7 +830,7 @@ public class bbc
 	};
 	
 	
-	READ_HANDLER( bbc_i8271_read )
+	public static ReadHandlerPtr bbc_i8271_read  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		switch (offset)
 		{
@@ -847,9 +847,9 @@ public class bbc
 		}
 	
 		return 0x0ff;
-	}
+	} };
 	
-	WRITE_HANDLER( bbc_i8271_write )
+	public static WriteHandlerPtr bbc_i8271_write = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		switch (offset)
 		{
@@ -866,7 +866,7 @@ public class bbc
 			default:
 				break;
 		}
-	}
+	} };
 	
 	
 	
@@ -1082,7 +1082,7 @@ public class bbc
 	
 		fp = (FILE*)image_fopen (IO_CARTSLOT, id, OSD_FILETYPE_IMAGE, 0);
 	
-		if (!fp)
+		if (fp == 0)
 		{
 			logerror("%s file not found\n", device_filename(IO_CARTSLOT,id));
 			return 1;

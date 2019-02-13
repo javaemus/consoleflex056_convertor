@@ -7,7 +7,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -1666,7 +1666,7 @@ public class newgenes
 		//scroll_element.colortable = &colours[0];
 	
 	      /*	genesis_dma_poll(200); */
-	/*	if (!vdp_display_enable) return;*/
+	/*	if (vdp_display_enable == 0) return;*/
 	
 	
 	/* organise sprites by priority, into the sprite layer  */

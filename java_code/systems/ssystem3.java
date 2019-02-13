@@ -23,7 +23,7 @@ internal expansion/cartridge port
 */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -35,23 +35,27 @@ public class ssystem3
 	static int ssystem3_frame_int(void);
 	static void ssystem3_machine_init(void);
 	
-	static MEMORY_READ_START( ssystem3_readmem )
-		{ 0x0000, 0x03ff, MRA_RAM },
-		{ 0x6000, 0x600f, via_0_r },
-		{ 0xc000, 0xffff, MRA_ROM },
-	MEMORY_END
+	public static Memory_ReadAddress ssystem3_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress( 0x0000, 0x03ff, MRA_RAM ),
+		new Memory_ReadAddress( 0x6000, 0x600f, via_0_r ),
+		new Memory_ReadAddress( 0xc000, 0xffff, MRA_ROM ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( ssystem3_writemem )
-		{ 0x0000, 0x03ff, MWA_RAM },
+	public static Memory_WriteAddress ssystem3_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x0000, 0x03ff, MWA_RAM ),
 	// 0x4000, 0x40ff, lcd chip!?
-		{ 0x6000, 0x600f, via_0_w },
-		{ 0xc000, 0xffff, MWA_ROM },
-	MEMORY_END
+		new Memory_WriteAddress( 0x6000, 0x600f, via_0_w ),
+		new Memory_WriteAddress( 0xc000, 0xffff, MWA_ROM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
 	#define DIPS_HELPER(bit, name, keycode, r) \
-	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r)
+	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r);
 	
-	INPUT_PORTS_START( ssystem3 )
+	static InputPortPtr input_ports_ssystem3 = new InputPortPtr(){ public void handler() { 
 		PORT_START
 	DIPS_HELPER( 0x001, "NEW GAME", KEYCODE_F3, CODE_NONE) // seams to be direct wired to reset
 		DIPS_HELPER( 0x002, "CLEAR", KEYCODE_F1, CODE_NONE)
@@ -85,7 +89,7 @@ public class ssystem3
 		DIPS_HELPER( 0x040, "Test 7", KEYCODE_7_PAD, CODE_NONE)
 		DIPS_HELPER( 0x080, "Test 8", KEYCODE_8_PAD, CODE_NONE)
 	#endif
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	static struct DACinterface ssystem3_dac={ 1, {80}}; // silence is golden
 	
@@ -125,17 +129,17 @@ public class ssystem3
 	    }
 	};
 	
-	ROM_START(ssystem3)
-		ROM_REGION(0x10000,REGION_CPU1,0)
-		ROM_LOAD("ss3lrom", 0xc000, 0x1000, 0x9ea46ed3)
-		ROM_LOAD("ss3hrom", 0xf000, 0x1000, 0x52741e0b)
-		ROM_RELOAD(0xd000, 0x1000)
+	static RomLoadPtr rom_ssystem3 = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x10000,REGION_CPU1,0);
+		ROM_LOAD("ss3lrom", 0xc000, 0x1000, 0x9ea46ed3);
+		ROM_LOAD("ss3hrom", 0xf000, 0x1000, 0x52741e0b);
+		ROM_RELOAD(0xd000, 0x1000);
 	/* 0xd450 reset,irq,nmi
 	
 	   d7c7 outputs 2e..32 to serial port 1
 	 */
 	
-	ROM_END
+	ROM_END(); }}; 
 	
 	static const struct IODevice io_ssystem3[] = {
 	    { IO_END }

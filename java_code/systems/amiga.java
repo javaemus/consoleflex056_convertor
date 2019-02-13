@@ -9,7 +9,7 @@ ernesto@imagina.com
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -36,47 +36,47 @@ public class amiga
 	/**************************************************************************
 	***************************************************************************/
 	
-	INPUT_PORTS_START( amiga )
+	static InputPortPtr input_ports_amiga = new InputPortPtr(){ public void handler() { 
 	    PORT_START /* joystick/mouse buttons */
-	    PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL )
-	    PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 )
-	    PORT_DIPNAME( 0x20, 0x00, "Input Port 0 Device")
-	    PORT_DIPSETTING( 0x00, "Mouse" )
-	    PORT_DIPSETTING( 0x20, "Joystick" )
-	    PORT_DIPNAME( 0x10, 0x10, "Input Port 1 Device")
-	    PORT_DIPSETTING( 0x00, "Mouse" )
-	    PORT_DIPSETTING( 0x10, "Joystick" )
-	    PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )  /* Unused */
-	    PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED )  /* Unused */
-	    PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL )
-	    PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON2 )
+	    PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_COCKTAIL );
+	    PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 );
+	    PORT_DIPNAME( 0x20, 0x00, "Input Port 0 Device");
+	    PORT_DIPSETTING( 0x00, "Mouse" );
+	    PORT_DIPSETTING( 0x20, "Joystick" );
+	    PORT_DIPNAME( 0x10, 0x10, "Input Port 1 Device");
+	    PORT_DIPSETTING( 0x00, "Mouse" );
+	    PORT_DIPSETTING( 0x10, "Joystick" );
+	    PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED ); /* Unused */
+	    PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED ); /* Unused */
+	    PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_COCKTAIL );
+	    PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON2 );
 	
 	    PORT_START
-	    PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP ) /* Joystick - Port 1 */
-	    PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN )
-	    PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT )
-	    PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT )
-	    PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP | IPF_COCKTAIL ) /* Joystick - Port 2 */
-	    PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN | IPF_COCKTAIL )
-	    PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_COCKTAIL )
-	    PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_COCKTAIL )
+	    PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP );/* Joystick - Port 1 */
+	    PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN );
+	    PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT );
+	    PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT );
+	    PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP | IPF_COCKTAIL );/* Joystick - Port 2 */
+	    PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN | IPF_COCKTAIL );
+	    PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_COCKTAIL );
+	    PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_COCKTAIL );
 	
 	    PORT_START /* Mouse port 0 - X AXIS */
-	    PORT_ANALOGX( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER1, 100, 0, 0, 0, IP_KEY_NONE, IP_KEY_NONE, IP_JOY_NONE, IP_JOY_NONE )
+	    PORT_ANALOGX( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER1, 100, 0, 0, 0, IP_KEY_NONE, IP_KEY_NONE, IP_JOY_NONE, IP_JOY_NONE );
 	
 	    PORT_START /* Mouse port 0 - Y AXIS */
-	    PORT_ANALOGX( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER1, 100, 0, 0, 0, IP_KEY_NONE, IP_KEY_NONE, IP_JOY_NONE, IP_JOY_NONE )
+	    PORT_ANALOGX( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER1, 100, 0, 0, 0, IP_KEY_NONE, IP_KEY_NONE, IP_JOY_NONE, IP_JOY_NONE );
 	
 	    PORT_START /* Mouse port 1 - X AXIS */
-	    PORT_ANALOGX( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER2, 100, 0, 0, 0, IP_KEY_NONE, IP_KEY_NONE, IP_JOY_NONE, IP_JOY_NONE )
+	    PORT_ANALOGX( 0xff, 0x00, IPT_TRACKBALL_X | IPF_PLAYER2, 100, 0, 0, 0, IP_KEY_NONE, IP_KEY_NONE, IP_JOY_NONE, IP_JOY_NONE );
 	
 	    PORT_START /* Mouse port 1 - Y AXIS */
-	    PORT_ANALOGX( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER2, 100, 0, 0, 0, IP_KEY_NONE, IP_KEY_NONE, IP_JOY_NONE, IP_JOY_NONE )
-	INPUT_PORTS_END
+	    PORT_ANALOGX( 0xff, 0x00, IPT_TRACKBALL_Y | IPF_PLAYER2, 100, 0, 0, 0, IP_KEY_NONE, IP_KEY_NONE, IP_JOY_NONE, IP_JOY_NONE );
+	INPUT_PORTS_END(); }}; 
 	
-	static struct GfxDecodeInfo gfxdecodeinfo[] =
+	static GfxDecodeInfo gfxdecodeinfo[] =
 	{
-	    { -1 } /* end of array */
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
 	static struct MachineDriver machine_driver_ntsc =
@@ -119,10 +119,10 @@ public class amiga
 	
 	***************************************************************************/
 	
-	ROM_START( amiga )
-	    ROM_REGION(0x200000,REGION_CPU1,ROMREGION_16BIT) /* for ram, etc */
-	    ROM_LOAD ( "kick13.rom",  0x180000, 0x80000, 0xf6290043)
-	ROM_END
+	static RomLoadPtr rom_amiga = new RomLoadPtr(){ public void handler(){ 
+	    ROM_REGION(0x200000,REGION_CPU1,ROMREGION_16BIT);/* for ram, etc */
+	    ROM_LOAD ( "kick13.rom",  0x180000, 0x80000, 0xf6290043);
+	ROM_END(); }}; 
 	
 	static const struct IODevice io_amiga[] = {
 	    {
@@ -150,10 +150,10 @@ public class amiga
 	/*     YEAR  NAME      PARENT    MACHINE   INPUT     INIT      COMPANY   FULLNAME */
 	COMPX( 1984, amiga,    0,        ntsc,     amiga,    0,        "Commodore Business Machines Co.",  "Amiga 500 (NTSC)", GAME_NOT_WORKING )
 	
-	ROM_START( cdtv )
-	    ROM_REGION(0x200000,REGION_CPU1,ROMREGION_16BIT) /* for ram, etc */
-	    ROM_LOAD ( "cdtv13.rom",  0x180000, 0x80000, 0x42BAA124)
-	ROM_END
+	static RomLoadPtr rom_cdtv = new RomLoadPtr(){ public void handler(){ 
+	    ROM_REGION(0x200000,REGION_CPU1,ROMREGION_16BIT);/* for ram, etc */
+	    ROM_LOAD ( "cdtv13.rom",  0x180000, 0x80000, 0x42BAA124);
+	ROM_END(); }}; 
 	
 	static const struct IODevice io_cdtv[] = {
 	    {

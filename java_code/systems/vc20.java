@@ -152,7 +152,7 @@ when problems start with -log and look into error.log file
 
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -162,102 +162,108 @@ public class vc20
 	
 	#define VERBOSE_DBG 0
 	
-	static MEMORY_READ_START( vc20_readmem )
-		{0x0000, 0x03ff, MRA_RAM},
+	public static Memory_ReadAddress vc20_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress(0x0000, 0x03ff, MRA_RAM),
 	#if 0
-		{0x0400, 0x0fff, MRA_RAM},		   /* ram, rom or nothing; I think read 0xff! */
+		new Memory_ReadAddress(0x0400, 0x0fff, MRA_RAM),		   /* ram, rom or nothing; I think read 0xff! */
 	#endif
-		{0x1000, 0x1fff, MRA_RAM},
+		new Memory_ReadAddress(0x1000, 0x1fff, MRA_RAM),
 	#if 0
-		{0x2000, 0x3fff, MRA_RAM},		   /* ram, rom or nothing */
-		{0x4000, 0x5fff, MRA_RAM},		   /* ram, rom or nothing */
-		{0x6000, 0x7fff, MRA_RAM},		   /* ram, rom or nothing */
+		new Memory_ReadAddress(0x2000, 0x3fff, MRA_RAM),		   /* ram, rom or nothing */
+		new Memory_ReadAddress(0x4000, 0x5fff, MRA_RAM),		   /* ram, rom or nothing */
+		new Memory_ReadAddress(0x6000, 0x7fff, MRA_RAM),		   /* ram, rom or nothing */
 	#endif
-		{0x8000, 0x8fff, MRA_ROM},
-		{0x9000, 0x900f, vic6560_port_r},
-		{0x9010, 0x910f, MRA_NOP},
-		{0x9110, 0x911f, via_0_r},
-		{0x9120, 0x912f, via_1_r},
-		{0x9130, 0x93ff, MRA_NOP},
-		{0x9400, 0x97ff, MRA_RAM},		   /*color ram 4 bit */
-		{0x9800, 0x9fff, MRA_NOP},
+		new Memory_ReadAddress(0x8000, 0x8fff, MRA_ROM),
+		new Memory_ReadAddress(0x9000, 0x900f, vic6560_port_r),
+		new Memory_ReadAddress(0x9010, 0x910f, MRA_NOP),
+		new Memory_ReadAddress(0x9110, 0x911f, via_0_r),
+		new Memory_ReadAddress(0x9120, 0x912f, via_1_r),
+		new Memory_ReadAddress(0x9130, 0x93ff, MRA_NOP),
+		new Memory_ReadAddress(0x9400, 0x97ff, MRA_RAM),		   /*color ram 4 bit */
+		new Memory_ReadAddress(0x9800, 0x9fff, MRA_NOP),
 	#if 0
-		{0xa000, 0xbfff, MRA_RAM},		   /* or nothing */
+		new Memory_ReadAddress(0xa000, 0xbfff, MRA_RAM),		   /* or nothing */
 	#endif
-		{0xc000, 0xffff, MRA_ROM},
+		new Memory_ReadAddress(0xc000, 0xffff, MRA_ROM),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
+	
+	public static Memory_WriteAddress vc20_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress(0x0000, 0x03ff, MWA_RAM, vc20_memory),
+		new Memory_WriteAddress(0x1000, 0x1fff, MWA_RAM),
+		new Memory_WriteAddress(0x8000, 0x8fff, MWA_ROM),
+		new Memory_WriteAddress(0x9000, 0x900f, vic6560_port_w),
+		new Memory_WriteAddress(0x9010, 0x910f, MWA_NOP),
+		new Memory_WriteAddress(0x9110, 0x911f, via_0_w),
+		new Memory_WriteAddress(0x9120, 0x912f, via_1_w),
+		new Memory_WriteAddress(0x9130, 0x93ff, MWA_NOP),
+		new Memory_WriteAddress(0x9400, 0x97ff, vc20_write_9400, vc20_memory_9400),
+		new Memory_WriteAddress(0x9800, 0x9fff, MWA_NOP),
+		new Memory_WriteAddress(0xc000, 0xffff, MWA_NOP),		   /* MWA_ROM }, but logfile */
 	MEMORY_END
 	
-	static MEMORY_WRITE_START( vc20_writemem )
-		{0x0000, 0x03ff, MWA_RAM, &vc20_memory},
-		{0x1000, 0x1fff, MWA_RAM},
-		{0x8000, 0x8fff, MWA_ROM},
-		{0x9000, 0x900f, vic6560_port_w},
-		{0x9010, 0x910f, MWA_NOP},
-		{0x9110, 0x911f, via_0_w},
-		{0x9120, 0x912f, via_1_w},
-		{0x9130, 0x93ff, MWA_NOP},
-		{0x9400, 0x97ff, vc20_write_9400, &vc20_memory_9400},
-		{0x9800, 0x9fff, MWA_NOP},
-		{0xc000, 0xffff, MWA_NOP},		   /* MWA_ROM }, but logfile */
-	MEMORY_END
-	
-	static MEMORY_READ_START( vc20i_readmem )
-		{0x0000, 0x03ff, MRA_RAM},
+	public static Memory_ReadAddress vc20i_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress(0x0000, 0x03ff, MRA_RAM),
 	#if 0
-		{0x0400, 0x0fff, MRA_RAM},		   /* ram, rom or nothing; I think read 0xff! */
+		new Memory_ReadAddress(0x0400, 0x0fff, MRA_RAM),		   /* ram, rom or nothing; I think read 0xff! */
 	#endif
-		{0x1000, 0x1fff, MRA_RAM},
+		new Memory_ReadAddress(0x1000, 0x1fff, MRA_RAM),
 	#if 0
-		{0x2000, 0x3fff, MRA_RAM},		   /* ram, rom or nothing */
-		{0x4000, 0x5fff, MRA_RAM},		   /* ram, rom or nothing */
-		{0x6000, 0x7fff, MRA_RAM},		   /* ram, rom or nothing */
+		new Memory_ReadAddress(0x2000, 0x3fff, MRA_RAM),		   /* ram, rom or nothing */
+		new Memory_ReadAddress(0x4000, 0x5fff, MRA_RAM),		   /* ram, rom or nothing */
+		new Memory_ReadAddress(0x6000, 0x7fff, MRA_RAM),		   /* ram, rom or nothing */
 	#endif
-		{0x8000, 0x8fff, MRA_ROM},
-		{0x9000, 0x900f, vic6560_port_r},
-		{0x9010, 0x910f, MRA_NOP},
-		{0x9110, 0x911f, via_0_r},
-		{0x9120, 0x912f, via_1_r},
-		{0x9400, 0x97ff, MRA_RAM},		   /*color ram 4 bit */
-		{0x9800, 0x980f, via_4_r},
-		{0x9810, 0x981f, via_5_r},
-		{0xa000, 0xbfff, MRA_ROM},
-		{0xc000, 0xffff, MRA_ROM},
-	MEMORY_END
+		new Memory_ReadAddress(0x8000, 0x8fff, MRA_ROM),
+		new Memory_ReadAddress(0x9000, 0x900f, vic6560_port_r),
+		new Memory_ReadAddress(0x9010, 0x910f, MRA_NOP),
+		new Memory_ReadAddress(0x9110, 0x911f, via_0_r),
+		new Memory_ReadAddress(0x9120, 0x912f, via_1_r),
+		new Memory_ReadAddress(0x9400, 0x97ff, MRA_RAM),		   /*color ram 4 bit */
+		new Memory_ReadAddress(0x9800, 0x980f, via_4_r),
+		new Memory_ReadAddress(0x9810, 0x981f, via_5_r),
+		new Memory_ReadAddress(0xa000, 0xbfff, MRA_ROM),
+		new Memory_ReadAddress(0xc000, 0xffff, MRA_ROM),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( vc20i_writemem )
-		{0x0000, 0x03ff, MWA_RAM, &vc20_memory},
-		{0x1000, 0x1fff, MWA_RAM},
-		{0x8000, 0x8fff, MWA_ROM},
-		{0x9000, 0x900f, vic6560_port_w},
-		{0x9010, 0x910f, MWA_NOP},
-		{0x9110, 0x911f, via_0_w},
-		{0x9120, 0x912f, via_1_w},
-		{0x9400, 0x97ff, vc20_write_9400, &vc20_memory_9400},
-		{0x9800, 0x980f, via_4_w},
-		{0x9810, 0x981f, via_5_w},
-		{0xa000, 0xbfff, MWA_ROM},
-		{0xc000, 0xffff, MWA_NOP},		   /* MWA_ROM }, but logfile */
+	public static Memory_WriteAddress vc20i_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress(0x0000, 0x03ff, MWA_RAM, vc20_memory),
+		new Memory_WriteAddress(0x1000, 0x1fff, MWA_RAM),
+		new Memory_WriteAddress(0x8000, 0x8fff, MWA_ROM),
+		new Memory_WriteAddress(0x9000, 0x900f, vic6560_port_w),
+		new Memory_WriteAddress(0x9010, 0x910f, MWA_NOP),
+		new Memory_WriteAddress(0x9110, 0x911f, via_0_w),
+		new Memory_WriteAddress(0x9120, 0x912f, via_1_w),
+		new Memory_WriteAddress(0x9400, 0x97ff, vc20_write_9400, vc20_memory_9400),
+		new Memory_WriteAddress(0x9800, 0x980f, via_4_w),
+		new Memory_WriteAddress(0x9810, 0x981f, via_5_w),
+		new Memory_WriteAddress(0xa000, 0xbfff, MWA_ROM),
+		new Memory_WriteAddress(0xc000, 0xffff, MWA_NOP),		   /* MWA_ROM }, but logfile */
 	MEMORY_END
 	
 	#define DIPS_HELPER(bit, name, keycode) \
-	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, IP_JOY_NONE)
+	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, IP_JOY_NONE);
 	
 	#define DIPS_JOY \
 		PORT_START\
-		PORT_BITX( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP|IPF_8WAY, "Joystick Up", CODE_DEFAULT, CODE_NONE) \
-		PORT_BITX( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN|IPF_8WAY, "Joystick Down", CODE_DEFAULT, CODE_NONE) \
-		PORT_BITX( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT|IPF_8WAY, "Joystick Left", CODE_DEFAULT, CODE_NONE) \
-		PORT_BITX( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT|IPF_8WAY, "Joystick Right", CODE_DEFAULT, CODE_NONE) \
-		PORT_BITX( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1, "Joystick Button", CODE_DEFAULT, CODE_NONE) \
-		PORT_BITX( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON1, "Paddle 1 Button", KEYCODE_INSERT, CODE_NONE) \
-		PORT_BITX( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON2, "Paddle 2 Button", KEYCODE_DEL, CODE_NONE) \
-		PORT_BITX( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON1, "Lightpen Signal", KEYCODE_LALT, CODE_NONE) \
+		PORT_BITX( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP|IPF_8WAY, "Joystick Up", CODE_DEFAULT, CODE_NONE);\
+		PORT_BITX( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN|IPF_8WAY, "Joystick Down", CODE_DEFAULT, CODE_NONE);\
+		PORT_BITX( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT|IPF_8WAY, "Joystick Left", CODE_DEFAULT, CODE_NONE);\
+		PORT_BITX( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT|IPF_8WAY, "Joystick Right", CODE_DEFAULT, CODE_NONE);\
+		PORT_BITX( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON1, "Joystick Button", CODE_DEFAULT, CODE_NONE);\
+		PORT_BITX( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON1, "Paddle 1 Button", KEYCODE_INSERT, CODE_NONE);\
+		PORT_BITX( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON2, "Paddle 2 Button", KEYCODE_DEL, CODE_NONE);\
+		PORT_BITX( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON1, "Lightpen Signal", KEYCODE_LALT, CODE_NONE);\
 		PORT_START \
 		PORT_ANALOGX(0xff,128,IPT_PADDLE|IPF_REVERSE,\
-				 30,20,0,255,KEYCODE_HOME,KEYCODE_PGUP,JOYCODE_NONE,JOYCODE_NONE)\
+				 30,20,0,255,KEYCODE_HOME,KEYCODE_PGUP,JOYCODE_NONE,JOYCODE_NONE);
 		PORT_START \
 		PORT_ANALOGX(0xff,128,IPT_PADDLE|IPF_PLAYER2|IPF_REVERSE,\
-				 30,20,0,255,KEYCODE_END,KEYCODE_PGDN,JOYCODE_NONE,JOYCODE_NONE)
+				 30,20,0,255,KEYCODE_END,KEYCODE_PGDN,JOYCODE_NONE,JOYCODE_NONE);
 	
 	#define DIPS_INPUT \
 		PORT_START \
@@ -296,7 +302,7 @@ public class vc20
 		PORT_START \
 		DIPS_HELPER( 0x8000, "STOP RUN",          KEYCODE_TAB)\
 		PORT_BITX( 0x4000, IP_ACTIVE_HIGH, IPF_TOGGLE, \
-			   "SHIFT-LOCK (switch)", KEYCODE_CAPSLOCK, IP_JOY_NONE )\
+			   "SHIFT-LOCK (switch);, KEYCODE_CAPSLOCK, IP_JOY_NONE )\
 		DIPS_HELPER( 0x2000, "A",                 KEYCODE_A)\
 		DIPS_HELPER( 0x1000, "S",                 KEYCODE_S)\
 		DIPS_HELPER( 0x0800, "D",                 KEYCODE_D)\
@@ -341,80 +347,80 @@ public class vc20
 	
 	#define DIPS_BOTH \
 		PORT_START \
-		PORT_DIPNAME ( 0x07, 0, "RAM Cartridge")\
-		PORT_DIPSETTING(	0, "None" )\
-		PORT_DIPSETTING(	1, "3k" )\
-		PORT_DIPSETTING(	2, "8k" )\
-		PORT_DIPSETTING(	3, "16k" )\
-		PORT_DIPSETTING(	4, "32k" )\
-		PORT_DIPSETTING(	5, "Custom" )\
-		PORT_DIPNAME   ( 0x08, 0, " Ram at 0x0400")\
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )\
-		PORT_DIPSETTING( 0x08, DEF_STR( Yes ) )\
-		PORT_DIPNAME   ( 0x10, 0, " Ram at 0x2000")\
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )\
-		PORT_DIPSETTING( 0x10, DEF_STR( Yes ) )\
-		PORT_DIPNAME   ( 0x20, 0, " Ram at 0x4000")\
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )\
-		PORT_DIPSETTING( 0x20, DEF_STR( Yes ) )\
-		PORT_DIPNAME   ( 0x40, 0, " Ram at 0x6000")\
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )\
-		PORT_DIPSETTING( 0x40, DEF_STR( Yes ) )\
-		PORT_DIPNAME   ( 0x80, 0, " Ram at 0xa000")\
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )\
-		PORT_DIPSETTING( 0x80, DEF_STR( Yes ) )\
+		PORT_DIPNAME ( 0x07, 0, "RAM Cartridge");
+		PORT_DIPSETTING(	0, "None" );
+		PORT_DIPSETTING(	1, "3k" );
+		PORT_DIPSETTING(	2, "8k" );
+		PORT_DIPSETTING(	3, "16k" );
+		PORT_DIPSETTING(	4, "32k" );
+		PORT_DIPSETTING(	5, "Custom" );
+		PORT_DIPNAME   ( 0x08, 0, " Ram at 0x0400");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );\
+		PORT_DIPSETTING( 0x08, DEF_STR( "Yes") );\
+		PORT_DIPNAME   ( 0x10, 0, " Ram at 0x2000");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );\
+		PORT_DIPSETTING( 0x10, DEF_STR( "Yes") );\
+		PORT_DIPNAME   ( 0x20, 0, " Ram at 0x4000");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );\
+		PORT_DIPSETTING( 0x20, DEF_STR( "Yes") );\
+		PORT_DIPNAME   ( 0x40, 0, " Ram at 0x6000");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );\
+		PORT_DIPSETTING( 0x40, DEF_STR( "Yes") );\
+		PORT_DIPNAME   ( 0x80, 0, " Ram at 0xa000");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );\
+		PORT_DIPSETTING( 0x80, DEF_STR( "Yes") );\
 		PORT_START \
-		PORT_DIPNAME   ( 0x80, 0x80, "Joystick")\
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )\
-		PORT_DIPSETTING( 0x80, DEF_STR( Yes ) )\
-		PORT_DIPNAME   ( 0x40, 0x40, "Paddles")\
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )\
-		PORT_DIPSETTING( 0x40, DEF_STR( Yes ) )\
-		PORT_DIPNAME   ( 0x20, 0x00, "Lightpen")\
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )\
-		PORT_DIPSETTING( 0x20, DEF_STR( Yes ) )\
-		PORT_DIPNAME   ( 0x10, 0x10, " Draw Pointer")\
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )\
-		PORT_DIPSETTING( 0x10, DEF_STR( Yes ) )\
-		PORT_DIPNAME   ( 0x08, 0x08, "Tape Drive/Device 1")\
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )\
-		PORT_DIPSETTING( 0x08, DEF_STR( Yes ) )\
-		PORT_DIPNAME   ( 0x04, 0x00, " Tape Sound")\
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )\
-		PORT_DIPSETTING( 0x04, DEF_STR( Yes ) )\
-		PORT_DIPNAME ( 0x02, 0x02, "Serial/Dev 8/VC1541 Floppy")\
-		PORT_DIPSETTING(  0, DEF_STR( No ) )\
-		PORT_DIPSETTING(0x02, DEF_STR( Yes ) )\
-		PORT_DIPNAME ( 0x01, 0x01, "Serial/Dev 9/VC1541 Floppy")\
-		PORT_DIPSETTING(  0, DEF_STR( No ) )\
-		PORT_DIPSETTING(  1, DEF_STR( Yes ) )\
+		PORT_DIPNAME   ( 0x80, 0x80, "Joystick");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );\
+		PORT_DIPSETTING( 0x80, DEF_STR( "Yes") );\
+		PORT_DIPNAME   ( 0x40, 0x40, "Paddles");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );\
+		PORT_DIPSETTING( 0x40, DEF_STR( "Yes") );\
+		PORT_DIPNAME   ( 0x20, 0x00, "Lightpen");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );\
+		PORT_DIPSETTING( 0x20, DEF_STR( "Yes") );\
+		PORT_DIPNAME   ( 0x10, 0x10, " Draw Pointer");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );\
+		PORT_DIPSETTING( 0x10, DEF_STR( "Yes") );\
+		PORT_DIPNAME   ( 0x08, 0x08, "Tape Drive/Device 1");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );\
+		PORT_DIPSETTING( 0x08, DEF_STR( "Yes") );\
+		PORT_DIPNAME   ( 0x04, 0x00, " Tape Sound");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );\
+		PORT_DIPSETTING( 0x04, DEF_STR( "Yes") );\
+		PORT_DIPNAME ( 0x02, 0x02, "Serial/Dev 8/VC1541 Floppy");
+		PORT_DIPSETTING(  0, DEF_STR( "No") );\
+		PORT_DIPSETTING(0x02, DEF_STR( "Yes") );\
+		PORT_DIPNAME ( 0x01, 0x01, "Serial/Dev 9/VC1541 Floppy");
+		PORT_DIPSETTING(  0, DEF_STR( "No") );\
+		PORT_DIPSETTING(  1, DEF_STR( "Yes") );\
 	
 	INPUT_PORTS_START (vic20)
 		DIPS_JOY
 		PORT_START							   /* in 16 lightpen X */
 		PORT_ANALOGX (0xff, 0, IPT_PADDLE | IPF_PLAYER3,
-					  30, 2, 0, (VIC6560_MAME_XSIZE - 1),
+					  30, 2, 0, (VIC6560_MAME_XSIZE - 1);
 					  KEYCODE_LEFT, KEYCODE_RIGHT,
 					  JOYCODE_1_LEFT, JOYCODE_1_RIGHT)
 		PORT_START							   /* in 17 lightpen Y */
 		PORT_ANALOGX (0xff, 0, IPT_PADDLE | IPF_PLAYER4,
-					  30, 2, 0, (VIC6560_MAME_YSIZE - 1),
+					  30, 2, 0, (VIC6560_MAME_YSIZE - 1);
 					  KEYCODE_UP, KEYCODE_DOWN, JOYCODE_1_UP, JOYCODE_1_DOWN)
 		DIPS_INPUT
 		DIPS_BOTH
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	// some different labels to vic20
 	INPUT_PORTS_START (vic1001)
 		DIPS_JOY
 		PORT_START							   /* in 16 lightpen X */
 		PORT_ANALOGX (0xff, 0, IPT_PADDLE | IPF_PLAYER3,
-					  30, 2, 0, (VIC6560_MAME_XSIZE - 1),
+					  30, 2, 0, (VIC6560_MAME_XSIZE - 1);
 					  KEYCODE_LEFT, KEYCODE_RIGHT,
 					  JOYCODE_1_LEFT, JOYCODE_1_RIGHT)
 		PORT_START							   /* in 17 lightpen Y */
 		PORT_ANALOGX (0xff, 0, IPT_PADDLE | IPF_PLAYER4,
-					  30, 2, 0, (VIC6560_MAME_YSIZE - 1),
+					  30, 2, 0, (VIC6560_MAME_YSIZE - 1);
 					  KEYCODE_UP, KEYCODE_DOWN, JOYCODE_1_UP, JOYCODE_1_DOWN)
 		PORT_START 
 		DIPS_HELPER( 0x8000, "Arrow-Left",        KEYCODE_TILDE)
@@ -452,7 +458,7 @@ public class vc20
 		PORT_START 
 		DIPS_HELPER( 0x8000, "STOP RUN",          KEYCODE_TAB)
 		PORT_BITX( 0x4000, IP_ACTIVE_HIGH, IPF_TOGGLE, 
-			   "SHIFT-LOCK (switch)", KEYCODE_CAPSLOCK, IP_JOY_NONE )
+			   "SHIFT-LOCK (switch);, KEYCODE_CAPSLOCK, IP_JOY_NONE )
 		DIPS_HELPER( 0x2000, "A",                 KEYCODE_A)
 		DIPS_HELPER( 0x1000, "S",                 KEYCODE_S)
 		DIPS_HELPER( 0x0800, "D",                 KEYCODE_D)
@@ -495,103 +501,103 @@ public class vc20
 		DIPS_HELPER( 0x02, "Tape Drive Record",     KEYCODE_F6)
 		DIPS_HELPER( 0x01, "Tape Drive Stop",       KEYCODE_F7)
 		DIPS_BOTH
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	
 	INPUT_PORTS_START (vic20i)
 		DIPS_JOY
 		PORT_START							   /* in 16 lightpen X */
 		PORT_ANALOGX (0xff, 0, IPT_PADDLE | IPF_PLAYER3,
-					  30, 2, 0, (VIC6560_MAME_XSIZE - 1),
+					  30, 2, 0, (VIC6560_MAME_XSIZE - 1);
 					  KEYCODE_LEFT, KEYCODE_RIGHT,
 					  JOYCODE_1_LEFT, JOYCODE_1_RIGHT)
 		PORT_START							   /* in 17 lightpen Y */
 		PORT_ANALOGX (0xff, 0, IPT_PADDLE | IPF_PLAYER4,
-					  30, 2, 0, (VIC6560_MAME_YSIZE - 1),
+					  30, 2, 0, (VIC6560_MAME_YSIZE - 1);
 					  KEYCODE_UP, KEYCODE_DOWN, JOYCODE_1_UP, JOYCODE_1_DOWN)
 		DIPS_INPUT
 		PORT_START
-		PORT_DIPNAME ( 0x07, 0, "RAM Cartridge")
-		PORT_DIPSETTING(	0, "None" )
-		PORT_DIPSETTING(	1, "3k" )
-		PORT_DIPSETTING(	2, "8k" )
-		PORT_DIPSETTING(	3, "16k" )
-		PORT_DIPSETTING(	4, "32k" )
-		PORT_DIPSETTING(	5, "Custom" )
-		PORT_DIPNAME   ( 0x08, 0, " Ram at 0x0400")
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )
-		PORT_DIPSETTING( 0x08, DEF_STR( Yes ) )
-		PORT_DIPNAME   ( 0x10, 0, " Ram at 0x2000")
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )
-		PORT_DIPSETTING( 0x10, DEF_STR( Yes ) )
-		PORT_DIPNAME   ( 0x20, 0, " Ram at 0x4000")
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )
-		PORT_DIPSETTING( 0x20, DEF_STR( Yes ) )
-		PORT_DIPNAME   ( 0x40, 0, " Ram at 0x6000")
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )
-		PORT_DIPSETTING( 0x40, DEF_STR( Yes ) )
-		PORT_DIPNAME   ( 0x80, 0, " Ram at 0xa000")
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )
-		PORT_DIPSETTING( 0x80, DEF_STR( Yes ) )
+		PORT_DIPNAME ( 0x07, 0, "RAM Cartridge");
+		PORT_DIPSETTING(	0, "None" );
+		PORT_DIPSETTING(	1, "3k" );
+		PORT_DIPSETTING(	2, "8k" );
+		PORT_DIPSETTING(	3, "16k" );
+		PORT_DIPSETTING(	4, "32k" );
+		PORT_DIPSETTING(	5, "Custom" );
+		PORT_DIPNAME   ( 0x08, 0, " Ram at 0x0400");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );
+		PORT_DIPSETTING( 0x08, DEF_STR( "Yes") );
+		PORT_DIPNAME   ( 0x10, 0, " Ram at 0x2000");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );
+		PORT_DIPSETTING( 0x10, DEF_STR( "Yes") );
+		PORT_DIPNAME   ( 0x20, 0, " Ram at 0x4000");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );
+		PORT_DIPSETTING( 0x20, DEF_STR( "Yes") );
+		PORT_DIPNAME   ( 0x40, 0, " Ram at 0x6000");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );
+		PORT_DIPSETTING( 0x40, DEF_STR( "Yes") );
+		PORT_DIPNAME   ( 0x80, 0, " Ram at 0xa000");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );
+		PORT_DIPSETTING( 0x80, DEF_STR( "Yes") );
 		PORT_START
-		PORT_DIPNAME   ( 0x80, 0x80, "Joystick")
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )
-		PORT_DIPSETTING( 0x80, DEF_STR( Yes ) )
-		PORT_DIPNAME   ( 0x40, 0x40, "Paddles")
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )
-		PORT_DIPSETTING( 0x40, DEF_STR( Yes ) )
-		PORT_DIPNAME   ( 0x20, 0x00, "Lightpen")
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )
-		PORT_DIPSETTING( 0x20, DEF_STR( Yes ) )
-		PORT_DIPNAME   ( 0x10, 0x10, " Draw Pointer")
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )
-		PORT_DIPSETTING( 0x10, DEF_STR( Yes ) )
-		PORT_DIPNAME   ( 0x08, 0x08, "Tape Drive/Device 1")
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )
-		PORT_DIPSETTING( 0x08, DEF_STR( Yes ) )
-		PORT_DIPNAME   ( 0x04, 0x00, " Tape Sound")
-		PORT_DIPSETTING( 0x00, DEF_STR( No ) )
-		PORT_DIPSETTING( 0x04, DEF_STR( Yes ) )
-		PORT_DIPNAME ( 0x02, 0x02, "IEEE/Dev 8/Floppy Sim")
-		PORT_DIPSETTING(  0, DEF_STR( No ) )
-		PORT_DIPSETTING(0x02, DEF_STR( Yes ) )
+		PORT_DIPNAME   ( 0x80, 0x80, "Joystick");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );
+		PORT_DIPSETTING( 0x80, DEF_STR( "Yes") );
+		PORT_DIPNAME   ( 0x40, 0x40, "Paddles");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );
+		PORT_DIPSETTING( 0x40, DEF_STR( "Yes") );
+		PORT_DIPNAME   ( 0x20, 0x00, "Lightpen");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );
+		PORT_DIPSETTING( 0x20, DEF_STR( "Yes") );
+		PORT_DIPNAME   ( 0x10, 0x10, " Draw Pointer");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );
+		PORT_DIPSETTING( 0x10, DEF_STR( "Yes") );
+		PORT_DIPNAME   ( 0x08, 0x08, "Tape Drive/Device 1");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );
+		PORT_DIPSETTING( 0x08, DEF_STR( "Yes") );
+		PORT_DIPNAME   ( 0x04, 0x00, " Tape Sound");
+		PORT_DIPSETTING( 0x00, DEF_STR( "No") );
+		PORT_DIPSETTING( 0x04, DEF_STR( "Yes") );
+		PORT_DIPNAME ( 0x02, 0x02, "IEEE/Dev 8/Floppy Sim");
+		PORT_DIPSETTING(  0, DEF_STR( "No") );
+		PORT_DIPSETTING(0x02, DEF_STR( "Yes") );
 	#if 1
 		/* ieee simu currently not a bus, so only 1 device */
-		PORT_BIT( 0x01, 0,	IPT_UNUSED )
+		PORT_BIT( 0x01, 0,	IPT_UNUSED );
 	#else
-		PORT_DIPNAME ( 0x01, 0x01, "IEEE/Dev 9/Floppy Sim")
-		PORT_DIPSETTING(  0, DEF_STR( No ) )
-		PORT_DIPSETTING(  1, DEF_STR( Yes ) )
+		PORT_DIPNAME ( 0x01, 0x01, "IEEE/Dev 9/Floppy Sim");
+		PORT_DIPSETTING(  0, DEF_STR( "No") );
+		PORT_DIPSETTING(  1, DEF_STR( "Yes") );
 	#endif
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	INPUT_PORTS_START (vc20)
 		DIPS_JOY
 		PORT_START							   /* in 16 lightpen X */
 		PORT_ANALOGX (0xff, 0, IPT_PADDLE | IPF_PLAYER3,
-					  30, 2, 0, (VIC6561_MAME_XSIZE - 1),
+					  30, 2, 0, (VIC6561_MAME_XSIZE - 1);
 					  KEYCODE_LEFT, KEYCODE_RIGHT,
 					  JOYCODE_1_LEFT, JOYCODE_1_RIGHT)
 		PORT_START							   /* in 17 lightpen Y */
 		PORT_ANALOGX (0x1ff, 0, IPT_PADDLE | IPF_PLAYER4,
-					  30, 2, 0, (VIC6561_MAME_YSIZE - 1),
+					  30, 2, 0, (VIC6561_MAME_YSIZE - 1);
 					  KEYCODE_UP, KEYCODE_DOWN,
 					  JOYCODE_1_UP, JOYCODE_1_DOWN)
 		DIPS_INPUT
 		DIPS_BOTH
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	// some different labels to vc20
 	INPUT_PORTS_START (vic20swe)
 		DIPS_JOY
 		PORT_START							   /* in 16 lightpen X */
 		PORT_ANALOGX (0xff, 0, IPT_PADDLE | IPF_PLAYER3,
-					  30, 2, 0, (VIC6561_MAME_XSIZE - 1),
+					  30, 2, 0, (VIC6561_MAME_XSIZE - 1);
 					  KEYCODE_LEFT, KEYCODE_RIGHT,
 					  JOYCODE_1_LEFT, JOYCODE_1_RIGHT)
 		PORT_START							   /* in 17 lightpen Y */
 		PORT_ANALOGX (0x1ff, 0, IPT_PADDLE | IPF_PLAYER4,
-					  30, 2, 0, (VIC6561_MAME_YSIZE - 1),
+					  30, 2, 0, (VIC6561_MAME_YSIZE - 1);
 					  KEYCODE_UP, KEYCODE_DOWN,
 					  JOYCODE_1_UP, JOYCODE_1_DOWN)
 		PORT_START 
@@ -630,7 +636,7 @@ public class vc20
 		PORT_START 
 		DIPS_HELPER( 0x8000, "STOP RUN",          KEYCODE_TAB)
 		PORT_BITX( 0x4000, IP_ACTIVE_HIGH, IPF_TOGGLE, 
-			   "SHIFT-LOCK (switch)", KEYCODE_CAPSLOCK, IP_JOY_NONE )
+			   "SHIFT-LOCK (switch);, KEYCODE_CAPSLOCK, IP_JOY_NONE )
 		DIPS_HELPER( 0x2000, "A",                 KEYCODE_A)
 		DIPS_HELPER( 0x1000, "S",                 KEYCODE_S)
 		DIPS_HELPER( 0x0800, "D",                 KEYCODE_D)
@@ -673,7 +679,7 @@ public class vc20
 		DIPS_HELPER( 0x02, "Tape Drive Record",     KEYCODE_F6)
 		DIPS_HELPER( 0x01, "Tape Drive Stop",       KEYCODE_F7)
 		DIPS_BOTH
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	
 	/* Initialise the vc20 palette */
@@ -687,77 +693,77 @@ public class vc20
 	
 	#if 0
 		/* chargen */
-		ROM_LOAD ("901460.03", 0x8000, 0x1000, 0x83e032a6)
+		ROM_LOAD ("901460.03", 0x8000, 0x1000, 0x83e032a6);
 		/* basic */
-		ROM_LOAD ("901486.01", 0xc000, 0x2000, 0xdb4c43c1)
+		ROM_LOAD ("901486.01", 0xc000, 0x2000, 0xdb4c43c1);
 		/* kernel ntsc-m of vic1001? */
-		ROM_LOAD ("901486.02", 0xe000, 0x2000, 0x336900d7)
+		ROM_LOAD ("901486.02", 0xe000, 0x2000, 0x336900d7);
 		/* kernel ntsc */
-		ROM_LOAD ("901486.06", 0xe000, 0x2000, 0xe5e7c174)
+		ROM_LOAD ("901486.06", 0xe000, 0x2000, 0xe5e7c174);
 		/* kernel pal */
-		ROM_LOAD ("901486.07", 0xe000, 0x2000, 0x4be07cb4)
+		ROM_LOAD ("901486.07", 0xe000, 0x2000, 0x4be07cb4);
 	
 		/* patched pal system for swedish/finish keyboard and chars */
 		/* but in rom? (maybe patched means in this case nec version) */
-		ROM_LOAD ("nec22101.207", 0x8000, 0x1000, 0xd808551d)
-		ROM_LOAD ("nec22081.206", 0xe000, 0x2000, 0xb2a60662)
+		ROM_LOAD ("nec22101.207", 0x8000, 0x1000, 0xd808551d);
+		ROM_LOAD ("nec22081.206", 0xe000, 0x2000, 0xb2a60662);
 	
 		/* ieee488 cartridge */
-		ROM_LOAD ("325329-04.bin", 0xb000, 0x800, 0xd37b6335)
+		ROM_LOAD ("325329-04.bin", 0xb000, 0x800, 0xd37b6335);
 	#endif
 	
 	ROM_START (vic20)
-		ROM_REGION (0x10000, REGION_CPU1,0)
-		ROM_LOAD ("901460.03", 0x8000, 0x1000, 0x83e032a6)
-		ROM_LOAD ("901486.01", 0xc000, 0x2000, 0xdb4c43c1)
-		ROM_LOAD ("901486.06", 0xe000, 0x2000, 0xe5e7c174)
-	ROM_END
+		ROM_REGION (0x10000, REGION_CPU1,0);
+		ROM_LOAD ("901460.03", 0x8000, 0x1000, 0x83e032a6);
+		ROM_LOAD ("901486.01", 0xc000, 0x2000, 0xdb4c43c1);
+		ROM_LOAD ("901486.06", 0xe000, 0x2000, 0xe5e7c174);
+	ROM_END(); }}; 
 	
 	ROM_START (vic1001)
-		ROM_REGION (0x10000, REGION_CPU1,0)
-		ROM_LOAD ("901460.02", 0x8000, 0x1000, 0xfcfd8a4b)
-		ROM_LOAD ("901486.01", 0xc000, 0x2000, 0xdb4c43c1)
-		ROM_LOAD ("901486.02", 0xe000, 0x2000, 0x336900d7)
-	ROM_END
+		ROM_REGION (0x10000, REGION_CPU1,0);
+		ROM_LOAD ("901460.02", 0x8000, 0x1000, 0xfcfd8a4b);
+		ROM_LOAD ("901486.01", 0xc000, 0x2000, 0xdb4c43c1);
+		ROM_LOAD ("901486.02", 0xe000, 0x2000, 0x336900d7);
+	ROM_END(); }}; 
 	
 	ROM_START (vic20swe)
-		ROM_REGION (0x10000, REGION_CPU1,0)
-		ROM_LOAD ("nec22101.207", 0x8000, 0x1000, 0xd808551d)
-		ROM_LOAD ("901486.01", 0xc000, 0x2000, 0xdb4c43c1)
-		ROM_LOAD ("nec22081.206", 0xe000, 0x2000, 0xb2a60662)
-	ROM_END
+		ROM_REGION (0x10000, REGION_CPU1,0);
+		ROM_LOAD ("nec22101.207", 0x8000, 0x1000, 0xd808551d);
+		ROM_LOAD ("901486.01", 0xc000, 0x2000, 0xdb4c43c1);
+		ROM_LOAD ("nec22081.206", 0xe000, 0x2000, 0xb2a60662);
+	ROM_END(); }}; 
 	
 	ROM_START (vic20v)
-		ROM_REGION (0x10000, REGION_CPU1,0)
-		ROM_LOAD ("901460.03", 0x8000, 0x1000, 0x83e032a6)
-		ROM_LOAD ("901486.01", 0xc000, 0x2000, 0xdb4c43c1)
-		ROM_LOAD ("901486.06", 0xe000, 0x2000, 0xe5e7c174)
+		ROM_REGION (0x10000, REGION_CPU1,0);
+		ROM_LOAD ("901460.03", 0x8000, 0x1000, 0x83e032a6);
+		ROM_LOAD ("901486.01", 0xc000, 0x2000, 0xdb4c43c1);
+		ROM_LOAD ("901486.06", 0xe000, 0x2000, 0xe5e7c174);
 		VC1540_ROM (REGION_CPU2)
-	ROM_END
+	ROM_END(); }}; 
 	
 	ROM_START (vic20i)
-		ROM_REGION (0x10000, REGION_CPU1,0)
-		ROM_LOAD ("901460.03", 0x8000, 0x1000, 0x83e032a6)
-		ROM_LOAD ("325329.04", 0xb000, 0x800, 0xd37b6335)
-		ROM_LOAD ("901486.01", 0xc000, 0x2000, 0xdb4c43c1)
-		ROM_LOAD ("901486.06", 0xe000, 0x2000, 0xe5e7c174)
+		ROM_REGION (0x10000, REGION_CPU1,0);
+		ROM_LOAD ("901460.03", 0x8000, 0x1000, 0x83e032a6);
+		ROM_LOAD ("325329.04", 0xb000, 0x800, 0xd37b6335);
+		ROM_LOAD ("901486.01", 0xc000, 0x2000, 0xdb4c43c1);
+		ROM_LOAD ("901486.06", 0xe000, 0x2000, 0xe5e7c174);
 	/*	C2031_ROM (REGION_CPU2) */
-	ROM_END
+	ROM_END(); }}; 
 	
 	ROM_START (vc20)
-		ROM_REGION (0x10000, REGION_CPU1,0)
-		ROM_LOAD ("901460.03", 0x8000, 0x1000, 0x83e032a6)
-		ROM_LOAD ("901486.01", 0xc000, 0x2000, 0xdb4c43c1)
-		ROM_LOAD ("901486.07", 0xe000, 0x2000, 0x4be07cb4)
-	ROM_END
+		ROM_REGION (0x10000, REGION_CPU1,0);
+		ROM_LOAD ("901460.03", 0x8000, 0x1000, 0x83e032a6);
+		ROM_LOAD ("901486.01", 0xc000, 0x2000, 0xdb4c43c1);
+		ROM_LOAD ("901486.07", 0xe000, 0x2000, 0x4be07cb4);
+	ROM_END(); }}; 
 	
 	ROM_START (vc20v)
-		ROM_REGION (0x10000, REGION_CPU1,0)
-		ROM_LOAD ("901460.03", 0x8000, 0x1000, 0x83e032a6)
-		ROM_LOAD ("901486.01", 0xc000, 0x2000, 0xdb4c43c1)
-		ROM_LOAD ("901486.07", 0xe000, 0x2000, 0x4be07cb4)
+		ROM_REGION (0x10000, REGION_CPU1,0);
+		ROM_LOAD ("901460.03", 0x8000, 0x1000, 0x83e032a6);
+		ROM_LOAD ("901486.01", 0xc000, 0x2000, 0xdb4c43c1);
+		ROM_LOAD ("901486.07", 0xe000, 0x2000, 0x4be07cb4);
 		VC1541_ROM (REGION_CPU2)
-	ROM_END
+	ROM_END(); }}; 
 	
 	static struct MachineDriver machine_driver_vic20 =
 	{

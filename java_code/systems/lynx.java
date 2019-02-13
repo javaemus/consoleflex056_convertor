@@ -7,7 +7,7 @@
 ******************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -21,44 +21,48 @@ public class lynx
 	static int lynx_line_y;
 	UINT32 lynx_palette[0x10];
 	
-	static MEMORY_READ_START( lynx_readmem )
-		{ 0x0000, 0xfbff, MRA_RAM },
-		{ 0xfc00, 0xfcff, MRA_BANK1 },
-		{ 0xfd00, 0xfdff, MRA_BANK2 },
-		{ 0xfe00, 0xfff7, MRA_BANK3 },
-		{ 0xfff8, 0xfff9, MRA_RAM },
-	    { 0xfffa, 0xffff, MRA_BANK4 },
-	MEMORY_END
+	public static Memory_ReadAddress lynx_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress( 0x0000, 0xfbff, MRA_RAM ),
+		new Memory_ReadAddress( 0xfc00, 0xfcff, MRA_BANK1 ),
+		new Memory_ReadAddress( 0xfd00, 0xfdff, MRA_BANK2 ),
+		new Memory_ReadAddress( 0xfe00, 0xfff7, MRA_BANK3 ),
+		new Memory_ReadAddress( 0xfff8, 0xfff9, MRA_RAM ),
+	    new Memory_ReadAddress( 0xfffa, 0xffff, MRA_BANK4 ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( lynx_writemem )
-		{ 0x0000, 0xfbff, MWA_RAM },
-		{ 0xfc00, 0xfcff, MWA_BANK1 },
-		{ 0xfd00, 0xfdff, MWA_BANK2 },
-		{ 0xfe00, 0xfff8, MWA_RAM },
-	    { 0xfff9, 0xfff9, lynx_memory_config },
-	    { 0xfffa, 0xffff, MWA_RAM },
-	MEMORY_END
+	public static Memory_WriteAddress lynx_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x0000, 0xfbff, MWA_RAM ),
+		new Memory_WriteAddress( 0xfc00, 0xfcff, MWA_BANK1 ),
+		new Memory_WriteAddress( 0xfd00, 0xfdff, MWA_BANK2 ),
+		new Memory_WriteAddress( 0xfe00, 0xfff8, MWA_RAM ),
+	    new Memory_WriteAddress( 0xfff9, 0xfff9, lynx_memory_config ),
+	    new Memory_WriteAddress( 0xfffa, 0xffff, MWA_RAM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
-	INPUT_PORTS_START( lynx )
+	static InputPortPtr input_ports_lynx = new InputPortPtr(){ public void handler() { 
 		PORT_START
-		PORT_BITX( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON1, "A", CODE_DEFAULT, CODE_DEFAULT )
-		PORT_BITX( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON2, "B", CODE_DEFAULT, CODE_DEFAULT )
-		PORT_BITX( 0x04, IP_ACTIVE_HIGH, IPT_KEYBOARD, "Opt 2", KEYCODE_2, IP_JOY_DEFAULT )
-		PORT_BITX( 0x08, IP_ACTIVE_HIGH, IPT_KEYBOARD, "Opt 1",  KEYCODE_1, IP_JOY_DEFAULT )
-	    PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT)
-	    PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT )
-	    PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN )
-	    PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP   )
+		PORT_BITX( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON1, "A", CODE_DEFAULT, CODE_DEFAULT );
+		PORT_BITX( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON2, "B", CODE_DEFAULT, CODE_DEFAULT );
+		PORT_BITX( 0x04, IP_ACTIVE_HIGH, IPT_KEYBOARD, "Opt 2", KEYCODE_2, IP_JOY_DEFAULT );
+		PORT_BITX( 0x08, IP_ACTIVE_HIGH, IPT_KEYBOARD, "Opt 1",  KEYCODE_1, IP_JOY_DEFAULT );
+	    PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT);
+	    PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT );
+	    PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN );
+	    PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP   );
 		PORT_START
-		PORT_BITX( 0x01, IP_ACTIVE_HIGH, IPT_KEYBOARD, "Pause",  KEYCODE_3, IP_JOY_DEFAULT )
+		PORT_BITX( 0x01, IP_ACTIVE_HIGH, IPT_KEYBOARD, "Pause",  KEYCODE_3, IP_JOY_DEFAULT );
 		// power on and power off buttons
 		PORT_START
-		PORT_DIPNAME ( 0x03, 3, "90 Degree Rotation")
-		PORT_DIPSETTING(	2, "counterclockwise" )
-		PORT_DIPSETTING(	1, "clockwise" )
-		PORT_DIPSETTING(	0, "None" )
-		PORT_DIPSETTING(	3, "crcfile" )
-	INPUT_PORTS_END
+		PORT_DIPNAME ( 0x03, 3, "90 Degree Rotation");
+		PORT_DIPSETTING(	2, "counterclockwise" );
+		PORT_DIPSETTING(	1, "clockwise" );
+		PORT_DIPSETTING(	0, "None" );
+		PORT_DIPSETTING(	3, "crcfile" );
+	INPUT_PORTS_END(); }}; 
 	
 	static int lynx_frame_int(void)
 	{
@@ -289,26 +293,26 @@ public class lynx
 	   (memory configuration)
 	   these 2 dumps differ only in this byte!
 	*/
-	ROM_START(lynx)
-		ROM_REGION(0x10200,REGION_CPU1, 0)
-		ROM_LOAD("lynx.bin", 0x10000, 0x200, 0xe1ffecb6)
-		ROM_REGION(0x100,REGION_GFX1, 0)
-		ROM_REGION(0x100000, REGION_USER1, 0)
-	ROM_END
+	static RomLoadPtr rom_lynx = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x10200,REGION_CPU1, 0);
+		ROM_LOAD("lynx.bin", 0x10000, 0x200, 0xe1ffecb6);
+		ROM_REGION(0x100,REGION_GFX1, 0);
+		ROM_REGION(0x100000, REGION_USER1, 0);
+	ROM_END(); }}; 
 	
-	ROM_START(lynxa)
-		ROM_REGION(0x10200,REGION_CPU1, 0)
-		ROM_LOAD("lynxa.bin", 0x10000, 0x200, 0x0d973c9d)
-		ROM_REGION(0x100,REGION_GFX1, 0)
-		ROM_REGION(0x100000, REGION_USER1, 0)
-	ROM_END
+	static RomLoadPtr rom_lynxa = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x10200,REGION_CPU1, 0);
+		ROM_LOAD("lynxa.bin", 0x10000, 0x200, 0x0d973c9d);
+		ROM_REGION(0x100,REGION_GFX1, 0);
+		ROM_REGION(0x100000, REGION_USER1, 0);
+	ROM_END(); }}; 
 	
-	ROM_START(lynx2)
-		ROM_REGION(0x10200,REGION_CPU1, 0)
-		ROM_LOAD("lynx2.bin", 0x10000, 0x200, 0x0)
-		ROM_REGION(0x100,REGION_GFX1, 0)
-		ROM_REGION(0x100000, REGION_USER1, 0)
-	ROM_END
+	static RomLoadPtr rom_lynx2 = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x10200,REGION_CPU1, 0);
+		ROM_LOAD("lynx2.bin", 0x10000, 0x200, 0x0);
+		ROM_REGION(0x100,REGION_GFX1, 0);
+		ROM_REGION(0x100000, REGION_USER1, 0);
+	ROM_END(); }}; 
 	
 	UINT32 lynx_partialcrc(const unsigned char *buf,unsigned int size)
 	{

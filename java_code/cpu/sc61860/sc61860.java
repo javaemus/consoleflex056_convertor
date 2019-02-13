@@ -27,7 +27,7 @@
  *         Extended execute procudure with HLT-mode of CPU.
  *****************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package cpu.sc61860;
@@ -307,7 +307,7 @@ public class sc61860
 	
 		which = (which + 1) % 16;
 		buffer[which][0] = '\0';
-		if( !context )
+		if (context == 0)
 			r = &sc61860;
 	
 		switch( regnum )

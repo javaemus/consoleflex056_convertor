@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package windowsui;
@@ -250,7 +250,7 @@ public class softwarelist
 	    if (!mess_images_index || (imagenum >= mess_images_count))
 	        return FALSE;		/* Invalid image index */
 	    filename = strdup(T2A(mess_images_index[imagenum]->fullname));
-	    if (!filename)
+	    if (filename == 0)
 	        return FALSE;		/* Out of memory */
 	
 	    SetupImageTypes(nDriver, imagetypes, sizeof(imagetypes) / sizeof(imagetypes[0]), TRUE, IO_END);
@@ -287,7 +287,7 @@ public class softwarelist
 		fullname_t = A2T(fullname);
 	
 		newimg = malloc(sizeof(ImageData) + (_tcslen(fullname_t) + 1) * sizeof(TCHAR));
-		if (!newimg)
+		if (newimg == 0)
 			return NULL;
 		memset(newimg, 0, sizeof(ImageData));
 	
@@ -320,7 +320,7 @@ public class softwarelist
 		char *newcrcline;
 	
 		newcrcline = strdup(crcline);
-		if (!newcrcline)
+		if (newcrcline == 0)
 			return FALSE;
 	
 		if (img->crcline)
@@ -343,7 +343,7 @@ public class softwarelist
 		FILE *f = NULL;
 	
 		f = fopen (file, "rb");
-		if (!f)
+		if (f == 0)
 			goto done;
 	
 		/* determine length of file */
@@ -356,7 +356,7 @@ public class softwarelist
 	
 		/* allocate space for entire file */
 		data = (unsigned char *) malloc(length);
-		if (!data)
+		if (data == 0)
 			goto done;
 	
 		/* read entire file into memory */
@@ -431,7 +431,7 @@ public class softwarelist
 	    ImageData *newimg;
 	
 		newimg = ImageData_Alloc(fullname);
-	    if (!newimg)
+	    if (newimg == 0)
 	        return FALSE;
 	
 		ImageData_Realize(newimg, eRealize, imagetypes);
@@ -471,7 +471,7 @@ public class softwarelist
 	        pathlen = strlen(buffer);
 	
 	        while(osd_dir_get_entry(d, buffer + pathlen, buffersz - pathlen, &is_dir)) {
-	            if (!is_dir) {
+	            if (is_dir == 0) {
 	                /* Not a directory */
 	                if (AppendNewImage(buffer, REALIZE_IMMEDIATE, listend, imagetypes))
 	                    mess_images_count++;
@@ -517,7 +517,7 @@ public class softwarelist
 		if (mess_crc_file)
 			config_close(mess_crc_file);
 		mess_crc_file = OpenCrcFile(drivers[nGame], mess_crc_category);
-		if (!mess_crc_file)
+		if (mess_crc_file == 0)
 			mess_crc_file = OpenCrcFile(drivers[nGame]->clone_of, mess_crc_category);
 	#endif
 	
@@ -548,7 +548,7 @@ public class softwarelist
 			if (s) {
 				int nLen = s - plpPaths[i];
 				s = malloc((nLen + 1) * sizeof(*s));
-				if (!s)
+				if (s == 0)
 					return;
 				memcpy(s, plpPaths[i], nLen * sizeof(*s));
 				s[nLen] = '\0';
@@ -684,7 +684,7 @@ public class softwarelist
 	        goto unknownsoftware;
 	
 	    pNewIndex = (ImageData **) realloc(mess_images_index, (mess_images_count+1) * sizeof(ImageData *));
-	    if (!pNewIndex)
+	    if (pNewIndex == 0)
 	        goto outofmemory;
 	    i = mess_images_count++;
 	    pNewIndex[i] = (*pOldLastImageNext);

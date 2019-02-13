@@ -8,48 +8,48 @@ int		saa5050_vh_start (void);
 void	saa5050_vh_stop (void);
 void	saa5050_vh_screenrefresh (struct mame_bitmap *, int);
 
-struct	GfxLayout	saa5050_charlayout =
-{
+static GfxLayout saa5050_charlayout = new GfxLayout
+(
 	6, 10,
 	256,
 	1,
-	{ 0 },
-	{ 2, 3, 4, 5, 6, 7 },
-	{ 0*8, 1*8, 2*8, 3*8, 4*8,
+	new int[] { 0 },
+	new int[] { 2, 3, 4, 5, 6, 7 },
+	new int[] { 0*8, 1*8, 2*8, 3*8, 4*8,
 	  5*8, 6*8, 7*8, 8*8, 9*8 },
 	8 * 10
-};
+);
 
-struct	GfxLayout	saa5050_hilayout =
-{
+static GfxLayout saa5050_hilayout = new GfxLayout
+(
 	6, 10,
 	256,
 	1,
-	{ 0 },
-	{ 2, 3, 4, 5, 6, 7 },
-	{ 0*8, 0*8, 1*8, 1*8, 2*8,
+	new int[] { 0 },
+	new int[] { 2, 3, 4, 5, 6, 7 },
+	new int[] { 0*8, 0*8, 1*8, 1*8, 2*8,
 	  2*8, 3*8, 3*8, 4*8, 4*8 },
 	8 * 10
-};
+);
 
-struct	GfxLayout	saa5050_lolayout =
-{
+static GfxLayout saa5050_lolayout = new GfxLayout
+(
 	6, 10,
 	256,
 	1,
-	{ 0 },
-	{ 2, 3, 4, 5, 6, 7 },
-	{ 5*8, 5*8, 6*8, 6*8, 7*8,
+	new int[] { 0 },
+	new int[] { 2, 3, 4, 5, 6, 7 },
+	new int[] { 5*8, 5*8, 6*8, 6*8, 7*8,
 	  7*8, 8*8, 8*8, 9*8, 9*8 },
 	8 * 10
-};
+);
 
-static	struct	GfxDecodeInfo	saa5050_gfxdecodeinfo[] =
+static GfxDecodeInfo saa5050_gfxdecodeinfo[] =
 {
-	{ REGION_GFX1, 0x0000, &saa5050_charlayout, 0, 128},
-	{ REGION_GFX1, 0x0000, &saa5050_hilayout, 0, 128},
-	{ REGION_GFX1, 0x0000, &saa5050_lolayout, 0, 128},
-	{-1}
+	new GfxDecodeInfo( REGION_GFX1, 0x0000, saa5050_charlayout, 0, 128),
+	new GfxDecodeInfo( REGION_GFX1, 0x0000, saa5050_hilayout, 0, 128),
+	new GfxDecodeInfo( REGION_GFX1, 0x0000, saa5050_lolayout, 0, 128),
+	new GfxDecodeInfo(-1)
 };
 
 static	unsigned	char	saa5050_palette[8 * 3] =

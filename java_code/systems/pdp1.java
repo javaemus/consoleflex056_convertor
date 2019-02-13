@@ -82,7 +82,7 @@ binary form plus a makro assembler for PDP1 programs.
 
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -129,42 +129,42 @@ public class pdp1
 		{ 0x0000, 0xffff, pdp1_write_mem },
 	MEMORY_END
 	
-	INPUT_PORTS_START( pdp1 )
+	static InputPortPtr input_ports_pdp1 = new InputPortPtr(){ public void handler() { 
 	
 	    PORT_START      /* IN0 */
-		PORT_BITX( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT, "Spin Left Player 1", KEYCODE_A, JOYCODE_1_LEFT )
-		PORT_BITX( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT, "Spin Right Player 1", KEYCODE_S, JOYCODE_1_RIGHT )
-		PORT_BITX( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON1, "Thrust Player 1", KEYCODE_D, JOYCODE_1_BUTTON1 )
-		PORT_BITX( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON2, "Fire Player 1", KEYCODE_F, JOYCODE_1_BUTTON2 )
-		PORT_BITX( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT|IPF_PLAYER2, "Spin Left Player 2", KEYCODE_LEFT, JOYCODE_2_LEFT )
-		PORT_BITX( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT|IPF_PLAYER2, "Spin Right Player 2", KEYCODE_RIGHT, JOYCODE_2_RIGHT )
-		PORT_BITX( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON1|IPF_PLAYER2, "Thrust Player 2", KEYCODE_UP, JOYCODE_2_BUTTON1 )
-		PORT_BITX( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON2|IPF_PLAYER2, "Fire Player 2", KEYCODE_DOWN, JOYCODE_2_BUTTON2 )
+		PORT_BITX( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT, "Spin Left Player 1", KEYCODE_A, JOYCODE_1_LEFT );
+		PORT_BITX( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT, "Spin Right Player 1", KEYCODE_S, JOYCODE_1_RIGHT );
+		PORT_BITX( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON1, "Thrust Player 1", KEYCODE_D, JOYCODE_1_BUTTON1 );
+		PORT_BITX( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON2, "Fire Player 1", KEYCODE_F, JOYCODE_1_BUTTON2 );
+		PORT_BITX( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT|IPF_PLAYER2, "Spin Left Player 2", KEYCODE_LEFT, JOYCODE_2_LEFT );
+		PORT_BITX( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT|IPF_PLAYER2, "Spin Right Player 2", KEYCODE_RIGHT, JOYCODE_2_RIGHT );
+		PORT_BITX( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON1|IPF_PLAYER2, "Thrust Player 2", KEYCODE_UP, JOYCODE_2_BUTTON1 );
+		PORT_BITX( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON2|IPF_PLAYER2, "Fire Player 2", KEYCODE_DOWN, JOYCODE_2_BUTTON2 );
 	
 	    PORT_START /* IN1 */
-		PORT_BITX(	  0x80, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Sense Switch 1", KEYCODE_1, IP_JOY_NONE )
-	    PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	    PORT_DIPSETTING(    0x80, DEF_STR( On )	 )
-		PORT_BITX(	  0x40, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Sense Switch 2", KEYCODE_2, IP_JOY_NONE )
-	    PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	    PORT_DIPSETTING(    0x40, DEF_STR( On ) )
-		PORT_BITX(	  0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Sense Switch 3", KEYCODE_3, IP_JOY_NONE )
-	    PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	    PORT_DIPSETTING(    0x20, DEF_STR( On ) )
-		PORT_BITX(	  0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Sense Switch 4", KEYCODE_4, IP_JOY_NONE )
-	    PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	    PORT_DIPSETTING(    0x10, DEF_STR( On ) )
-		PORT_BITX(	  0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Sense Switch 5", KEYCODE_5, IP_JOY_NONE )
-	    PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	    PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-		PORT_BITX(	  0x04, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Sense Switch 6", KEYCODE_6, IP_JOY_NONE )
-	    PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	    PORT_DIPSETTING(    0x04, DEF_STR( On ) )
-	    INPUT_PORTS_END
+		PORT_BITX(	  0x80, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Sense Switch 1", KEYCODE_1, IP_JOY_NONE );
+	    PORT_DIPSETTING(    0x00, DEF_STR( "Off") );
+	    PORT_DIPSETTING(    0x80, DEF_STR( "On") ); )
+		PORT_BITX(	  0x40, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Sense Switch 2", KEYCODE_2, IP_JOY_NONE );
+	    PORT_DIPSETTING(    0x00, DEF_STR( "Off") );
+	    PORT_DIPSETTING(    0x40, DEF_STR( "On") );
+		PORT_BITX(	  0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Sense Switch 3", KEYCODE_3, IP_JOY_NONE );
+	    PORT_DIPSETTING(    0x00, DEF_STR( "Off") );
+	    PORT_DIPSETTING(    0x20, DEF_STR( "On") );
+		PORT_BITX(	  0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Sense Switch 4", KEYCODE_4, IP_JOY_NONE );
+	    PORT_DIPSETTING(    0x00, DEF_STR( "Off") );
+	    PORT_DIPSETTING(    0x10, DEF_STR( "On") );
+		PORT_BITX(	  0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Sense Switch 5", KEYCODE_5, IP_JOY_NONE );
+	    PORT_DIPSETTING(    0x00, DEF_STR( "Off") );
+	    PORT_DIPSETTING(    0x08, DEF_STR( "On") );
+		PORT_BITX(	  0x04, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Sense Switch 6", KEYCODE_6, IP_JOY_NONE );
+	    PORT_DIPSETTING(    0x00, DEF_STR( "Off") );
+	    PORT_DIPSETTING(    0x04, DEF_STR( "On") );
+	    INPUT_PORTS_END(); }}; 
 	
-	static struct GfxDecodeInfo gfxdecodeinfo[] =
+	static GfxDecodeInfo gfxdecodeinfo[] =
 	{
-		{ -1 } /* end of array */
+		new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
 	
@@ -254,9 +254,9 @@ public class pdp1
 	};
 	
 	#ifdef SUPPORT_ODD_WORD_SIZES
-	ROM_START(pdp1)
-		ROM_REGION(0x10000 * sizeof(data32_t),REGION_CPU1,0)
-	ROM_END
+	static RomLoadPtr rom_pdp1 = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x10000 * sizeof(data32_t);REGION_CPU1,0)
+	ROM_END(); }}; 
 	#else
 	#define rom_pdp1    NULL
 	#endif

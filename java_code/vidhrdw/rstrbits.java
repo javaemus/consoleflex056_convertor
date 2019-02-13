@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -29,7 +29,7 @@ public class rstrbits
 	{
 		int i;
 	
-		if (!db)
+		if (db == 0)
 			return TRUE;
 	
 		for (i = 0; i < rowbytes; i++) {
@@ -366,7 +366,7 @@ public class rstrbits
 		void (*build_scanline)(UINT8 *, UINT8 *, int , int , pen_t *) = NULL;
 	
 		scanline = malloc(mode->width * scalex);
-		if (!scanline)
+		if (scanline == 0)
 			goto done; /* PANIC */
 	
 		vram = src->videoram + src->position;
@@ -436,7 +436,7 @@ public class rstrbits
 				num_colors = 1 << mode->depth;
 	
 			mappedpens = malloc(num_colors * sizeof(pen_t));
-			if (!mappedpens)
+			if (mappedpens == 0)
 				goto done; /* PANIC */
 	
 			for (i = 0; i < num_colors; i++)
@@ -528,7 +528,7 @@ public class rstrbits
 		if (mode->u.text.fontheight != scaley) {
 			/* If the scale and the font height don't match, we may have to remap */
 			remappedchar = malloc(scaley);
-			if (!remappedchar)
+			if (remappedchar == 0)
 				return;
 			memset(remappedchar, 0, scaley);
 		}

@@ -5,7 +5,7 @@
 #endif
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package windowsui;
@@ -44,7 +44,7 @@ public class messproperties
 		int iCount, i;
 	
 		hList = GetDlgItem(hDlg, IDC_DIR_LIST);
-		if (!hList)
+		if (hList == 0)
 			return;
 		memset(lpBuf, '\0', iBufLen);
 	
@@ -79,7 +79,7 @@ public class messproperties
 		LPCSTR s;
 	
 		hList = GetDlgItem(hDlg, IDC_DIR_LIST);
-		if (!hList)
+		if (hList == 0)
 			return;
 	
 		ListView_DeleteAllItems(hList);
@@ -132,7 +132,7 @@ public class messproperties
 	        bBrowse = FALSE;
 	    }
 	
-		if (!lpItem) {
+		if (lpItem == 0) {
 			if (bBrowse) {
 				ListView_GetItemText(hList, nItem, 0, inbuf, sizeof(inbuf) / sizeof(inbuf[0]));
 				lpIn = inbuf;

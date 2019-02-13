@@ -21,7 +21,7 @@ T1	Mirror sync pulse
 ***********************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -29,42 +29,50 @@ package systems;
 public class advision
 {
 	
-	static MEMORY_READ_START( readmem )
-	    { 0x0000, 0x03FF,  MRA_BANK1 },
-	    { 0x0400, 0x0fff,  MRA_ROM },
-		{ 0x2000, 0x23ff,  MRA_RAM },	/* MAINRAM four banks */
-	MEMORY_END
+	public static Memory_ReadAddress readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+	    new Memory_ReadAddress( 0x0000, 0x03FF,  MRA_BANK1 ),
+	    new Memory_ReadAddress( 0x0400, 0x0fff,  MRA_ROM ),
+		new Memory_ReadAddress( 0x2000, 0x23ff,  MRA_RAM ),	/* MAINRAM four banks */
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( writemem )
-	    { 0x0000, 0x0fff, MWA_ROM },
-		{ 0x2000, 0x23ff, MWA_RAM },	/* MAINRAM four banks */
-	MEMORY_END
+	public static Memory_WriteAddress writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+	    new Memory_WriteAddress( 0x0000, 0x0fff, MWA_ROM ),
+		new Memory_WriteAddress( 0x2000, 0x23ff, MWA_RAM ),	/* MAINRAM four banks */
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static PORT_READ_START( readport )
-	    { 0x00,     0xff,     advision_MAINRAM_r},
-	    { I8039_p1, I8039_p1, advision_getp1 },
-	    { I8039_p2, I8039_p2, advision_getp2 },
-	    { I8039_t0, I8039_t0, advision_gett0 },
-	    { I8039_t1, I8039_t1, advision_gett1 },
-	PORT_END
+	public static IO_ReadPort readport[]={
+		new IO_ReadPort(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),
+	    new IO_ReadPort( 0x00,     0xff,     advision_MAINRAM_r),
+	    new IO_ReadPort( I8039_p1, I8039_p1, advision_getp1 ),
+	    new IO_ReadPort( I8039_p2, I8039_p2, advision_getp2 ),
+	    new IO_ReadPort( I8039_t0, I8039_t0, advision_gett0 ),
+	    new IO_ReadPort( I8039_t1, I8039_t1, advision_gett1 ),
+		new IO_ReadPort(MEMPORT_MARKER, 0)
+	};
 	
-	static PORT_WRITE_START( writeport )
-	    { 0x00,     0xff,     advision_MAINRAM_w },
-	    { I8039_p1, I8039_p1, advision_putp1 },
-	    { I8039_p2, I8039_p2, advision_putp2 },
-	PORT_END
+	public static IO_WritePort writeport[]={
+		new IO_WritePort(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),
+	    new IO_WritePort( 0x00,     0xff,     advision_MAINRAM_w ),
+	    new IO_WritePort( I8039_p1, I8039_p1, advision_putp1 ),
+	    new IO_WritePort( I8039_p2, I8039_p2, advision_putp2 ),
+		new IO_WritePort(MEMPORT_MARKER, 0)
+	};
 	
-	INPUT_PORTS_START( advision )
+	static InputPortPtr input_ports_advision = new InputPortPtr(){ public void handler() { 
 		PORT_START      /* IN0 */
-	    PORT_BIT ( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON4)
-	    PORT_BIT ( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON3)
-	    PORT_BIT ( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON2)
-	    PORT_BIT ( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON1)
-	    PORT_BIT ( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN)
-	    PORT_BIT ( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP)
-	    PORT_BIT ( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT)
-	    PORT_BIT ( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT)
-	INPUT_PORTS_END
+	    PORT_BIT ( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON4);
+	    PORT_BIT ( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON3);
+	    PORT_BIT ( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON2);
+	    PORT_BIT ( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON1);
+	    PORT_BIT ( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN);
+	    PORT_BIT ( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_UP);
+	    PORT_BIT ( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT);
+	    PORT_BIT ( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT);
+	INPUT_PORTS_END(); }}; 
 	
 	static struct MachineDriver machine_driver_advision =
 	{
@@ -101,9 +109,9 @@ public class advision
 	
 	
 	ROM_START (advision)
-		ROM_REGION(0x2800,REGION_CPU1, 0)
-	    ROM_LOAD ("avbios.rom", 0x1000, 0x400, 0x279e33d1)
-	ROM_END
+		ROM_REGION(0x2800,REGION_CPU1, 0);
+	    ROM_LOAD ("avbios.rom", 0x1000, 0x400, 0x279e33d1);
+	ROM_END(); }}; 
 	
 	static const struct IODevice io_advision[] = {
 		{

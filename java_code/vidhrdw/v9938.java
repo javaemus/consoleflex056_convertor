@@ -15,7 +15,7 @@
 */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -160,10 +160,10 @@ public class v9938
 		v9938_init_palette (palette, colortable, color_prom);
 	
 		/* set up YJK table */
-		if (!pal_indYJK)
+		if (pal_indYJK == 0)
 			{
 			pal_indYJK = malloc (0x20000 * sizeof (UINT16) );
-			if (!pal_indYJK)
+			if (pal_indYJK == 0)
 				{
 				logerror ("Fatal: cannot malloc () in v9958_init_palette (), cannot exit\n");
 				return;
@@ -868,7 +868,7 @@ public class v9938
 	               with CC = 0 are seen on this line */
 				if (c & 0x40)
 					{
-					if (!first_cc_seen)
+					if (first_cc_seen == 0)
 						goto skip_first_cc_set;
 					}
 				else
@@ -1952,7 +1952,7 @@ public class v9938
 	    /* Command execution done */
 	    VDPStatus[2]&=0xFE;
 	    VdpEngine=0;
-	    if (!NY)
+	    if (NY == 0)
 	      DY+=TY;
 	    VDP[38]=DY & 0xFF;
 	    VDP[39]=(DY>>8) & 0x03;
@@ -2005,7 +2005,7 @@ public class v9938
 	    /* Command execution done */
 	    VDPStatus[2]&=0xFE;
 	    VdpEngine=0;
-	    if (!NY) {
+	    if (NY == 0) {
 	      SY+=TY;
 	      DY+=TY;
 	    }
@@ -2126,7 +2126,7 @@ public class v9938
 	    /* Command execution done */
 	    VDPStatus[2]&=0xFE;
 	    VdpEngine=0;
-	    if (!NY)
+	    if (NY == 0)
 	      DY+=TY;
 	    VDP[42]=NY & 0xFF;
 	    VDP[43]=(NY>>8) & 0x03;
@@ -2178,7 +2178,7 @@ public class v9938
 	    /* Command execution done */
 	    VDPStatus[2]&=0xFE;
 	    VdpEngine=0;
-	    if (!NY) {
+	    if (NY == 0) {
 	      SY+=TY;
 	      DY+=TY;
 	    }
@@ -2235,7 +2235,7 @@ public class v9938
 	    /* Command execution done */
 	    VDPStatus[2]&=0xFE;
 	    VdpEngine=0;
-	    if (!NY) {
+	    if (NY == 0) {
 	      SY+=TY;
 	      DY+=TY;
 	    }

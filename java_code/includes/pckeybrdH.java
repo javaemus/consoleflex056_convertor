@@ -23,11 +23,11 @@ void at_keyboard_set_type(AT_KEYBOARD_TYPE type);
 #define PS2_MOUSE_ON 1
 */
 #define PC_KEYB_HELPER(bit,text,key1,key2) \
-	PORT_BITX( bit, 0x0000, IPT_KEYBOARD, text, key1, key2 )
+	PORT_BITX( bit, 0x0000, IPT_KEYBOARD, text, key1, key2 );
 
 #define PC_KEYBOARD \
     PORT_START  /* IN4 */\
-	PORT_BIT ( 0x0001, 0x0000, IPT_UNUSED ) 	/* unused scancode 0 */\
+	PORT_BIT ( 0x0001, 0x0000, IPT_UNUSED );	/* unused scancode 0 */\
 	PC_KEYB_HELPER( 0x0002, "Esc",          KEYCODE_ESC,        CODE_NONE ) /* Esc                         01  81 */\
 	PC_KEYB_HELPER( 0x0004, "1 !",          KEYCODE_1,          CODE_NONE ) /* 1                           02  82 */\
 	PC_KEYB_HELPER( 0x0008, "2 @",          KEYCODE_2,          CODE_NONE ) /* 2                           03  83 */\
@@ -121,22 +121,22 @@ void at_keyboard_set_type(AT_KEYBOARD_TYPE type);
 	PC_KEYB_HELPER( 0x0002, "KP 3 (PgDn)",  KEYCODE_3_PAD,      KEYCODE_PGDN )   /* Keypad 3  (PgDn)            51  D1 */\
 	PC_KEYB_HELPER( 0x0004, "KP 0 (Ins)",   KEYCODE_0_PAD,      KEYCODE_INSERT ) /* Keypad 0  (Ins)             52  D2 */\
 	PC_KEYB_HELPER( 0x0008, "KP . (Del)",   KEYCODE_DEL_PAD,    KEYCODE_DEL )    /* Keypad .  (Del)             53  D3 */\
-	PORT_BIT ( 0x0030, 0x0000, IPT_UNUSED )\
+	PORT_BIT ( 0x0030, 0x0000, IPT_UNUSED );
 	PC_KEYB_HELPER( 0x0040, "(84/102)\\",   KEYCODE_BACKSLASH2, CODE_NONE )      /* Backslash 2                 56  D6 */\
-	PORT_BIT ( 0xff80, 0x0000, IPT_UNUSED )\
+	PORT_BIT ( 0xff80, 0x0000, IPT_UNUSED );
 		\
 	PORT_START	/* IN10 */\
-	PORT_BIT ( 0xffff, 0x0000, IPT_UNUSED )\
+	PORT_BIT ( 0xffff, 0x0000, IPT_UNUSED );
 		\
 	PORT_START	/* IN11 */\
-	PORT_BIT ( 0xffff, 0x0000, IPT_UNUSED )
+	PORT_BIT ( 0xffff, 0x0000, IPT_UNUSED );
 
 #define AT_KEYB_HELPER(bit, text, key1) \
-	PORT_BITX( bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, text, key1, CODE_NONE )
+	PORT_BITX( bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, text, key1, CODE_NONE );
 
 #define AT_KEYBOARD \
 	PORT_START	/* IN4 */\
-	PORT_BIT ( 0x0001, 0x0000, IPT_UNUSED ) 	/* unused scancode 0 */\
+	PORT_BIT ( 0x0001, 0x0000, IPT_UNUSED );	/* unused scancode 0 */\
 	AT_KEYB_HELPER( 0x0002, "Esc",          KEYCODE_ESC         ) /* Esc                         01  81 */\
 	AT_KEYB_HELPER( 0x0004, "1 !",          KEYCODE_1           ) /* 1                           02  82 */\
 	AT_KEYB_HELPER( 0x0008, "2 @",          KEYCODE_2           ) /* 2                           03  83 */\
@@ -230,11 +230,11 @@ void at_keyboard_set_type(AT_KEYBOARD_TYPE type);
 	AT_KEYB_HELPER( 0x0002, "KP 3 (PgDn)",  KEYCODE_3_PAD       ) /* Keypad 3  (PgDn)            51  D1 */\
 	AT_KEYB_HELPER( 0x0004, "KP 0 (Ins)",   KEYCODE_0_PAD       ) /* Keypad 0  (Ins)             52  D2 */\
 	AT_KEYB_HELPER( 0x0008, "KP . (Del)",   KEYCODE_DEL_PAD     ) /* Keypad .  (Del)             53  D3 */\
-	PORT_BIT ( 0x0030, 0x0000, IPT_UNUSED )\
+	PORT_BIT ( 0x0030, 0x0000, IPT_UNUSED );
 	AT_KEYB_HELPER( 0x0040, "(84/102)\\",   KEYCODE_BACKSLASH2  ) /* Backslash 2                 56  D6 */\
 	AT_KEYB_HELPER( 0x0080, "(MF2)F11",		KEYCODE_F11         ) /* F11                         57  D7 */\
 	AT_KEYB_HELPER( 0x0100, "(MF2)F12",		KEYCODE_F12         ) /* F12                         58  D8 */\
-	PORT_BIT ( 0xfe00, 0x0000, IPT_UNUSED )\
+	PORT_BIT ( 0xfe00, 0x0000, IPT_UNUSED );
 		\
 	PORT_START	/* IN10 */\
 	AT_KEYB_HELPER( 0x0001, "(MF2)KP Enter",		KEYCODE_ENTER_PAD   ) /* PAD Enter                   60  e0 */\
@@ -255,7 +255,7 @@ void at_keyboard_set_type(AT_KEYBOARD_TYPE type);
 	AT_KEYB_HELPER( 0x8000, "(MF2)Pause",			KEYCODE_PAUSE       ) /* Pause                       65  e5 */\
 	PORT_START	/* IN11 */\
 	AT_KEYB_HELPER( 0x0001, "Print Screen", KEYCODE_PRTSCR           ) /* Print Screen alternate      77  f7 */\
-	PORT_BIT ( 0xfffe, 0x0000, IPT_UNUSED )
+	PORT_BIT ( 0xfffe, 0x0000, IPT_UNUSED );
 
 #if 0
 	AT_KEYB_HELPER( 0x2000, "Left Win",     CODE_NONE           ) /* Left Win                    7d  fd */

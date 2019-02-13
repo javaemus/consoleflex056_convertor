@@ -3,7 +3,7 @@ This file is a set of function calls and defs required for MESS.
 */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package mess;
@@ -151,7 +151,7 @@ public class mess
 			logerror("image_fopen: trying %s for system %s\n", img->name, sysname);
 			file = osd_fopen(sysname, img->name, filetype, read_or_write);
 			/* file found, break out */
-			if (!file)
+			if (file == 0)
 			{
 				if( Machine->gamedrv->clone_of &&
 					Machine->gamedrv->clone_of != &driver_0 )

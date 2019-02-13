@@ -5,7 +5,7 @@
 
 ***************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -57,26 +57,26 @@ public class pc_t1t
 		 0,1,2,3, 4,5,6,7, 8,9,0xa,0xb, 0xc,0xd,0xe,0xf
 	};
 	
-	static struct GfxLayout t1t_gfxlayout_4bpp =
-	{
+	static GfxLayout t1t_gfxlayout_4bpp = new GfxLayout
+	(
 		2,1,					/* 8 x 32 graphics */
 	    256,                    /* 256 codes */
 		4,						/* 4 bit per pixel */
-		{ 0,1,2,3 },			/* adjacent bit planes */
+		new int[] { 0,1,2,3 },			/* adjacent bit planes */
 	    /* x offsets */
-		{ 0,4 },
+		new int[] { 0,4 },
 	    /* y offsets (we only use one byte to build the block) */
-	    { 0 },
+	    new int[] { 0 },
 		1*8 					/* every code takes 1 byte */
-	};
+	);
 	
-	struct GfxDecodeInfo t1t_gfxdecodeinfo[] =
+	static GfxDecodeInfo t1t_gfxdecodeinfo[] =
 	{
-		{ 1, 0x0000, &europc_cga_charlayout,		  0,			 256 },	/* single width */
-		{ 1, 0x1000, &CGA_gfxlayout_1bpp,	  256*2,		  16 },	/* 640x400 1bpp gfx */
-	    { 1, 0x1000, &CGA_gfxlayout_2bpp,     256*2+16*2,      4 },  /* 320x200 2bpp gfx */
-		{ 1, 0x1000, &t1t_gfxlayout_4bpp,	  256*2+16*2+2*4, 16 },	/* 160x200 4bpp gfx */
-	    { -1 } /* end of array */
+		new GfxDecodeInfo( 1, 0x0000, europc_cga_charlayout,		  0,			 256 ),	/* single width */
+		new GfxDecodeInfo( 1, 0x1000, CGA_gfxlayout_1bpp,	  256*2,		  16 ),	/* 640x400 1bpp gfx */
+	    new GfxDecodeInfo( 1, 0x1000, CGA_gfxlayout_2bpp,     256*2+16*2,      4 ),  /* 320x200 2bpp gfx */
+		new GfxDecodeInfo( 1, 0x1000, t1t_gfxlayout_4bpp,	  256*2+16*2+2*4, 16 ),	/* 160x200 4bpp gfx */
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
 	/* Initialise the cga palette */
@@ -134,7 +134,7 @@ public class pc_t1t
 	{
 		int i, offs, size;
 	
-		if (!videoram) return;
+		if (videoram == 0) return;
 		if (pcjr.pc_blink == on) return;
 	
 	    pcjr.pc_blink = on;
@@ -182,7 +182,7 @@ public class pc_t1t
 	
 	WRITE_HANDLER ( pc_t1t_videoram_w )
 	{
-		if( !videoram )
+		if (videoram == 0)
 			return;
 		if( videoram[offset] == data )
 			return;

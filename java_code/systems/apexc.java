@@ -7,7 +7,7 @@
 */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -267,55 +267,55 @@ public class apexc
 	};
 	
 	/* fake input ports with keyboard keys */
-	INPUT_PORTS_START(apexc)
+	static InputPortPtr input_ports_apexc = new InputPortPtr(){ public void handler() { 
 	
 		PORT_START	/* 0 : panel control */
-		PORT_BITX(panel_run, IP_ACTIVE_HIGH, IPT_KEYBOARD, "run/stop", KEYCODE_ENTER, IP_JOY_NONE)
-		PORT_BITX(panel_CR,  IP_ACTIVE_HIGH, IPT_KEYBOARD, "read CR",  KEYCODE_1_PAD, IP_JOY_NONE)
-		PORT_BITX(panel_A,   IP_ACTIVE_HIGH, IPT_KEYBOARD, "read A",   KEYCODE_2_PAD, IP_JOY_NONE)
-		PORT_BITX(panel_R,   IP_ACTIVE_HIGH, IPT_KEYBOARD, "read R",   KEYCODE_3_PAD, IP_JOY_NONE)
-		PORT_BITX(panel_HB,  IP_ACTIVE_HIGH, IPT_KEYBOARD, "read HB",  KEYCODE_4_PAD, IP_JOY_NONE)
-		PORT_BITX(panel_ML,  IP_ACTIVE_HIGH, IPT_KEYBOARD, "read ML",  KEYCODE_5_PAD, IP_JOY_NONE)
-		PORT_BITX(panel_mem, IP_ACTIVE_HIGH, IPT_KEYBOARD, "read mem", KEYCODE_6_PAD, IP_JOY_NONE)
-		PORT_BITX(panel_write, IP_ACTIVE_HIGH, IPT_KEYBOARD, "write instead of reading", KEYCODE_LSHIFT, IP_JOY_NONE)
+		PORT_BITX(panel_run, IP_ACTIVE_HIGH, IPT_KEYBOARD, "run/stop", KEYCODE_ENTER, IP_JOY_NONE);
+		PORT_BITX(panel_CR,  IP_ACTIVE_HIGH, IPT_KEYBOARD, "read CR",  KEYCODE_1_PAD, IP_JOY_NONE);
+		PORT_BITX(panel_A,   IP_ACTIVE_HIGH, IPT_KEYBOARD, "read A",   KEYCODE_2_PAD, IP_JOY_NONE);
+		PORT_BITX(panel_R,   IP_ACTIVE_HIGH, IPT_KEYBOARD, "read R",   KEYCODE_3_PAD, IP_JOY_NONE);
+		PORT_BITX(panel_HB,  IP_ACTIVE_HIGH, IPT_KEYBOARD, "read HB",  KEYCODE_4_PAD, IP_JOY_NONE);
+		PORT_BITX(panel_ML,  IP_ACTIVE_HIGH, IPT_KEYBOARD, "read ML",  KEYCODE_5_PAD, IP_JOY_NONE);
+		PORT_BITX(panel_mem, IP_ACTIVE_HIGH, IPT_KEYBOARD, "read mem", KEYCODE_6_PAD, IP_JOY_NONE);
+		PORT_BITX(panel_write, IP_ACTIVE_HIGH, IPT_KEYBOARD, "write instead of reading", KEYCODE_LSHIFT, IP_JOY_NONE);
 	
 		PORT_START	/* 1 : data edit #1 */
-		PORT_BITX(0x8000, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #1", KEYCODE_1, IP_JOY_NONE)
-		PORT_BITX(0x4000, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #2", KEYCODE_2, IP_JOY_NONE)
-		PORT_BITX(0x2000, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #3", KEYCODE_3, IP_JOY_NONE)
-		PORT_BITX(0x1000, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #4", KEYCODE_4, IP_JOY_NONE)
-		PORT_BITX(0x0800, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #5", KEYCODE_5, IP_JOY_NONE)
-		PORT_BITX(0x0400, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #6", KEYCODE_6, IP_JOY_NONE)
-		PORT_BITX(0x0200, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #7", KEYCODE_7, IP_JOY_NONE)
-		PORT_BITX(0x0100, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #8", KEYCODE_8, IP_JOY_NONE)
-		PORT_BITX(0x0080, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #9", KEYCODE_9, IP_JOY_NONE)
-		PORT_BITX(0x0040, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #10", KEYCODE_0, IP_JOY_NONE)
-		PORT_BITX(0x0020, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #11", KEYCODE_Q, IP_JOY_NONE)
-		PORT_BITX(0x0010, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #12", KEYCODE_W, IP_JOY_NONE)
-		PORT_BITX(0x0008, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #13", KEYCODE_E, IP_JOY_NONE)
-		PORT_BITX(0x0004, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #14", KEYCODE_R, IP_JOY_NONE)
-		PORT_BITX(0x0002, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #15", KEYCODE_T, IP_JOY_NONE)
-		PORT_BITX(0x0001, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #16", KEYCODE_Y, IP_JOY_NONE)
+		PORT_BITX(0x8000, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #1", KEYCODE_1, IP_JOY_NONE);
+		PORT_BITX(0x4000, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #2", KEYCODE_2, IP_JOY_NONE);
+		PORT_BITX(0x2000, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #3", KEYCODE_3, IP_JOY_NONE);
+		PORT_BITX(0x1000, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #4", KEYCODE_4, IP_JOY_NONE);
+		PORT_BITX(0x0800, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #5", KEYCODE_5, IP_JOY_NONE);
+		PORT_BITX(0x0400, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #6", KEYCODE_6, IP_JOY_NONE);
+		PORT_BITX(0x0200, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #7", KEYCODE_7, IP_JOY_NONE);
+		PORT_BITX(0x0100, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #8", KEYCODE_8, IP_JOY_NONE);
+		PORT_BITX(0x0080, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #9", KEYCODE_9, IP_JOY_NONE);
+		PORT_BITX(0x0040, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #10", KEYCODE_0, IP_JOY_NONE);
+		PORT_BITX(0x0020, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #11", KEYCODE_Q, IP_JOY_NONE);
+		PORT_BITX(0x0010, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #12", KEYCODE_W, IP_JOY_NONE);
+		PORT_BITX(0x0008, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #13", KEYCODE_E, IP_JOY_NONE);
+		PORT_BITX(0x0004, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #14", KEYCODE_R, IP_JOY_NONE);
+		PORT_BITX(0x0002, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #15", KEYCODE_T, IP_JOY_NONE);
+		PORT_BITX(0x0001, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #16", KEYCODE_Y, IP_JOY_NONE);
 	
 		PORT_START	/* 2 : data edit #2 */
-		PORT_BITX(0x8000, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #17", KEYCODE_U, IP_JOY_NONE)
-		PORT_BITX(0x4000, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #18", KEYCODE_I, IP_JOY_NONE)
-		PORT_BITX(0x2000, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #19", KEYCODE_O, IP_JOY_NONE)
-		PORT_BITX(0x1000, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #20", KEYCODE_P, IP_JOY_NONE)
-		PORT_BITX(0x0800, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #21", KEYCODE_A, IP_JOY_NONE)
-		PORT_BITX(0x0400, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #22", KEYCODE_S, IP_JOY_NONE)
-		PORT_BITX(0x0200, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #23", KEYCODE_D, IP_JOY_NONE)
-		PORT_BITX(0x0100, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #24", KEYCODE_F, IP_JOY_NONE)
-		PORT_BITX(0x0080, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #25", KEYCODE_G, IP_JOY_NONE)
-		PORT_BITX(0x0040, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #26", KEYCODE_H, IP_JOY_NONE)
-		PORT_BITX(0x0020, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #27", KEYCODE_J, IP_JOY_NONE)
-		PORT_BITX(0x0010, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #28", KEYCODE_K, IP_JOY_NONE)
-		PORT_BITX(0x0008, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #29", KEYCODE_L, IP_JOY_NONE)
-		PORT_BITX(0x0004, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #30", KEYCODE_COLON, IP_JOY_NONE)
-		PORT_BITX(0x0002, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #31", KEYCODE_Z, IP_JOY_NONE)
-		PORT_BITX(0x0001, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #32", KEYCODE_X, IP_JOY_NONE)
+		PORT_BITX(0x8000, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #17", KEYCODE_U, IP_JOY_NONE);
+		PORT_BITX(0x4000, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #18", KEYCODE_I, IP_JOY_NONE);
+		PORT_BITX(0x2000, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #19", KEYCODE_O, IP_JOY_NONE);
+		PORT_BITX(0x1000, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #20", KEYCODE_P, IP_JOY_NONE);
+		PORT_BITX(0x0800, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #21", KEYCODE_A, IP_JOY_NONE);
+		PORT_BITX(0x0400, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #22", KEYCODE_S, IP_JOY_NONE);
+		PORT_BITX(0x0200, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #23", KEYCODE_D, IP_JOY_NONE);
+		PORT_BITX(0x0100, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #24", KEYCODE_F, IP_JOY_NONE);
+		PORT_BITX(0x0080, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #25", KEYCODE_G, IP_JOY_NONE);
+		PORT_BITX(0x0040, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #26", KEYCODE_H, IP_JOY_NONE);
+		PORT_BITX(0x0020, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #27", KEYCODE_J, IP_JOY_NONE);
+		PORT_BITX(0x0010, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #28", KEYCODE_K, IP_JOY_NONE);
+		PORT_BITX(0x0008, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #29", KEYCODE_L, IP_JOY_NONE);
+		PORT_BITX(0x0004, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #30", KEYCODE_COLON, IP_JOY_NONE);
+		PORT_BITX(0x0002, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #31", KEYCODE_Z, IP_JOY_NONE);
+		PORT_BITX(0x0001, IP_ACTIVE_HIGH, IPT_KEYBOARD, "toggle bit #32", KEYCODE_X, IP_JOY_NONE);
 	
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	
 	static UINT32 panel_data_reg;	/* value of a data register on the control panel which can
@@ -771,21 +771,21 @@ public class apexc
 		memcpy(dst, fontdata6x8, apexcfontdata_size);
 	}
 	
-	static struct GfxLayout fontlayout =
-	{
+	static GfxLayout fontlayout = new GfxLayout
+	(
 		6, 8,			/* 6*8 characters */
 		apexc_charnum,	/* 96+4 characters */
 		1,				/* 1 bit per pixel */
-		{ 0 },
-		{ 0, 1, 2, 3, 4, 5, 6, 7 }, /* straightforward layout */
-		{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
+		new int[] { 0 },
+		new int[] { 0, 1, 2, 3, 4, 5, 6, 7 }, /* straightforward layout */
+		new int[] { 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
 		8*8 /* every char takes 8 consecutive bytes */
-	};
+	);
 	
-	static struct GfxDecodeInfo gfxdecodeinfo[] =
+	static GfxDecodeInfo gfxdecodeinfo[] =
 	{
-		{ REGION_GFX1, 0, &fontlayout, 0, 1 },
-		{ -1 }	/* end of array */
+		new GfxDecodeInfo( REGION_GFX1, 0, fontlayout, 0, 1 ),
+		new GfxDecodeInfo( -1 )	/* end of array */
 	};
 	
 	
@@ -904,14 +904,14 @@ public class apexc
 		{ IO_END }
 	};
 	
-	ROM_START(apexc)
+	static RomLoadPtr rom_apexc = new RomLoadPtr(){ public void handler(){ 
 		/*CPU memory space*/
-		ROM_REGION32_BE(0x10000, REGION_CPU1, 0)
+		ROM_REGION32_BE(0x10000, REGION_CPU1, 0);
 			/* Note this computer has no ROM... */
 	
-		ROM_REGION(apexcfontdata_size, REGION_GFX1, 0)
+		ROM_REGION(apexcfontdata_size, REGION_GFX1, 0);
 			/* space filled with our font */
-	ROM_END
+	ROM_END(); }}; 
 	
 	/*		YEAR	NAME		PARENT	MACHINE		INPUT	INIT	COMPANY		FULLNAME */
 	/*COMP( c. 1951,	apexc53,	0,		apexc53,	apexc,	apexc,	"Booth",	"APEXC (as described in 1953)" )*/

@@ -8,7 +8,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -31,7 +31,7 @@ public class enterp
 		 * where memory bank is not defined
 		 */
 		Enterprise_RAM = malloc((128*1024)+32768);
-		if (!Enterprise_RAM) return;
+		if (Enterprise_RAM == 0) return;
 	
 		/* initialise the hardware */
 		Enterprise_Initialise();

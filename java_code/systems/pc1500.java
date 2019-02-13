@@ -25,7 +25,7 @@ lh5811 53zd sharp
 */
 /* with this one you include nearly all necessary structure definitions */
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -35,65 +35,73 @@ public class pc1500
 	
 	
 	// trs80pc2 configuration 
-	static MEMORY_READ_START( pc1500_readmem )
-	{ 0x00000, 0x03fff, MRA_NOP },
-	{ 0x04000, 0x047ff, MRA_RAM },
-	{ 0x07000, 0x071ff, MRA_BANK1 },
-	{ 0x07200, 0x073ff, MRA_BANK2 },
-	{ 0x07400, 0x075ff, MRA_BANK3 },
-	{ 0x07600, 0x077ff, MRA_RAM }, 
-	{ 0x07800, 0x07bff, MRA_RAM }, // maybe mirrored to 7c00
-	{ 0x07c00, 0x07fff, MRA_BANK4 },
-	{ 0x0c000, 0x0ffff, MRA_ROM },
-	{ 0x1f000, 0x1f00f, lh5811_r }, // 0x00YY0 ignored
-	MEMORY_END
+	public static Memory_ReadAddress pc1500_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+	new Memory_ReadAddress( 0x00000, 0x03fff, MRA_NOP ),
+	new Memory_ReadAddress( 0x04000, 0x047ff, MRA_RAM ),
+	new Memory_ReadAddress( 0x07000, 0x071ff, MRA_BANK1 ),
+	new Memory_ReadAddress( 0x07200, 0x073ff, MRA_BANK2 ),
+	new Memory_ReadAddress( 0x07400, 0x075ff, MRA_BANK3 ),
+	new Memory_ReadAddress( 0x07600, 0x077ff, MRA_RAM ), 
+	new Memory_ReadAddress( 0x07800, 0x07bff, MRA_RAM ), // maybe mirrored to 7c00
+	new Memory_ReadAddress( 0x07c00, 0x07fff, MRA_BANK4 ),
+	new Memory_ReadAddress( 0x0c000, 0x0ffff, MRA_ROM ),
+	new Memory_ReadAddress( 0x1f000, 0x1f00f, lh5811_r ), // 0x00YY0 ignored
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( pc1500_writemem )
-	{ 0x00000, 0x03fff, MWA_NOP },
-	{ 0x04000, 0x047ff, MWA_RAM }, 
-	{ 0x04800, 0x06fff, MWA_NOP },
-	{ 0x07000, 0x071ff, MWA_BANK1 },
-	{ 0x07200, 0x073ff, MWA_BANK2 },
-	{ 0x07400, 0x075ff, MWA_BANK3 },
-	{ 0x07600, 0x077ff, MWA_RAM }, //display chips with ram
-	{ 0x07800, 0x07bff, MWA_RAM },
-	{ 0x07c00, 0x07fff, MWA_BANK4 },
-	{ 0x08000, 0x0bfff, MWA_NOP },
-	{ 0x0c000, 0x0ffff, MWA_ROM },
-	{ 0x1f000, 0x1f00f, lh5811_w }, // 0x00YY0 ignored
-	MEMORY_END
+	public static Memory_WriteAddress pc1500_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+	new Memory_WriteAddress( 0x00000, 0x03fff, MWA_NOP ),
+	new Memory_WriteAddress( 0x04000, 0x047ff, MWA_RAM ), 
+	new Memory_WriteAddress( 0x04800, 0x06fff, MWA_NOP ),
+	new Memory_WriteAddress( 0x07000, 0x071ff, MWA_BANK1 ),
+	new Memory_WriteAddress( 0x07200, 0x073ff, MWA_BANK2 ),
+	new Memory_WriteAddress( 0x07400, 0x075ff, MWA_BANK3 ),
+	new Memory_WriteAddress( 0x07600, 0x077ff, MWA_RAM ), //display chips with ram
+	new Memory_WriteAddress( 0x07800, 0x07bff, MWA_RAM ),
+	new Memory_WriteAddress( 0x07c00, 0x07fff, MWA_BANK4 ),
+	new Memory_WriteAddress( 0x08000, 0x0bfff, MWA_NOP ),
+	new Memory_WriteAddress( 0x0c000, 0x0ffff, MWA_ROM ),
+	new Memory_WriteAddress( 0x1f000, 0x1f00f, lh5811_w ), // 0x00YY0 ignored
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
 	// pc1500a configuration
-	static MEMORY_READ_START( pc1500a_readmem )
-	{ 0x00000, 0x03fff, MRA_NOP },
-	{ 0x04000, 0x057ff, MRA_RAM },
-	{ 0x07000, 0x071ff, MRA_BANK1 },
-	{ 0x07200, 0x073ff, MRA_BANK2 },
-	{ 0x07400, 0x075ff, MRA_BANK3 },
-	{ 0x07600, 0x077ff, MRA_RAM }, 
-	{ 0x07800, 0x07fff, MRA_RAM },
-	{ 0x0c000, 0x0ffff, MRA_ROM },
-	{ 0x1f000, 0x1f00f, lh5811_r }, // 0x00YY0 not ignored
-	MEMORY_END
+	public static Memory_ReadAddress pc1500a_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+	new Memory_ReadAddress( 0x00000, 0x03fff, MRA_NOP ),
+	new Memory_ReadAddress( 0x04000, 0x057ff, MRA_RAM ),
+	new Memory_ReadAddress( 0x07000, 0x071ff, MRA_BANK1 ),
+	new Memory_ReadAddress( 0x07200, 0x073ff, MRA_BANK2 ),
+	new Memory_ReadAddress( 0x07400, 0x075ff, MRA_BANK3 ),
+	new Memory_ReadAddress( 0x07600, 0x077ff, MRA_RAM ), 
+	new Memory_ReadAddress( 0x07800, 0x07fff, MRA_RAM ),
+	new Memory_ReadAddress( 0x0c000, 0x0ffff, MRA_ROM ),
+	new Memory_ReadAddress( 0x1f000, 0x1f00f, lh5811_r ), // 0x00YY0 not ignored
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( pc1500a_writemem )
-	{ 0x00000, 0x03fff, MWA_NOP },
-	{ 0x04000, 0x057ff, MWA_RAM }, 
-	{ 0x05800, 0x06fff, MWA_NOP },
-	{ 0x07000, 0x071ff, MWA_BANK1 },
-	{ 0x07200, 0x073ff, MWA_BANK2 },
-	{ 0x07400, 0x075ff, MWA_BANK3 },
-	{ 0x07600, 0x077ff, MWA_RAM }, //display chips with ram
-	{ 0x07800, 0x07fff, MWA_RAM },
-	{ 0x08000, 0x0bfff, MWA_NOP },
-	{ 0x0c000, 0x0ffff, MWA_ROM },
-	{ 0x1f000, 0x1f00f, lh5811_w }, // 0x00YY0 not ignored
-	MEMORY_END
+	public static Memory_WriteAddress pc1500a_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+	new Memory_WriteAddress( 0x00000, 0x03fff, MWA_NOP ),
+	new Memory_WriteAddress( 0x04000, 0x057ff, MWA_RAM ), 
+	new Memory_WriteAddress( 0x05800, 0x06fff, MWA_NOP ),
+	new Memory_WriteAddress( 0x07000, 0x071ff, MWA_BANK1 ),
+	new Memory_WriteAddress( 0x07200, 0x073ff, MWA_BANK2 ),
+	new Memory_WriteAddress( 0x07400, 0x075ff, MWA_BANK3 ),
+	new Memory_WriteAddress( 0x07600, 0x077ff, MWA_RAM ), //display chips with ram
+	new Memory_WriteAddress( 0x07800, 0x07fff, MWA_RAM ),
+	new Memory_WriteAddress( 0x08000, 0x0bfff, MWA_NOP ),
+	new Memory_WriteAddress( 0x0c000, 0x0ffff, MWA_ROM ),
+	new Memory_WriteAddress( 0x1f000, 0x1f00f, lh5811_w ), // 0x00YY0 not ignored
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
 	#define DIPS_HELPER(bit, name, keycode, r) \
-	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r)
+	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r);
 	
-	INPUT_PORTS_START( pc1500 )
+	static InputPortPtr input_ports_pc1500 = new InputPortPtr(){ public void handler() { 
 		PORT_START
 		DIPS_HELPER( 0x0001, "DEF",			KEYCODE_LALT, KEYCODE_RALT)
 		DIPS_HELPER( 0x0002, "      !",		KEYCODE_1, CODE_NONE)
@@ -165,18 +173,18 @@ public class pc1500
 		DIPS_HELPER( 0x0200, "=     @",		KEYCODE_ENTER_PAD, CODE_NONE)
 		DIPS_HELPER( 0x0400, "+     ;",		KEYCODE_PLUS_PAD, CODE_NONE)
 		DIPS_HELPER( 0x0800, "right INS",	KEYCODE_RIGHT, CODE_NONE)
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
-	static struct GfxLayout pc1500_charlayout =
-	{
+	static GfxLayout pc1500_charlayout = new GfxLayout
+	(
 	        2,8,
 	        16,                                    /* 256 characters */
 	        1,                      /* 1 bits per pixel */
-	        { 0,0 },                  /* no bitplanes; 1 bit per pixel */
+	        new int[] { 0,0 },                  /* no bitplanes; 1 bit per pixel */
 	        /* x offsets */
-	        { 0,0 },
+	        new int[] { 0,0 },
 	        /* y offsets */
-	        {
+	        new int[] {
 				7, 7,
 				6, 6,
 				5, 5,
@@ -186,18 +194,18 @@ public class pc1500
 				1, 1
 	        },
 	        1*8
-	};
+	);
 	
-	static struct GfxLayout pc1500_charlayout2 =
-	{
+	static GfxLayout pc1500_charlayout2 = new GfxLayout
+	(
 	        2,6,
 	        16,                                    /* 256 characters */
 	        1,                      /* 1 bits per pixel */
-	        { 0,0 },                  /* no bitplanes; 1 bit per pixel */
+	        new int[] { 0,0 },                  /* no bitplanes; 1 bit per pixel */
 	        /* x offsets */
-	        { 0,0 },
+	        new int[] { 0,0 },
 	        /* y offsets */
-	        {
+	        new int[] {
 				7, 7,
 				6, 6,
 				5, 5,
@@ -207,24 +215,24 @@ public class pc1500
 				1, 1
 	        },
 	        1*8
-	};
+	);
 	
-	static struct GfxDecodeInfo pc1500_gfxdecodeinfo[] = {
-		{ 
+	static GfxDecodeInfo pc1500_gfxdecodeinfo[] ={
+		new GfxDecodeInfo( 
 			REGION_GFX1, /* memory region */
 			0x0000, /* offset in memory region */
-			&pc1500_charlayout,                     
+			pc1500_charlayout,                     
 			0, /* index in the color lookup table where color codes start */
 			1  /* total number of color codes */
-		},
-		{ 
+		),
+		new GfxDecodeInfo( 
 			REGION_GFX1, /* memory region */
 			0x0000, /* offset in memory region */
-			&pc1500_charlayout2,                     
+			pc1500_charlayout2,                     
 			0, /* index in the color lookup table where color codes start */
 			1  /* total number of color codes */
-		},
-	    { -1 } /* end of array */
+		),
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
 	/* called about 60 times a second,
@@ -386,11 +394,11 @@ public class pc1500
 	    }
 	};
 	
-	ROM_START(pc1500a)
-		ROM_REGION(0x20000,REGION_CPU1, 0)
-		ROM_LOAD("pc1500a.rom", 0xc000, 0x4000, 0xdca8f879)
-		ROM_REGION(0x100,REGION_GFX1, 0)
-	ROM_END
+	static RomLoadPtr rom_pc1500a = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x20000,REGION_CPU1, 0);
+		ROM_LOAD("pc1500a.rom", 0xc000, 0x4000, 0xdca8f879);
+		ROM_REGION(0x100,REGION_GFX1, 0);
+	ROM_END(); }}; 
 	/*
 	  0xe000
 	  0xe04d

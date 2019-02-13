@@ -1,20 +1,17 @@
 /*
-This file is part of ConsoleFlex.
-
-Arcadeflex is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Arcadeflex is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Arcadeflex.  If not, see <http://www.gnu.org/licenses/>.
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package consoleflex;
+
+import static consoleflex.Convertor.inpos;
+import static consoleflex.Convertor.token;
+import static consoleflex.sUtil.getToken;
+import static consoleflex.sUtil.parseChar;
+import static consoleflex.sUtil.parseToken;
+import static consoleflex.sUtil.skipSpace;
+
 
 /**
  * @author shadow
@@ -29,68 +26,24 @@ public class convertMame {
     public static void Analyse() {
 
     }
-
-    static final int GAMEDRIVER = 0;
-    static final int Samplesinterface = 1;
-    static final int READHANDLER = 2;
-    static final int WRITEHANDLER = 3;
-    static final int MACHINE_INTERRUPT = 4;
-    static final int DRIVER_INIT = 5;
-    static final int MACHINE_INIT = 6;
-    static final int VH_STOP = 7;
-    static final int VH_START = 8;
-    static final int VH_SCREENREFRESH = 9;
-    static final int GFXLAYOUT = 10;
-    static final int GFXDECODE = 11;
-    static final int VLM5030interface = 12;
-    static final int VH_CONVERT = 13;
-    static final int SH_UPDATE = 14;
-    static final int SH_START = 15;
-    static final int SH_STOP = 16;
-    static final int NESinterface = 17;
-    static final int SN76496interface = 18;
-    static final int DACinterface = 19;
-    static final int PLOT_BOX = 20;
-    static final int MARK_DIRTY = 21;
-    static final int PLOT_PIXEL = 22;
-    static final int VH_EOF = 23;
-    static final int NVRAM_H = 24;
-    static final int MACHINEDRIVER = 25;
-    static final int AY8910interface = 26;
-    static final int YM3812interface = 27;
-    static final int YM3526interface = 28;
-    static final int MSM5205interface = 29;
-    static final int YM2203interface = 30;
-    static final int K054539interface = 31;
-    static final int EEPROM_interface = 32;
-    static final int MEMORYREAD = 33;
-    static final int MEMORYWRITE =34;
-    static final int IOREAD = 35;
-    static final int IOWRITE = 36;
-    static final int OKIM6295interface = 37;
-    static final int YM2413interface=38;
-    static final int POKEYinterface=39;
-    static final int YM2151interface=40;
-    static final int UPD7759_interface=41;
-    static final int CustomSound_interface=42;
-    static final int YM2610interface=43;
-    static final int TIMERCALLBACK=44;
-    static final int C140interface=45;
-    static final int astrocade_interface=46;
-    static final int RF5C68interface=47;
-    static final int k051649_interface=48;
-    static final int hc55516_interface=49;
-    static final int vclk_interruptPtr=50;
-    static final int konami_cpu_setlines_callbackPtr=51;
-    static final int namco_interface=52;
-    static final int SN76477interface=53;
-    static final int K052109=54;
-    static final int K051960=55;
-    static final int TILEINFO=56;
-
-    //type2 fields
-    static final int NEWINPUT = 130;
-    static final int ROMDEF = 131;
+    static final int PLOT_BOX = 1;
+    static final int PLOT_PIXEL = 2;
+    static final int MARK_DIRTY = 3;
+    static final int READ_PIXEL = 4;
+    static final int MEMORY_READ8 = 5;
+    static final int MEMORY_WRITE8 = 6;
+    static final int PORT_READ8 = 7;
+    static final int PORT_WRITE8 = 8;
+    static final int READ_HANDLER8 = 9;
+    static final int WRITE_HANDLER8 = 10;
+    static final int GFXLAYOUT = 11;
+    static final int GFXDECODE = 12;
+    static final int ROMDEF = 13;
+    static final int GAMEDRIVER = 14;
+    static final int NEWINPUT = 15;
+    static final int MACHINEDRIVER = 16;
+    static final int SN76496=17;
+    static final int AY8910=18;
 
     public static void Convert() {
         Convertor.inpos = 0;//position of pointer inside the buffers
@@ -150,8 +103,937 @@ public class convertMame {
                     line_change_flag = true;
                     continue;
                 }
-                
-                //break;
+                case 'i': {
+                    int l1 = inpos;
+                    if (getToken("if")) {
+                        skipSpace();
+                        if (parseChar() != '(') {
+                            inpos = l1;
+                            break;
+                        }
+                        skipSpace();
+                        char c2 = parseChar();
+                        if (c2 == '!') {
+                            skipSpace();
+                            token[0] = parseToken();
+                            skipSpace();
+                            if (parseChar() != ')') {
+                                inpos = l1;
+                                break;
+                            }
+                            sUtil.putString((new StringBuilder()).append("if (").append(token[0]).append(" == 0)").toString());
+                        } else {
+                            inpos = l1;
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                    continue;
+                }
+                case 'e': {
+                    int j1 = inpos;
+                    if (getToken("enum")) {
+                        skipSpace();
+
+                        if (parseChar() != '{') {
+                            inpos = j1;
+                            break;
+                        }
+                        skipSpace();
+                        int i5 = 0;
+                        char c2;
+                        do {
+                            token[i5++] = parseToken();
+                            skipSpace();
+                            c2 = parseChar();
+                            if (c2 != '}' && c2 != ',') {
+                                inpos = j1;
+                                break;
+                            }
+                            skipSpace();
+                        } while (c2 == ',');
+                        if (parseChar() != ';') {
+                            inpos = j1;
+                            break;
+                        }
+                        int k5 = 0;
+                        while (k5 < i5) {
+                            sUtil.putString((new StringBuilder()).append("public static final int ").append(token[k5]).append(" = ").append(k5).append(";\n\t").toString());
+                            k5++;
+                        }
+                    } else {
+                        break;
+                    }
+                    continue;
+                }
+                case 's': {
+                    i = Convertor.inpos;
+                    if (sUtil.getToken("static")) {
+                        sUtil.skipSpace();
+                    }
+                    if (!sUtil.getToken("struct")) //static but not static struct
+                    {
+                        if (sUtil.getToken("void")) {
+                            sUtil.skipSpace();
+                            Convertor.token[0] = sUtil.parseToken();
+                            sUtil.skipSpace();
+                            if (sUtil.parseChar() != '(') {
+                                Convertor.inpos = i;
+                                break;
+                            }
+                            sUtil.skipSpace();
+                            if (sUtil.getToken("struct mame_bitmap *b,int x,int y,int w,int h,UINT32 p")) {
+                                sUtil.skipSpace();
+                                if (sUtil.parseChar() != ')') {
+                                    Convertor.inpos = i;
+                                    break;
+                                }
+                                if (sUtil.getChar() == ';') {
+                                    sUtil.skipLine();
+                                    continue;
+                                }
+                                if (Convertor.token[0].contains("pb_")) {
+                                    sUtil.putString((new StringBuilder()).append("public static plot_box_procPtr ").append(Convertor.token[0]).append("  = new plot_box_procPtr() { public void handler(mame_bitmap b, int x, int y, int w, int h, /*UINT32*/int p) ").toString());
+                                    type = PLOT_BOX;
+                                    i3 = -1;
+                                    continue;
+                                }
+
+                            }
+                            if (sUtil.getToken("struct mame_bitmap *b,int x,int y,UINT32 p")) {
+                                sUtil.skipSpace();
+                                if (sUtil.parseChar() != ')') {
+                                    Convertor.inpos = i;
+                                    break;
+                                }
+                                if (sUtil.getChar() == ';') {
+                                    sUtil.skipLine();
+                                    continue;
+                                }
+                                if (Convertor.token[0].contains("pp_")) {
+                                    sUtil.putString((new StringBuilder()).append("public static plot_pixel_procPtr ").append(Convertor.token[0]).append("  = new plot_pixel_procPtr() { public void handler(mame_bitmap b,int x,int y,/*UINT32*/int p) ").toString());
+                                    type = PLOT_PIXEL;
+                                    i3 = -1;
+                                    continue;
+                                }
+
+                            }
+                            if (sUtil.getToken("int sx,int sy,int ex,int ey")) {
+                                sUtil.skipSpace();
+                                if (sUtil.parseChar() != ')') {
+                                    Convertor.inpos = i;
+                                    break;
+                                }
+                                if (sUtil.getChar() == ';') {
+                                    sUtil.skipLine();
+                                    continue;
+                                }
+                                if (Convertor.token[0].contains("md")) {
+                                    sUtil.putString((new StringBuilder()).append("public static mark_dirty_procPtr ").append(Convertor.token[0]).append("  = new mark_dirty_procPtr() { public void handler(int sx,int sy,int ex,int ey) ").toString());
+                                    type = MARK_DIRTY;
+                                    i3 = -1;
+                                    continue;
+                                }
+
+                            }
+                        } else if (sUtil.getToken("int")) {
+                            sUtil.skipSpace();
+                            Convertor.token[0] = sUtil.parseToken();
+                            sUtil.skipSpace();
+                            if (sUtil.parseChar() != '(') {
+                                Convertor.inpos = i;
+                                break;
+                            }
+                            sUtil.skipSpace();
+                            if (sUtil.getToken("struct mame_bitmap *b,int x,int y")) {
+                                sUtil.skipSpace();
+                                if (sUtil.parseChar() != ')') {
+                                    Convertor.inpos = i;
+                                    break;
+                                }
+                                if (sUtil.getChar() == ';') {
+                                    sUtil.skipLine();
+                                    continue;
+                                }
+                                if (Convertor.token[0].contains("rp_")) {
+                                    sUtil.putString((new StringBuilder()).append("public static read_pixel_procPtr ").append(Convertor.token[0]).append("  = new read_pixel_procPtr() { public int handler(mame_bitmap bitmap, int x, int y) ").toString());
+                                    type = READ_PIXEL;
+                                    i3 = -1;
+                                    continue;
+                                }
+
+                            }
+                        } else if (sUtil.getToken("MEMORY_READ_START(")) {
+                            sUtil.skipSpace();
+                            Convertor.token[0] = sUtil.parseToken();
+                            sUtil.skipSpace();
+                            if (sUtil.getToken(")")) {
+                                sUtil.putString("public static Memory_ReadAddress " + Convertor.token[0] + "[]={\n\t\tnew Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),");
+                                type = MEMORY_READ8;
+                                i3 = 1;
+                                Convertor.inpos += 1;
+                                continue;
+                            }
+                        } else if (sUtil.getToken("MEMORY_WRITE_START(")) {
+                            sUtil.skipSpace();
+                            Convertor.token[0] = sUtil.parseToken();
+                            sUtil.skipSpace();
+                            if (sUtil.getToken(")")) {
+                                sUtil.putString("public static Memory_WriteAddress " + Convertor.token[0] + "[]={\n\t\tnew Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),");
+                                type = MEMORY_WRITE8;
+                                i3 = 1;
+                                Convertor.inpos += 1;
+                                continue;
+                            }
+                        } else if (sUtil.getToken("PORT_READ_START(")) {
+                            sUtil.skipSpace();
+                            Convertor.token[0] = sUtil.parseToken();
+                            sUtil.skipSpace();
+                            if (sUtil.getToken(")")) {
+                                sUtil.putString("public static IO_ReadPort " + Convertor.token[0] + "[]={\n\t\tnew IO_ReadPort(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),");
+                                type = PORT_READ8;
+                                i3 = 1;
+                                Convertor.inpos += 1;
+                                continue;
+                            }
+                        } else if (sUtil.getToken("PORT_WRITE_START(")) {
+                            sUtil.skipSpace();
+                            Convertor.token[0] = sUtil.parseToken();
+                            sUtil.skipSpace();
+                            if (sUtil.getToken(")")) {
+                                sUtil.putString("public static IO_WritePort " + Convertor.token[0] + "[]={\n\t\tnew IO_WritePort(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),");
+                                type = PORT_WRITE8;
+                                i3 = 1;
+                                Convertor.inpos += 1;
+                                continue;
+                            }
+                        } else if (sUtil.getToken("READ_HANDLER(")) {
+                            sUtil.skipSpace();
+                            Convertor.token[0] = sUtil.parseToken();
+                            sUtil.skipSpace();
+                            if (sUtil.getToken(");"))//if it is front function skip it
+                            {
+                                sUtil.skipLine();
+                                continue;
+                            } else {
+                                sUtil.putString("public static ReadHandlerPtr " + Convertor.token[0] + "  = new ReadHandlerPtr() { public int handler(int offset)");
+                                type = READ_HANDLER8;
+                                i3 = -1;
+                                Convertor.inpos += 1;
+                                continue;
+                            }
+                        } else if (sUtil.getToken("WRITE_HANDLER(")) {
+                            sUtil.skipSpace();
+                            Convertor.token[0] = sUtil.parseToken();
+                            sUtil.skipSpace();
+                            if (sUtil.getToken(");"))//if it is a front function skip it
+                            {
+                                sUtil.skipLine();
+                                continue;
+                            } else {
+                                sUtil.putString("public static WriteHandlerPtr " + Convertor.token[0] + " = new WriteHandlerPtr() {public void handler(int offset, int data)");
+                                type = WRITE_HANDLER8;
+                                i3 = -1;
+                                Convertor.inpos += 1;
+                                continue;
+                            }
+                        } else if (sUtil.getToken("const")) {
+                            sUtil.skipSpace();
+                            if (sUtil.getToken("struct")) {
+                                sUtil.skipSpace();
+                                if (sUtil.getToken("MachineDriver")) {
+                                    sUtil.skipSpace();
+                                    Convertor.token[0] = sUtil.parseToken();
+                                    sUtil.skipSpace();
+                                    if (sUtil.parseChar() != '=') {
+                                        Convertor.inpos = i;
+                                    } else {
+                                        sUtil.skipSpace();
+                                        sUtil.putString("static MachineDriver " + Convertor.token[0] + " = new MachineDriver");
+                                        type = MACHINEDRIVER;
+                                        i3 = -1;
+                                        continue;
+                                    }
+                                }
+                            }
+                        }
+                        Convertor.inpos = i;
+                        break;
+                    } else {
+                        sUtil.skipSpace();
+                        if (sUtil.getToken("GfxLayout")) {
+                            sUtil.skipSpace();
+                            Convertor.token[0] = sUtil.parseToken();
+                            sUtil.skipSpace();
+                            if (sUtil.parseChar() != '=') {
+                                Convertor.inpos = i;
+                            } else {
+                                sUtil.skipSpace();
+                                sUtil.putString("static GfxLayout " + Convertor.token[0] + " = new GfxLayout");
+                                type = GFXLAYOUT;
+                                i3 = -1;
+                                continue;
+                            }
+                        } else if (sUtil.getToken("GfxDecodeInfo")) {
+                            sUtil.skipSpace();
+                            Convertor.token[0] = sUtil.parseToken();
+                            sUtil.skipSpace();
+                            if (sUtil.parseChar() != '[') {
+                                Convertor.inpos = i;
+                            } else {
+                                sUtil.skipSpace();
+                                if (sUtil.parseChar() != ']') {
+                                    Convertor.inpos = i;
+                                } else {
+                                    sUtil.skipSpace();
+                                    if (sUtil.parseChar() != '=') {
+                                        Convertor.inpos = i;
+                                    } else {
+                                        sUtil.skipSpace();
+                                        sUtil.putString("static GfxDecodeInfo " + Convertor.token[0] + "[] =");
+                                        type = GFXDECODE;
+                                        i3 = -1;
+                                        continue;
+                                    }
+                                }
+                            }
+                        } else if (sUtil.getToken("SN76496interface")) {
+                            sUtil.skipSpace();
+                            Convertor.token[0] = sUtil.parseToken();
+                            sUtil.skipSpace();
+                            if (sUtil.parseChar() != '=') {
+                                Convertor.inpos = i;
+                            } else {
+                                sUtil.skipSpace();
+                                sUtil.putString("static SN76496interface " + Convertor.token[0] + " = new SN76496interface");
+                                type = SN76496;
+                                i3 = -1;
+                                continue;
+                            }
+                        }
+                        else if (sUtil.getToken("AY8910interface")) {
+                            sUtil.skipSpace();
+                            Convertor.token[0] = sUtil.parseToken();
+                            sUtil.skipSpace();
+                            if (sUtil.parseChar() != '=') {
+                                Convertor.inpos = i;
+                            } else {
+                                sUtil.skipSpace();
+                                sUtil.putString("static AY8910interface " + Convertor.token[0] + " = new AY8910interface");
+                                type = AY8910;
+                                i3 = -1;
+                                continue;
+                            }
+                        }
+                        Convertor.inpos = i;
+                        break;
+                    }
+                }
+                case '{': {
+                    if (type == MEMORY_READ8) {
+                        i3++;
+                        insideagk[i3] = 0;
+                        if (i3 == 2) {
+                            sUtil.putString("new Memory_ReadAddress(");
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                    }
+                    if (type == MEMORY_WRITE8) {
+                        i3++;
+                        insideagk[i3] = 0;
+                        if (i3 == 2) {
+                            sUtil.putString("new Memory_WriteAddress(");
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                    }
+                    if (type == PORT_READ8) {
+                        i3++;
+                        insideagk[i3] = 0;
+                        if (i3 == 2) {
+                            sUtil.putString("new IO_ReadPort(");
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                    }
+                    if (type == PORT_WRITE8) {
+                        i3++;
+                        insideagk[i3] = 0;
+                        if (i3 == 2) {
+                            sUtil.putString("new IO_WritePort(");
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                    }
+                    if (type == MACHINEDRIVER) {
+                        i3++;
+                        insideagk[i3] = 0;
+                        if (i3 == 0) {
+                            Convertor.outbuf[(Convertor.outpos++)] = 40;
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                        if ((i3 == 1) && (insideagk[0] == 0)) {
+                            sUtil.putString("new MachineCPU[] {");
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                        if ((i3 == 1) && (insideagk[0] == 7)) {
+                            sUtil.putString("new rectangle(");
+                            Convertor.inpos += 1;
+                            continue;
+                        } else if ((i3 == 1) && (insideagk[0] == 8))//case of 1 CPU
+                        {
+                            sUtil.putString("new rectangle(");
+                            Convertor.inpos += 1;
+                            continue;
+                        } else if ((i3 == 1) && (insideagk[0] == 9)) {
+                            sUtil.putString("new rectangle(");
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                        if ((i3 == 1) && (insideagk[0] == 21)) {
+                            sUtil.putString("new MachineSound[] {");
+                            Convertor.inpos += 1;
+                            continue;
+                        } else if ((i3 == 1) && (insideagk[0] == 22)) {
+                            sUtil.putString("new MachineSound[] {");
+                            Convertor.inpos += 1;
+                            continue;
+                        } else if ((i3 == 1) && (insideagk[0] == 23)) {
+                            sUtil.putString("new MachineSound[] {");
+                            Convertor.inpos += 1;
+                            continue;
+                        } else if ((i3 == 1) && (insideagk[0] == 24)) {
+                            sUtil.putString("new MachineSound[] {");
+                            Convertor.inpos += 1;
+                            continue;
+                        } else if ((i3 == 1) && (insideagk[0] == 25)) {
+                            sUtil.putString("new MachineSound[] {");
+                            Convertor.inpos += 1;
+                            continue;
+                        } else if ((i3 == 1) && (insideagk[0] == 26)) {
+                            sUtil.putString("new MachineSound[] {");
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                        if ((i3 == 2) && (insideagk[0] == 0)) {
+                            sUtil.putString("new MachineCPU(");
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                        if ((i3 == 2) && (insideagk[0] == 21)) {
+                            sUtil.putString("new MachineSound(");
+                            Convertor.inpos += 1;
+                            continue;
+                        } else if ((i3 == 2) && (insideagk[0] == 22)) {
+                            sUtil.putString("new MachineSound(");
+                            Convertor.inpos += 1;
+                            continue;
+                        } else if ((i3 == 2) && (insideagk[0] == 23)) {
+                            sUtil.putString("new MachineSound(");
+                            Convertor.inpos += 1;
+                            continue;
+                        } else if ((i3 == 2) && (insideagk[0] == 24)) {
+                            sUtil.putString("new MachineSound(");
+                            Convertor.inpos += 1;
+                            continue;
+                        } else if ((i3 == 2) && (insideagk[0] == 25)) {
+                            sUtil.putString("new MachineSound(");
+                            Convertor.inpos += 1;
+                            continue;
+                        } else if ((i3 == 2) && (insideagk[0] == 26)) {
+                            sUtil.putString("new MachineSound(");
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                    }
+                    if (type == GFXLAYOUT) {
+                        i3++;
+                        insideagk[i3] = 0;
+                        if (i3 == 0) {
+                            Convertor.outbuf[(Convertor.outpos++)] = '(';
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                        if ((i3 == 1) && ((insideagk[0] == 4) || (insideagk[0] == 5) || (insideagk[0] == 6) || (insideagk[0] == 7))) {
+                            sUtil.putString("new int[] {");
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                    }
+                    if (type == GFXDECODE) {
+                        i3++;
+                        insideagk[i3] = 0;
+                        if (i3 == 1) {
+                            sUtil.putString("new GfxDecodeInfo(");
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                    }
+                    if (type == AY8910) {
+                        i3++;
+                        insideagk[i3] = 0;
+                        if (i3 == 0) {
+                            Convertor.outbuf[(Convertor.outpos++)] = '(';
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                        if ((i3 == 1) && ((insideagk[0] == 1) || (insideagk[0] == 2))) {
+                            sUtil.putString("new int[] {");
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                        if ((i3 == 1) && ((insideagk[0] == 1) || (insideagk[0] == 3))) {
+                            sUtil.putString("new ReadHandlerPtr[] {");
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                        if ((i3 == 1) && ((insideagk[0] == 1) || (insideagk[0] == 4))) {
+                            sUtil.putString("new ReadHandlerPtr[] {");
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                        if ((i3 == 1) && ((insideagk[0] == 1) || (insideagk[0] == 5))) {
+                            sUtil.putString("new WriteHandlerPtr[] {");
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                        if ((i3 == 1) && ((insideagk[0] == 1) || (insideagk[0] == 6))) {
+                            sUtil.putString("new WriteHandlerPtr[] {");
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                    }
+                    if (type == SN76496) {
+                        i3++;
+                        insideagk[i3] = 0;
+                        if (i3 == 0) {
+                            Convertor.outbuf[(Convertor.outpos++)] = '(';
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                        if ((i3 == 1) && ((insideagk[0] == 1) || (insideagk[0] == 2))) {
+                            sUtil.putString("new int[] {");
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                    }
+
+                    if (type == PLOT_PIXEL || type == MARK_DIRTY || type == PLOT_BOX || type == READ_PIXEL || type == READ_HANDLER8 || type == WRITE_HANDLER8) {
+                        i3++;
+                    }
+                }
+                break;
+                case '}': {
+                    if ((type == MEMORY_READ8) || type == MEMORY_WRITE8 || type == PORT_READ8 || type == PORT_WRITE8) {
+                        i3--;
+                        if (i3 == 0) {
+                            type = -1;
+                        } else if (i3 == 1) {
+                            Convertor.outbuf[(Convertor.outpos++)] = ')';
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                    }
+                    if (type == MACHINEDRIVER) {
+                        i3--;
+                        if (i3 == -1) {
+                            Convertor.outbuf[(Convertor.outpos++)] = 41;
+                            Convertor.inpos += 1;
+                            type = -1;
+                            continue;
+                        }
+                        if ((i3 == 1) && (insideagk[0] == 0)) {
+                            Convertor.outbuf[(Convertor.outpos++)] = 41;
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                        if ((i3 == 1) && (insideagk[0] == 21)) {
+                            Convertor.outbuf[(Convertor.outpos++)] = 41;
+                            Convertor.inpos += 1;
+                            continue;
+                        } else if ((i3 == 1) && (insideagk[0] == 22)) {
+                            Convertor.outbuf[(Convertor.outpos++)] = 41;
+                            Convertor.inpos += 1;
+                            continue;
+                        } else if ((i3 == 1) && (insideagk[0] == 23)) {
+                            Convertor.outbuf[(Convertor.outpos++)] = 41;
+                            Convertor.inpos += 1;
+                            continue;
+                        } else if ((i3 == 1) && (insideagk[0] == 24)) {
+                            Convertor.outbuf[(Convertor.outpos++)] = 41;
+                            Convertor.inpos += 1;
+                            continue;
+                        } else if ((i3 == 1) && (insideagk[0] == 25)) {
+                            Convertor.outbuf[(Convertor.outpos++)] = 41;
+                            Convertor.inpos += 1;
+                            continue;
+                        } else if ((i3 == 1) && (insideagk[0] == 26)) {
+                            Convertor.outbuf[(Convertor.outpos++)] = 41;
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                        if ((i3 == 0) && (insideagk[0] == 7)) {
+                            Convertor.outbuf[(Convertor.outpos++)] = 41;
+                            Convertor.inpos += 1;
+                            continue;
+                        } else if ((i3 == 0) && (insideagk[0] == 8))//for rectangle defination in single cpu only
+                        {
+                            Convertor.outbuf[(Convertor.outpos++)] = 41;
+                            Convertor.inpos += 1;
+                            continue;
+                        } else if ((i3 == 0) && (insideagk[0] == 9)) {
+                            Convertor.outbuf[(Convertor.outpos++)] = 41;
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                    }
+                    if (type == AY8910) {
+                        i3--;
+                        if (i3 == -1) {
+                            Convertor.outbuf[(Convertor.outpos++)] = 41;
+                            Convertor.inpos += 1;
+                            type = -1;
+                            continue;
+                        }
+                    }
+                    if (type == SN76496) {
+                        i3--;
+                        if (i3 == -1) {
+                            Convertor.outbuf[(Convertor.outpos++)] = 41;
+                            Convertor.inpos += 1;
+                            type = -1;
+                            continue;
+                        }
+                    }
+                    if (type == GFXDECODE) {
+                        i3--;
+                        if (i3 == -1) {
+                            type = -1;
+                        } else if (i3 == 0) {
+                            Convertor.outbuf[(Convertor.outpos++)] = ')';
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                    }
+                    if (type == PLOT_PIXEL || type == MARK_DIRTY || type == PLOT_BOX || type == READ_PIXEL || type == READ_HANDLER8 || type == WRITE_HANDLER8) {
+                        i3--;
+                        if (i3 == -1) {
+                            sUtil.putString("} };");
+                            Convertor.inpos += 1;
+                            type = -1;
+                            continue;
+                        }
+                    }
+                    if (type == GFXLAYOUT) {
+                        i3--;
+                        if (i3 == -1) {
+                            Convertor.outbuf[(Convertor.outpos++)] = 41;
+                            Convertor.inpos += 1;
+                            type = -1;
+                            continue;
+                        }
+                    }
+                    break;
+                }
+                case 'M': {
+                    i = Convertor.inpos;
+                    if (!sUtil.getToken("MEMORY_END")) {
+                        Convertor.inpos = i;
+                        break;
+                    }
+                    if (type == MEMORY_READ8) {
+                        sUtil.putString("\tnew Memory_ReadAddress(MEMPORT_MARKER, 0)\n\t};");
+                        type = -1;
+                        Convertor.inpos += 1;
+                        continue;
+                    } else if (type == MEMORY_WRITE8) {
+                        sUtil.putString("\tnew Memory_WriteAddress(MEMPORT_MARKER, 0)\n\t};");
+                        type = -1;
+                        Convertor.inpos += 1;
+                        continue;
+                    }
+                    Convertor.inpos = i;
+                    break;
+                }
+                case 'P': {
+                    i = Convertor.inpos;
+                    if (sUtil.getToken("PORT_END")) {
+                        if (type == PORT_READ8) {
+                            sUtil.putString("\tnew IO_ReadPort(MEMPORT_MARKER, 0)\n\t};");
+                            type = -1;
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                        if (type == PORT_WRITE8) {
+                            sUtil.putString("\tnew IO_WritePort(MEMPORT_MARKER, 0)\n\t};");
+                            type = -1;
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                        if (sUtil.getToken("PORT_START")) {
+                            sUtil.putString((new StringBuilder()).append("PORT_START(); ").toString());
+                            continue;
+                        }
+                    }
+                    if (sUtil.getToken("PORT_DIPNAME") || sUtil.getToken("PORT_BIT") || sUtil.getToken("PORT_DIPSETTING") || sUtil.getToken("PORT_BITX") || sUtil.getToken("PORT_SERVICE") || sUtil.getToken("PORT_BIT_IMPULSE") || sUtil.getToken("PORT_ANALOG") || sUtil.getToken("PORT_ANALOGX")) {
+                        i8++;
+                        type2 = NEWINPUT;
+                        sUtil.skipSpace();
+                        if (sUtil.parseChar() == '(') {
+                            Convertor.inpos = i;
+                        }
+                    }
+                    Convertor.inpos = i;
+                    break;
+                }
+                case 'I':
+                    int j = Convertor.inpos;
+                    if (sUtil.getToken("INPUT_PORTS_START")) {
+                        if (sUtil.parseChar() != '(') {
+                            Convertor.inpos = j;
+                            break;
+                        }
+                        sUtil.skipSpace();
+                        Convertor.token[0] = sUtil.parseToken();
+                        sUtil.skipSpace();
+                        if (sUtil.parseChar() != ')') {
+                            Convertor.inpos = j;
+                            break;
+                        }
+                        sUtil.putString((new StringBuilder()).append("static InputPortPtr input_ports_").append(Convertor.token[0]).append(" = new InputPortPtr(){ public void handler() { ").toString());
+                    }
+                    if (sUtil.getToken("INPUT_PORTS_END")) {
+                        sUtil.putString((new StringBuilder()).append("INPUT_PORTS_END(); }}; ").toString());
+                        continue;
+                    }
+
+                    break;
+                case '&': {
+                    if (type == MEMORY_READ8 || type == MEMORY_WRITE8 || type == PORT_READ8 || type == PORT_WRITE8 || type == GFXDECODE || type == MACHINEDRIVER) {
+                        Convertor.inpos += 1;
+                        continue;
+                    }
+                    break;
+                }
+                case '0':
+                    i = Convertor.inpos;
+                    if (sUtil.getToken("0")) {
+                        Convertor.inpos = i;
+                        if (type == MACHINEDRIVER) {
+                            if ((i3 == 0) && ((insideagk[i3] == 3) || (insideagk[i3] == 5) || (insideagk[i3] == 6) || (insideagk[i3] == 10) || (insideagk[i3] == 14) || (insideagk[i3] == 15))) {
+                                sUtil.putString("null");
+                                Convertor.inpos += 1;
+                                continue;
+                            } else if ((i3 == 0) /*&& (type3==1)*/ && ((insideagk[i3] == 4) || (insideagk[i3] == 8) || (insideagk[i3] == 9) || (insideagk[i3] == 13) || (insideagk[i3] == 14) || (insideagk[i3] == 15) || (insideagk[i3] == 16))) {
+                                //case for single core cpus
+                                sUtil.putString("null");
+                                Convertor.inpos += 1;
+                                continue;
+                            }
+                            if ((i3 == 2) && (insideagk[0] == 0) && ((insideagk[i3] == 4) || (insideagk[i3] == 6))) {
+                                sUtil.putString("null");
+                                Convertor.inpos += 1;
+                            }
+                        }
+                    }
+                    break;
+                case ',':
+                    if ((type != -1)) {
+                        if (i3 != -1) {
+                            insideagk[i3] += 1;
+                        }
+                    }
+                    break;
+                case 'R': {
+                    i = Convertor.inpos;
+                    if (sUtil.getToken("ROM_START")) {
+                        if (sUtil.parseChar() != '(') {
+                            Convertor.inpos = i;
+                            break;
+                        }
+                        sUtil.skipSpace();
+                        Convertor.token[0] = sUtil.parseToken();
+                        sUtil.skipSpace();
+                        if (sUtil.parseChar() != ')') {
+                            Convertor.inpos = i;
+                            break;
+                        }
+                        sUtil.putString((new StringBuilder()).append("static RomLoadPtr rom_").append(Convertor.token[0]).append(" = new RomLoadPtr(){ public void handler(){ ").toString());
+                        continue;
+                    }
+                    if (sUtil.getToken("ROM_END")) {
+                        sUtil.putString((new StringBuilder()).append("ROM_END(); }}; ").toString());
+                        continue;
+                    }
+                    if (sUtil.getToken("ROM_REGION") || sUtil.getToken("ROM_LOAD")
+                            || sUtil.getToken("ROM_RELOAD") || sUtil.getToken("ROM_CONTINUE")
+                            || sUtil.getToken("ROM_LOAD16_BYTE") || sUtil.getToken("ROM_LOAD_NIB_HIGH")
+                            || sUtil.getToken("ROM_LOAD_NIB_LOW") || sUtil.getToken("ROM_FILL")
+                            || sUtil.getToken("ROM_COPY") || sUtil.getToken("ROM_LOAD16_WORD")
+                            || sUtil.getToken("ROM_LOAD32_BYTE") || sUtil.getToken("ROM_LOAD32_WORD")
+                            || sUtil.getToken("ROM_LOAD32_WORD_SWAP") || sUtil.getToken("ROM_REGION16_LE")
+                            || sUtil.getToken("ROM_REGION16_BE") || sUtil.getToken("ROM_REGION32_LE") || sUtil.getToken("ROM_REGION32_BE")) {
+                        i8++;
+                        type2 = ROMDEF;
+                        sUtil.skipSpace();
+                        if (sUtil.parseChar() == '(') {
+                            Convertor.inpos = i;
+                        }
+                    }
+                    if (sUtil.getToken("READ_HANDLER(")) {
+                        sUtil.skipSpace();
+                        Convertor.token[0] = sUtil.parseToken();
+                        sUtil.skipSpace();
+                        if (sUtil.getToken(");"))//if it is front function skip it
+                        {
+                            sUtil.skipLine();
+                            continue;
+                        } else {
+                            sUtil.putString("public static ReadHandlerPtr " + Convertor.token[0] + "  = new ReadHandlerPtr() { public int handler(int offset)");
+                            type = READ_HANDLER8;
+                            i3 = -1;
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                    }
+
+                    Convertor.inpos = i;
+                }
+                break;
+                case 'W': {
+                    i = Convertor.inpos;
+                    if (sUtil.getToken("WRITE_HANDLER(")) {
+                        sUtil.skipSpace();
+                        Convertor.token[0] = sUtil.parseToken();
+                        sUtil.skipSpace();
+                        if (sUtil.getToken(");"))//if it is a front function skip it
+                        {
+                            sUtil.skipLine();
+                            continue;
+                        } else {
+                            sUtil.putString("public static WriteHandlerPtr " + Convertor.token[0] + " = new WriteHandlerPtr() {public void handler(int offset, int data)");
+                            type = WRITE_HANDLER8;
+                            i3 = -1;
+                            Convertor.inpos += 1;
+                            continue;
+                        }
+                    }
+                    Convertor.inpos = i;
+                }
+                break;
+                case ')': {
+                    if (type2 == ROMDEF) {
+                        i8--;
+                        Convertor.outbuf[(Convertor.outpos++)] = ')';
+                        Convertor.outbuf[(Convertor.outpos++)] = ';';
+                        Convertor.inpos += 2;
+                        if (sUtil.getChar() == ')') {//fix for badcrc case
+                            Convertor.outpos -= 1;
+                            Convertor.outbuf[(Convertor.outpos++)] = ')';
+                            Convertor.outbuf[(Convertor.outpos++)] = ';';
+                            Convertor.inpos += 1;
+                        }
+                        type2 = -1;
+                        continue;
+                    }
+                    if (type2 == NEWINPUT) {
+                        i8--;
+                        Convertor.outbuf[(Convertor.outpos++)] = ')';
+                        Convertor.outbuf[(Convertor.outpos++)] = ';';
+                        Convertor.inpos += 2;
+                        if (sUtil.getChar() == ')') {
+                            Convertor.inpos += 1;
+                        }
+                        type2 = -1;
+                        continue;
+                    }
+                }
+                break;
+                case 'D':
+                    if (type2 == NEWINPUT) {
+                        i = Convertor.inpos;
+                        if (sUtil.getToken("DEF_STR(")) {
+                            sUtil.skipSpace();
+                            Convertor.token[0] = sUtil.parseToken();
+                            sUtil.putString((new StringBuilder()).append("DEF_STR( \"").append(Convertor.token[0]).append("\")").toString());
+                            i3 = -1;
+
+                            continue;
+                        }
+
+                    }
+                    break;
+                case 'G': {
+                    i = Convertor.inpos;
+                    if (sUtil.getToken("GAME") || sUtil.getToken("GAMEX")) {
+                        sUtil.skipSpace();
+                        if (sUtil.getChar() != '(') {
+                            Convertor.inpos = i;
+                            break;
+                        } else {
+                            Convertor.inpos += 1;
+                        }
+                        if (sUtil.getChar() == ')')//fix an issue in driverH
+                        {
+                            Convertor.inpos = i;
+                            break;
+                        }
+                        type = GAMEDRIVER;
+                        sUtil.skipSpace();
+                        Convertor.token[0] = sUtil.parseTokenGameDriv();//year
+                        Convertor.inpos++;
+                        sUtil.skipSpace();
+                        Convertor.token[1] = sUtil.parseToken();//rom
+                        Convertor.inpos++;
+                        sUtil.skipSpace();
+                        Convertor.token[2] = sUtil.parseToken();//parent
+                        if (Convertor.token[2].matches("0")) {
+                            Convertor.token[2] = "null";
+                        } else {
+                            Convertor.token[2] = "driver_" + Convertor.token[2];
+                        }
+                        Convertor.inpos++;
+                        sUtil.skipSpace();
+                        Convertor.token[3] = sUtil.parseToken();//machine
+                        Convertor.inpos++;
+                        sUtil.skipSpace();
+                        Convertor.token[4] = sUtil.parseToken();//input
+                        Convertor.inpos++;
+                        sUtil.skipSpace();
+                        Convertor.token[5] = sUtil.parseToken();//init
+                        if (Convertor.token[5].matches("0")) {
+                            Convertor.token[5] = "null";
+                        } else {
+                            Convertor.token[5] = "init_" + Convertor.token[5];
+                        }
+                        Convertor.inpos++;
+                        sUtil.skipSpace();
+                        Convertor.token[6] = sUtil.parseToken();//ROT
+                        //Convertor.inpos++;
+                        sUtil.skipSpace();
+                        Convertor.token[7] = sUtil.parseToken();
+                        Convertor.inpos++;
+                        sUtil.skipSpace();
+                        Convertor.token[8] = sUtil.parseToken();//name
+
+                        sUtil.putString((new StringBuilder()).append("public static GameDriver driver_").append(Convertor.token[1]).append("\t   = new GameDriver(\"").append(Convertor.token[0]).append("\"\t,\"").append(Convertor.token[1]).append("\"\t,\"").append(Convertor.className).append(".java\"\t,rom_")
+                                .append(Convertor.token[1]).append(",").append(Convertor.token[2])
+                                .append("\t,machine_driver_").append(Convertor.token[3])
+                                .append("\t,input_ports_").append(Convertor.token[4])
+                                .append("\t,").append(Convertor.token[5])
+                                .append("\t,").append(Convertor.token[6])
+                                .append("\t,").append(Convertor.token[7])
+                                .append("\t").append(Convertor.token[8])
+                                .toString());
+                        continue;
+                    }
+                }
+                break;
+
             }
             Convertor.outbuf[Convertor.outpos++] = Convertor.inbuf[Convertor.inpos++];//grapse to inputbuffer sto output
         } while (true);

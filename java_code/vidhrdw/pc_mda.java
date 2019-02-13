@@ -4,7 +4,7 @@
 
 ***************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -29,42 +29,42 @@ public class pc_mda
 		{ 0x00,0xff,0x00 }
 	};
 	
-	struct GfxLayout pc_mda_charlayout =
-	{
+	static GfxLayout pc_mda_charlayout = new GfxLayout
+	(
 		9,32,					/* 9 x 32 characters (9 x 15 is the default, but..) */
 		256,					/* 256 characters */
 		1,                      /* 1 bits per pixel */
-		{ 0 },                  /* no bitplanes; 1 bit per pixel */
+		new int[] { 0 },                  /* no bitplanes; 1 bit per pixel */
 		/* x offsets */
-		{ 0,1,2,3,4,5,6,7,7 },	/* pixel 7 repeated only for char code 176 to 223 */
+		new int[] { 0,1,2,3,4,5,6,7,7 },	/* pixel 7 repeated only for char code 176 to 223 */
 		/* y offsets */
-		{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8,
+		new int[] { 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8,
 		  16384+0*8, 16384+1*8, 16384+2*8, 16384+3*8,
 		  16384+4*8, 16384+5*8, 16384+6*8, 16384+7*8,
 		  0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8,
 		  16384+0*8, 16384+1*8, 16384+2*8, 16384+3*8,
 		  16384+4*8, 16384+5*8, 16384+6*8, 16384+7*8 },
 		8*8 					/* every char takes 8 bytes (upper half) */
-	};
+	);
 	
-	struct GfxLayout pc_mda_gfxlayout_1bpp =
-	{
+	static GfxLayout pc_mda_gfxlayout_1bpp = new GfxLayout
+	(
 		8,1,					/* 8 x 32 graphics */
 		256,					/* 256 codes */
 		1,						/* 1 bit per pixel */
-		{ 0 },					/* no bit planes */
+		new int[] { 0 },					/* no bit planes */
 	    /* x offsets */
-		{ 0,1,2,3,4,5,6,7 },
+		new int[] { 0,1,2,3,4,5,6,7 },
 		/* y offsets (we only use one byte to build the block) */
-		{ 0 },
+		new int[] { 0 },
 		8						/* every code takes 1 byte */
-	};
+	);
 	
-	struct GfxDecodeInfo pc_mda_gfxdecodeinfo[] =
+	static GfxDecodeInfo pc_mda_gfxdecodeinfo[] =
 	{
-		{ 1, 0x0000, &pc_mda_charlayout,		0, 256 },
-		{ 1, 0x1000, &pc_mda_gfxlayout_1bpp,256*2,	 1 },	/* 640x400x1 gfx */
-	    { -1 } /* end of array */
+		new GfxDecodeInfo( 1, 0x0000, pc_mda_charlayout,		0, 256 ),
+		new GfxDecodeInfo( 1, 0x1000, pc_mda_gfxlayout_1bpp,256*2,	 1 ),	/* 640x400x1 gfx */
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
 	/* to be done:

@@ -2,7 +2,7 @@
  PeT mess@utanet.at 2001
 ******************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -786,7 +786,7 @@ public class arcadia
 		for (k=0; k<8; k++) {
 		    b=arcadia_video.reg.d.chars[i][k];
 		    x=arcadia_video.pos[i].x+XPOS;
-		    if (!doublescan) {
+		    if (doublescan == 0) {
 			y=arcadia_video.pos[i].y+YPOS+k;
 			drawgfx(bitmap, Machine->gfx[0], b,0,
 				0,0,x,y,

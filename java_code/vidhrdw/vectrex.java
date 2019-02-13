@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -27,7 +27,6 @@ public class vectrex
 	  Local variables
 	 *********************************************************************/
 	static WRITE_HANDLER ( v_via_pa_w );
-	static WRITE_HANDLER( v_via_pb_w );
 	static void vectrex_screen_update (double time_);
 	static void vectrex_shift_reg_w (int via_sr);
 	static WRITE_HANDLER ( v_via_ca2_w );
@@ -251,7 +250,7 @@ public class vectrex
 		 * get redrawn. This is why we have an additional pulsing timer
 		 * which does the refresh if T2 isn't running. */
 	
-		if (!backup_timer)
+		if (backup_timer == 0)
 			backup_timer = timer_pulse (TIME_IN_CYCLES(30000, 0), 0, vectrex_screen_update_backup);
 	
 		via_config(0, &vectrex_via6522_interface);
@@ -375,7 +374,7 @@ public class vectrex
 	
 	static WRITE_HANDLER ( v_via_ca2_w )
 	{
-		if  (!data)    /* ~ZERO low ? Then zero integrators*/
+		if (data == 0)    /* ~ZERO low ? Then zero integrators*/
 			vectrex_zero_integrators();
 	}
 	
@@ -421,7 +420,7 @@ public class vectrex
 		}
 	}
 	
-	WRITE_HANDLER( raaspec_led_w )
+	public static WriteHandlerPtr raaspec_led_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		int i, y, width;
 		struct rectangle clip;
@@ -460,7 +459,7 @@ public class vectrex
 				}
 			old_data=data;
 		}
-	}
+	} };
 	
 	int raaspec_start (void)
 	{

@@ -4,7 +4,7 @@
 ******************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -17,19 +17,23 @@ public class hp48
 	 0-0x3ffff rom
 	 0xc0000- 0xcffff ram also mapped at 0xd0000-0xdffff */
 	
-	static MEMORY_READ_START( readmem )
-		{ 0x00000, 0xfffff, MRA_ROM }, // configured at runtime, complexe mmu
-	MEMORY_END
+	public static Memory_ReadAddress readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress( 0x00000, 0xfffff, MRA_ROM ), // configured at runtime, complexe mmu
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( writemem )
-		{ 0x00000, 0xfffff, MWA_ROM },
-	MEMORY_END
+	public static Memory_WriteAddress writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x00000, 0xfffff, MWA_ROM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
 	#define DIPS_HELPER(bit, name, keycode, r) \
-	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r)
+	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r);
 	
 	
-	INPUT_PORTS_START( hp48s )
+	static InputPortPtr input_ports_hp48s = new InputPortPtr(){ public void handler() { 
 	#if 1
 		PORT_START
 		DIPS_HELPER( 0x80, "        A", KEYCODE_A, CODE_NONE)
@@ -90,28 +94,28 @@ public class hp48
 	
 	#else
 		PORT_START
-		PORT_BIT ( 0x20, 0,     IPT_UNUSED )
+		PORT_BIT ( 0x20, 0,     IPT_UNUSED );
 		DIPS_HELPER( 0x10, "B", KEYCODE_F2)
 		DIPS_HELPER( 0x08, "C", KEYCODE_F3)
 		DIPS_HELPER( 0x04, "D", KEYCODE_F4)
 		DIPS_HELPER( 0x02, "E", KEYCODE_F5)
 		DIPS_HELPER( 0x01, "F", KEYCODE_F6)
 		PORT_START
-		PORT_BIT ( 0x20, 0,     IPT_UNUSED )
+		PORT_BIT ( 0x20, 0,     IPT_UNUSED );
 		DIPS_HELPER( 0x10, "PRG", KEYCODE_A)
 		DIPS_HELPER( 0x08, "CST", KEYCODE_B)
 		DIPS_HELPER( 0x04, "VAR", KEYCODE_C)
 		DIPS_HELPER( 0x02, "up", KEYCODE_UP)
 		DIPS_HELPER( 0x01, "NXT", KEYCODE_D)
 		PORT_START
-		PORT_BIT ( 0x20, 0,     IPT_UNUSED )
+		PORT_BIT ( 0x20, 0,     IPT_UNUSED );
 		DIPS_HELPER( 0x10, "STO", KEYCODE_E)
 		DIPS_HELPER( 0x08, "EVL", KEYCODE_F)
 		DIPS_HELPER( 0x04, "left", KEYCODE_LEFT)
 		DIPS_HELPER( 0x02, "down", KEYCODE_DOWN)
 		DIPS_HELPER( 0x01, "right", KEYCODE_RIGHT)
 		PORT_START
-		PORT_BIT ( 0x20, 0,     IPT_UNUSED )
+		PORT_BIT ( 0x20, 0,     IPT_UNUSED );
 		DIPS_HELPER( 0x10, "COS", CODE_DEFAULT)
 		DIPS_HELPER( 0x08, "TAN", KEYCODE_H)
 		DIPS_HELPER( 0x04, "sqt", KEYCODE_LEFT)
@@ -146,14 +150,14 @@ public class hp48
 		DIPS_HELPER( 0x02, "3", KEYCODE_3_PAD)
 		DIPS_HELPER( 0x01, "-", KEYCODE_MINUS_PAD)
 		PORT_START
-		PORT_BIT ( 0x20, 0,     IPT_UNUSED )
+		PORT_BIT ( 0x20, 0,     IPT_UNUSED );
 		DIPS_HELPER( 0x10, "'", KEYCODE_L)
 		DIPS_HELPER( 0x08, "0", KEYCODE_0_PAD)
 		DIPS_HELPER( 0x04, ".", KEYCODE_DEL_PAD)
 		DIPS_HELPER( 0x02, "SPC", KEYCODE_SPACE)
 		DIPS_HELPER( 0x01, "+", KEYCODE_PLUS_PAD)
 	#endif
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	#if 0
 	static struct DACinterface dac_interface =
@@ -163,24 +167,24 @@ public class hp48
 	};
 	#endif
 	
-	static struct GfxLayout hp48_charlayout =
-	{
+	static GfxLayout hp48_charlayout = new GfxLayout
+	(
 	        2,16,
 	        256,                                    /* 256 characters */
 	        1,                      /* 1 bits per pixel */
-	        { 0 },                  /* no bitplanes; 1 bit per pixel */
+	        new int[] { 0 },                  /* no bitplanes; 1 bit per pixel */
 	        /* x offsets */
-	        { 0,0 },
+	        new int[] { 0,0 },
 	        /* y offsets */
-	        {
+	        new int[] {
 				7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1, 0, 0
 	        },
 	        1*8
-	};
+	);
 	
-	static struct GfxDecodeInfo hp48_gfxdecodeinfo[] = {
-		{ REGION_GFX1, 0x0000, &hp48_charlayout,                     0, 8 },
-	    { -1 } /* end of array */
+	static GfxDecodeInfo hp48_gfxdecodeinfo[] ={
+		new GfxDecodeInfo( REGION_GFX1, 0x0000, hp48_charlayout,                     0, 8 ),
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
 	static SATURN_CONFIG config={ 
@@ -267,32 +271,32 @@ public class hp48
 	    }
 	};
 	
-	ROM_START(hp48s)
-		ROM_REGION(0x1c0000,REGION_CPU1, 0)
+	static RomLoadPtr rom_hp48s = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x1c0000,REGION_CPU1, 0);
 		/* version at 0x7fff0 little endian 6 characters */
 		/* 0x3fff8 in byte wide rom */
-	//	ROM_LOAD("sxrom-a", 0x00000, 0x40000, 0xa87696c7)
-	//	ROM_LOAD("sxrom-b", 0x00000, 0x40000, 0x034f6ce4)
-	//	ROM_LOAD("sxrom-c", 0x00000, 0x40000, 0xa9a0279d)
-	//	ROM_LOAD("sxrom-d", 0x00000, 0x40000, 0x6e71244e)
-	//	ROM_LOAD("sxrom-e", 0x00000, 0x40000, 0x704ffa08)
-		ROM_LOAD("sxrom-e", 0x00000, 0x40000, 0xd4f1390b) // differences only in the hardware window
-	//	ROM_LOAD("rom.sx", 0x00000, 0x40000, 0x5619ccaf) //revision E bad dump
-	//	ROM_LOAD("sxrom-j", 0x00000, 0x40000, 0x1a6378ef)
-		ROM_REGION(0x100,REGION_GFX1,0)
-	ROM_END
+	//	ROM_LOAD("sxrom-a", 0x00000, 0x40000, 0xa87696c7);
+	//	ROM_LOAD("sxrom-b", 0x00000, 0x40000, 0x034f6ce4);
+	//	ROM_LOAD("sxrom-c", 0x00000, 0x40000, 0xa9a0279d);
+	//	ROM_LOAD("sxrom-d", 0x00000, 0x40000, 0x6e71244e);
+	//	ROM_LOAD("sxrom-e", 0x00000, 0x40000, 0x704ffa08);
+		ROM_LOAD("sxrom-e", 0x00000, 0x40000, 0xd4f1390b);// differences only in the hardware window
+	//	ROM_LOAD("rom.sx", 0x00000, 0x40000, 0x5619ccaf);//revision E bad dump
+	//	ROM_LOAD("sxrom-j", 0x00000, 0x40000, 0x1a6378ef);
+		ROM_REGION(0x100,REGION_GFX1,0);
+	ROM_END(); }}; 
 	
-	ROM_START(hp48g)
-		ROM_REGION(0x580000,REGION_CPU1, 0)
+	static RomLoadPtr rom_hp48g = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x580000,REGION_CPU1, 0);
 		/* version at 0x7ffbf little endian 6 characters */
-	//	ROM_LOAD("gxrom-k", 0x00000, 0x80000, 0xbdd5d2ee)
-	//	ROM_LOAD("gxrom-l", 0x00000, 0x80000, 0x70958e6b)
-	//	ROM_LOAD("gxrom-m", 0x00000, 0x80000, 0xe21a09e4)
-	//	ROM_LOAD("gxrom-p", 0x00000, 0x80000, 0x27f90428)
-		ROM_LOAD("gxrom-r", 0x00000, 0x80000, 0x00ee1a62)
-	//	ROM_LOAD("rom.gx", 0x00000, 0x80000, 0xd6bb68c5) //revision R bad dump
-		ROM_REGION(0x100,REGION_GFX1,0)
-	ROM_END
+	//	ROM_LOAD("gxrom-k", 0x00000, 0x80000, 0xbdd5d2ee);
+	//	ROM_LOAD("gxrom-l", 0x00000, 0x80000, 0x70958e6b);
+	//	ROM_LOAD("gxrom-m", 0x00000, 0x80000, 0xe21a09e4);
+	//	ROM_LOAD("gxrom-p", 0x00000, 0x80000, 0x27f90428);
+		ROM_LOAD("gxrom-r", 0x00000, 0x80000, 0x00ee1a62);
+	//	ROM_LOAD("rom.gx", 0x00000, 0x80000, 0xd6bb68c5);//revision R bad dump
+		ROM_REGION(0x100,REGION_GFX1,0);
+	ROM_END(); }}; 
 	
 	static const struct IODevice io_hp48s[] = {
 	    { IO_END }

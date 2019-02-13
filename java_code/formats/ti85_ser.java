@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package formats;
@@ -128,7 +128,7 @@ public class ti85_ser
 		serial_data->end = NULL;
 	
 		number_of_entries = (file_data[0x3b]==0x1d) ? 3 : ti85_variables_count(file_data, file_size);
-		if (!number_of_entries) return 0;
+		if (number_of_entries == 0) return 0;
 	
 		serial_data->variables = malloc(sizeof(ti85_serial_variable)*number_of_entries);
 		if (!serial_data->variables) return 0;
@@ -143,7 +143,7 @@ public class ti85_ser
 		serial_data->number_of_variables = number_of_entries;
 	
 		ti85_entries = (ti85_entry*) malloc (sizeof(ti85_entry)*number_of_entries);
-		if (!ti85_entries) return 0;
+		if (ti85_entries == 0) return 0;
 	
 		if (file_data[0x3b]==0x1d)
 		{
@@ -160,10 +160,10 @@ public class ti85_ser
 			/*Header packet*/
 			if (file_data[0x3b]==0x1d)
 			{
-				if (!i)
+				if (i == 0)
 				{
 					temp_data_to_convert = (UINT8*) malloc (0x0f);
-					if (!temp_data_to_convert)
+					if (temp_data_to_convert == 0)
 					{
 						free (ti85_entries);
 						return 0;
@@ -195,7 +195,7 @@ public class ti85_ser
 			else
 			{
 				temp_data_to_convert = (UINT8*) malloc (10+ti85_entries[i].name_size);
-				if (!temp_data_to_convert)
+				if (temp_data_to_convert == 0)
 				{
 					free (ti85_entries);
 					return 0;
@@ -243,7 +243,7 @@ public class ti85_ser
 	
 			/*Data packet*/
 			temp_data_to_convert = (UINT8*) malloc (6+ti85_entries[i].data_size);
-			if (!temp_data_to_convert)
+			if (temp_data_to_convert == 0)
 			{
 				free (ti85_entries);
 				return 0;

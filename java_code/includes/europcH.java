@@ -1,18 +1,14 @@
-WRITE_HANDLER( europc_pio_w );
-READ_HANDLER( europc_pio_r );
 
 extern WRITE_HANDLER ( europc_jim_w );
 extern READ_HANDLER ( europc_jim_r );
 extern READ_HANDLER ( europc_jim2_r );
 
-READ_HANDLER( europc_rtc_r );
-WRITE_HANDLER( europc_rtc_w );
 void europc_rtc_nvram_handler(void* file, int write);
 void europc_rtc_set_time(void);
 void europc_rtc_init(void);
 
 #define EUROPC_HELPER(bit,text,key1,key2) \
-	PORT_BITX( bit, 0x0000, IPT_KEYBOARD, text, key1, key2 )
+	PORT_BITX( bit, 0x0000, IPT_KEYBOARD, text, key1, key2 );
 
 /*
 layout of an uk europc
@@ -30,7 +26,7 @@ i am not sure if keypad enter delivers the mf2 keycode
  */
 #define EUROPC_KEYBOARD \
     PORT_START  /* IN4 */\
-	PORT_BIT ( 0x0001, 0x0000, IPT_UNUSED ) 	/* unused scancode 0 */\
+	PORT_BIT ( 0x0001, 0x0000, IPT_UNUSED );	/* unused scancode 0 */\
 	EUROPC_HELPER( 0x0002, "Esc",          KEYCODE_ESC,        CODE_NONE ) /* Esc                         01  81 */\
 	EUROPC_HELPER( 0x0004, "1 !",          KEYCODE_1,          CODE_NONE ) /* 1                           02  82 */\
 	EUROPC_HELPER( 0x0008, "2 @",          KEYCODE_2,          CODE_NONE ) /* 2                           03  83 */\
@@ -124,16 +120,16 @@ i am not sure if keypad enter delivers the mf2 keycode
 	EUROPC_HELPER( 0x0002, "KP 3 (PgDn)",  KEYCODE_3_PAD,      KEYCODE_PGDN )   /* Keypad 3  (PgDn)            51  D1 */\
 	EUROPC_HELPER( 0x0004, "KP 0 (Ins)",   KEYCODE_0_PAD,      KEYCODE_INSERT ) /* Keypad 0  (Ins)             52  D2 */\
 	EUROPC_HELPER( 0x0008, "KP . (Del)",   KEYCODE_DEL_PAD,    KEYCODE_DEL )    /* Keypad .  (Del)             53  D3 */\
-	PORT_BIT ( 0x0070, 0x0000, IPT_UNUSED )\
+	PORT_BIT ( 0x0070, 0x0000, IPT_UNUSED );
 	/* 0x40 non us backslash 2 not available */\
 	EUROPC_HELPER( 0x0080, "F11",		   KEYCODE_F11,        CODE_NONE )		/* F11                         57  D7 */\
 	EUROPC_HELPER( 0x0100, "F12",	       KEYCODE_F12,        CODE_NONE )		/* F12                         58  D8 */\
-	PORT_BIT ( 0xfe00, 0x0000, IPT_UNUSED )\
+	PORT_BIT ( 0xfe00, 0x0000, IPT_UNUSED );
 		\
 	PORT_START	/* IN10 */\
 	EUROPC_HELPER( 0x0001, "KP Enter",	   KEYCODE_ENTER_PAD,  CODE_NONE )		/* PAD Enter                   60  e0 */\
-	PORT_BIT ( 0xfffe, 0x0000, IPT_UNUSED )\
+	PORT_BIT ( 0xfffe, 0x0000, IPT_UNUSED );
 		\
 	PORT_START	/* IN11 */\
-	PORT_BIT ( 0xffff, 0x0000, IPT_UNUSED )
+	PORT_BIT ( 0xffff, 0x0000, IPT_UNUSED );
 

@@ -7,7 +7,7 @@
 ****************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -145,7 +145,7 @@ public class zx
 		for (x = 0; x < 256; x += 8)
 		{
 			chr = rom[offs & 0x7fff];
-			if (!halted)
+			if (halted == 0)
 				logerror(" %02x", chr);
 			if (chr & 0x40)
 			{
@@ -163,7 +163,7 @@ public class zx
 			}
 			drawgfx(bitmap, Machine->gfx[0], data, 0, 0, 0, x, y, &Machine->visible_area, TRANSPARENCY_NONE, 0);
 		}
-		if (!halted)
+		if (halted == 0)
 			logerror(" %02x", rom[offs & 0x7fff]);
 		logerror("\n");
 		return rom[offs0];

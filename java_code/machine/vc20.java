@@ -10,7 +10,7 @@
 
 ***************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -52,24 +52,24 @@ public class vc20
 		cpu_set_nmi_line (0, level);
 	}
 	
-	static READ_HANDLER( vc20_via0_read_ca1 )
+	public static ReadHandlerPtr vc20_via0_read_ca1  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return !KEY_RESTORE;
-	}
+	} };
 	
-	static READ_HANDLER( vc20_via0_read_ca2 )
+	public static ReadHandlerPtr vc20_via0_read_ca2  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		DBG_LOG (1, "tape", ("motor read %d\n", via0_ca2));
 		return via0_ca2;
-	}
+	} };
 	
-	static WRITE_HANDLER( vc20_via0_write_ca2 )
+	public static WriteHandlerPtr vc20_via0_write_ca2 = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		via0_ca2 = data ? 1 : 0;
 		vc20_tape_motor (via0_ca2);
-	}
+	} };
 	
-	static READ_HANDLER( vc20_via0_read_porta )
+	public static ReadHandlerPtr vc20_via0_read_porta  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		UINT8 value = 0xff;
 	
@@ -92,13 +92,13 @@ public class vc20
 		if (!vc20_tape_switch ())
 			value &= ~0x40;
 		return value;
-	}
+	} };
 	
-	static WRITE_HANDLER( vc20_via0_write_porta )
+	public static WriteHandlerPtr vc20_via0_write_porta = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		cbm_serial_atn_write (serial_atn = !(data & 0x80));
 		DBG_LOG (1, "serial out", ("atn %s\n", serial_atn ? "high" : "low"));
-	}
+	} };
 	
 	/* via 1 addr 0x9120
 	 * port a input from keyboard (low key pressed in line of matrix
@@ -116,7 +116,7 @@ public class vc20
 		cpu_set_irq_line (0, M6502_IRQ_LINE, level);
 	}
 	
-	static READ_HANDLER( vc20_via1_read_porta )
+	public static ReadHandlerPtr vc20_via1_read_porta  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int value = 0xff;
 	
@@ -145,19 +145,19 @@ public class vc20
 			value &= keyboard[7];
 	
 		return value;
-	}
+	} };
 	
-	static READ_HANDLER( vc20_via1_read_ca1 )
+	public static ReadHandlerPtr vc20_via1_read_ca1  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return vc20_tape_read ();
-	}
+	} };
 	
-	static WRITE_HANDLER( vc20_via1_write_ca2 )
+	public static WriteHandlerPtr vc20_via1_write_ca2 = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		cbm_serial_clock_write (serial_clock = !data);
-	}
+	} };
 	
-	static READ_HANDLER( vc20_via1_read_portb )
+	public static ReadHandlerPtr vc20_via1_read_portb  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		UINT8 value = 0xff;
 	
@@ -266,31 +266,31 @@ public class vc20
 		}
 	
 		return value;
-	}
+	} };
 	
-	static WRITE_HANDLER( vc20_via1_write_porta )
+	public static WriteHandlerPtr vc20_via1_write_porta = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		via1_porta = data;
-	}
+	} };
 	
 	
-	static WRITE_HANDLER( vc20_via1_write_portb )
+	public static WriteHandlerPtr vc20_via1_write_portb = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	/*  if( errorlog ) fprintf(errorlog, "via1_write_portb: $%02X\n", data); */
 		vc20_tape_write (data & 8 ? 1 : 0);
 		via1_portb = data;
-	}
+	} };
 	
-	static READ_HANDLER( vc20_via1_read_cb1 )
+	public static ReadHandlerPtr vc20_via1_read_cb1  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		DBG_LOG (1, "serial in", ("request read\n"));
 		return cbm_serial_request_read ();
-	}
+	} };
 	
-	static WRITE_HANDLER( vc20_via1_write_cb2 )
+	public static WriteHandlerPtr vc20_via1_write_cb2 = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		cbm_serial_data_write (serial_data = !data);
-	}
+	} };
 	
 	/* ieee 6522 number 1 (via4)
 	 port b
@@ -303,7 +303,7 @@ public class vc20
 	  6 ndac in
 	  7 atn in
 	 */
-	static READ_HANDLER( vc20_via4_read_portb )
+	public static ReadHandlerPtr vc20_via4_read_portb  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		UINT8 data=0;
 		if (cbm_ieee_eoi_r()) data|=8;
@@ -312,14 +312,14 @@ public class vc20
 		if (cbm_ieee_ndac_r()) data|=0x40;
 		if (cbm_ieee_atn_r()) data|=0x80;
 		return data;
-	}
+	} };
 	
-	static WRITE_HANDLER( vc20_via4_write_portb )
+	public static WriteHandlerPtr vc20_via4_write_portb = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		cbm_ieee_dav_w(0,data&1);
 		cbm_ieee_nrfd_w(0,data&2);
 		cbm_ieee_ndac_w(0,data&4);
-	}
+	} };
 	
 	/* ieee 6522 number 2 (via5)
 	   port a data read
@@ -328,30 +328,30 @@ public class vc20
 	   cb2 eoi out
 	   ca2 atn out
 	*/
-	static WRITE_HANDLER( vc20_via5_write_porta )
+	public static WriteHandlerPtr vc20_via5_write_porta = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		cbm_ieee_data_w(0,data);
-	}
+	} };
 	
-	static READ_HANDLER( vc20_via5_read_portb )
+	public static ReadHandlerPtr vc20_via5_read_portb  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return cbm_ieee_data_r();
-	}
+	} };
 	
-	static WRITE_HANDLER( vc20_via5_write_ca2 )
+	public static WriteHandlerPtr vc20_via5_write_ca2 = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		cbm_ieee_atn_w(0,data);
-	}
+	} };
 	
-	static READ_HANDLER( vc20_via5_read_cb1 )
+	public static ReadHandlerPtr vc20_via5_read_cb1  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return cbm_ieee_srq_r();
-	}
+	} };
 	
-	static WRITE_HANDLER( vc20_via5_write_cb2 )
+	public static WriteHandlerPtr vc20_via5_write_cb2 = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		cbm_ieee_eoi_w(0,data);
-	}
+	} };
 	
 	static struct via6522_interface via0 =
 	{
@@ -656,7 +656,7 @@ public class vc20
 		if (!vc20_rom_id (id))
 			return 1;
 		fp = (FILE*)image_fopen (IO_CARTSLOT, id, OSD_FILETYPE_IMAGE, 0);
-		if (!fp)
+		if (fp == 0)
 		{
 			logerror("%s file not found\n", device_filename(IO_CARTSLOT,id));
 			return 1;

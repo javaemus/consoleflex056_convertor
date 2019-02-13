@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -17,18 +17,18 @@ public class pc1500
 	
 	*/
 	
-	READ_HANDLER( lh5811_r )
+	public static ReadHandlerPtr lh5811_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int data=lh5811.data[offset];
 		logerror("lh5811 read %x %.2x\n", offset, data);
 		return data;
-	}
+	} };
 	
-	WRITE_HANDLER( lh5811_w )
+	public static WriteHandlerPtr lh5811_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		logerror("lh5811 write %x %.2x\n", offset, data);
 		lh5811.data[offset]=data;
-	}
+	} };
 	
 	UINT8 pc1500_in(void)
 	{

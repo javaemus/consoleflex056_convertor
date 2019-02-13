@@ -5,7 +5,7 @@
 	PC-DMA glue to link with pc fdc hardware
 ***************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -66,7 +66,7 @@ public class pc_fdc
 				return;
 			}
 	
-			if (!pc_dma_started)
+			if (pc_dma_started == 0)
 			{
 				/* DMA is blocking, for now there is no way to halt the CPU and let
 				everything else continue. So this is a bodge*/

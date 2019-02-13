@@ -7,7 +7,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -43,9 +43,9 @@ public class odyssey2
 	PORT_END
 	
 	#define DIPS_HELPER(bit, name, keycode, r) \
-	   PORT_BITX(bit, IP_ACTIVE_LOW, IPT_KEYBOARD, name, keycode, r)
+	   PORT_BITX(bit, IP_ACTIVE_LOW, IPT_KEYBOARD, name, keycode, r);
 	
-	INPUT_PORTS_START( odyssey2 )
+	static InputPortPtr input_ports_odyssey2 = new InputPortPtr(){ public void handler() { 
 		PORT_START		/* IN0 */
 		DIPS_HELPER( 0x01, "0", KEYCODE_0, CODE_NONE)
 		DIPS_HELPER( 0x02, "1", KEYCODE_1, CODE_NONE)
@@ -106,24 +106,24 @@ public class odyssey2
 		DIPS_HELPER( 0x04, "Player 1/left down", KEYCODE_DOWN, CODE_NONE)
 		DIPS_HELPER( 0x08, "Player 1/left left", KEYCODE_LEFT, CODE_NONE)
 		DIPS_HELPER( 0x10, "Player 1/left fire", KEYCODE_LCONTROL, CODE_NONE)
-		PORT_BIT ( 0xe0, 0xe0,	 IPT_UNUSED )
+		PORT_BIT ( 0xe0, 0xe0,	 IPT_UNUSED );
 		PORT_START		/* IN7 */
 		DIPS_HELPER( 0x01, "Player 2/right up", KEYCODE_HOME, CODE_NONE)
 		DIPS_HELPER( 0x02, "Player 2/right right", KEYCODE_PGDN, CODE_NONE)
 		DIPS_HELPER( 0x04, "Player 2/right down", KEYCODE_END, CODE_NONE)
 		DIPS_HELPER( 0x08, "Player 2/right left", KEYCODE_DEL, CODE_NONE)
 		DIPS_HELPER( 0x10, "Player 2/right fire", KEYCODE_LALT, CODE_NONE)
-		PORT_BIT ( 0xe0, 0xe0,	 IPT_UNUSED )
-	INPUT_PORTS_END
+		PORT_BIT ( 0xe0, 0xe0,	 IPT_UNUSED );
+	INPUT_PORTS_END(); }}; 
 	
-	static struct GfxLayout odyssey2_graphicslayout =
-	{
+	static GfxLayout odyssey2_graphicslayout = new GfxLayout
+	(
 	        8,1,
 	        256,                                    /* 256 characters */
 	        1,                      /* 1 bits per pixel */
-	        { 0 },                  /* no bitplanes; 1 bit per pixel */
+	        new int[] { 0 },                  /* no bitplanes; 1 bit per pixel */
 	        /* x offsets */
-	        { 
+	        new int[] { 
 		    0,
 		    1,
 		    2,
@@ -134,30 +134,30 @@ public class odyssey2
 		    7,
 	        },
 	        /* y offsets */
-	        { 0 },
+	        new int[] { 0 },
 	        1*8
-	};
+	);
 	
 	
-	static struct GfxLayout odyssey2_spritelayout =
-	{
+	static GfxLayout odyssey2_spritelayout = new GfxLayout
+	(
 	        8,1,
 	        256,                                    /* 256 characters */
 	        1,                      /* 1 bits per pixel */
-	        { 0 },                  /* no bitplanes; 1 bit per pixel */
+	        new int[] { 0 },                  /* no bitplanes; 1 bit per pixel */
 	        /* x offsets */
-	        { 
+	        new int[] { 
 		    7,6,5,4,3,2,1,0
 	        },
 	        /* y offsets */
-	        { 0 },
+	        new int[] { 0 },
 	        1*8
-	};
+	);
 	
-	static struct GfxDecodeInfo odyssey2_gfxdecodeinfo[] = {
-	    { REGION_GFX1, 0x0000, &odyssey2_graphicslayout,                     0, 2 },
-	    { REGION_GFX1, 0x0000, &odyssey2_spritelayout,                     0, 2 },
-	    { -1 } /* end of array */
+	static GfxDecodeInfo odyssey2_gfxdecodeinfo[] ={
+	    new GfxDecodeInfo( REGION_GFX1, 0x0000, odyssey2_graphicslayout,                     0, 2 ),
+	    new GfxDecodeInfo( REGION_GFX1, 0x0000, odyssey2_spritelayout,                     0, 2 ),
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
 	static struct MachineDriver machine_driver_odyssey2 =
@@ -200,11 +200,11 @@ public class odyssey2
 	
 	
 	ROM_START (odyssey2)
-	    ROM_REGION(0x10000,REGION_CPU1,0)    /* safer for the memory handler/bankswitching??? */
-	    ROM_LOAD ("o2bios.rom", 0x0000, 0x0400, 0x8016a315)
-	    ROM_REGION(0x100, REGION_GFX1, 0)
-	    ROM_REGION(0x2000, REGION_USER1, 0)
-	ROM_END
+	    ROM_REGION(0x10000,REGION_CPU1,0);   /* safer for the memory handler/bankswitching??? */
+	    ROM_LOAD ("o2bios.rom", 0x0000, 0x0400, 0x8016a315);
+	    ROM_REGION(0x100, REGION_GFX1, 0);
+	    ROM_REGION(0x2000, REGION_USER1, 0);
+	ROM_END(); }}; 
 	
 	void init_odyssey2(void)
 	{

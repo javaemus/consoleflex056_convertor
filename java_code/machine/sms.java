@@ -1,6 +1,6 @@
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -176,7 +176,7 @@ public class sms
 		}
 	
 		/* Check at $81f0 also */
-		if (!retval)
+		if (retval == 0)
 		{
 			if (!strncmp(&magic[0x81f0],"TMR SEGA",8))
 			{

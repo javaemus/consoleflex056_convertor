@@ -16,7 +16,7 @@ state of this interrupt input can be read as bit 6 in interrupt status
 */
  
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package includes;
@@ -56,25 +56,9 @@ public class riot6532H
 	READ_HANDLER  ( riot_3_r );
 	WRITE_HANDLER ( riot_3_w );
 	
-	READ_HANDLER( riot_0_a_r );
-	READ_HANDLER( riot_1_a_r );
-	READ_HANDLER( riot_2_a_r );
-	READ_HANDLER( riot_3_a_r );
 	
-	WRITE_HANDLER( riot_0_a_w );
-	WRITE_HANDLER( riot_1_a_w );
-	WRITE_HANDLER( riot_2_a_w );
-	WRITE_HANDLER( riot_3_a_w );
 	
-	READ_HANDLER( riot_0_b_r );
-	READ_HANDLER( riot_1_b_r );
-	READ_HANDLER( riot_2_b_r );
-	READ_HANDLER( riot_3_b_r );
 	
-	WRITE_HANDLER( riot_0_b_w );
-	WRITE_HANDLER( riot_1_b_w );
-	WRITE_HANDLER( riot_2_b_w );
-	WRITE_HANDLER( riot_3_b_w );
 	
 	#ifdef __cplusplus
 	}

@@ -52,7 +52,7 @@ New (001004) :
 */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -249,7 +249,7 @@ public class ti99_4x
 		if (slot_empty)
 			slot_type[id] = SLOT_EMPTY;
 	
-		if (! slot_empty)
+		if (slot_empty == 0)
 		{
 			cartfile = osd_fopen(Machine->gamedrv->name, name, OSD_FILETYPE_IMAGE, 0);
 			if (cartfile == NULL)
@@ -739,7 +739,7 @@ public class ti99_4x
 	{
 		tms9900_ICount -= 4;
 	
-		if (!diskromon)
+		if (diskromon == 0)
 			return 0;
 	
 		switch (offset)
@@ -769,7 +769,7 @@ public class ti99_4x
 	{
 		tms9900_ICount -= 4;
 	
-		if (!diskromon)
+		if (diskromon == 0)
 			return;
 	
 		data = ((data >> 8) & 0xFF) ^ 0xFF;	/* inverted data bus */
@@ -850,7 +850,7 @@ public class ti99_4x
 	
 		answer = (readinputport(KeyCol) << 3) & 0xF8;
 	
-		if (! AlphaLockLine)
+		if (AlphaLockLine == 0)
 			answer &= ~ (input_port_8_r(0) << 3);
 	
 		return (answer);

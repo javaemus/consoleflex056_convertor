@@ -5,7 +5,7 @@
 ******************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -203,62 +203,66 @@ public class svision
 	    }
 	}
 	
-	static MEMORY_READ_START( readmem )
-	    { 0x0000, 0x1fff, MRA_RAM },
-	    { 0x2000, 0x3fff, svision_r },
-	    { 0x4000, 0x5fff, MRA_RAM }, //?
-		{ 0x6000, 0x7fff, MRA_ROM },
-		{ 0x8000, 0xbfff, MRA_BANK1 },
-		{ 0xc000, 0xffff, MRA_ROM },
-	MEMORY_END
+	public static Memory_ReadAddress readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+	    new Memory_ReadAddress( 0x0000, 0x1fff, MRA_RAM ),
+	    new Memory_ReadAddress( 0x2000, 0x3fff, svision_r ),
+	    new Memory_ReadAddress( 0x4000, 0x5fff, MRA_RAM ), //?
+		new Memory_ReadAddress( 0x6000, 0x7fff, MRA_ROM ),
+		new Memory_ReadAddress( 0x8000, 0xbfff, MRA_BANK1 ),
+		new Memory_ReadAddress( 0xc000, 0xffff, MRA_ROM ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( writemem )
-		{ 0x0000, 0x1fff, MWA_RAM },
-	    { 0x2000, 0x3fff, svision_w, &svision_reg },
-		{ 0x4000, 0x5fff, MWA_RAM },
-		{ 0x6000, 0xffff, MWA_ROM },
-	MEMORY_END
+	public static Memory_WriteAddress writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x0000, 0x1fff, MWA_RAM ),
+	    new Memory_WriteAddress( 0x2000, 0x3fff, svision_w, svision_reg ),
+		new Memory_WriteAddress( 0x4000, 0x5fff, MWA_RAM ),
+		new Memory_WriteAddress( 0x6000, 0xffff, MWA_ROM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
-	INPUT_PORTS_START( svision )
+	static InputPortPtr input_ports_svision = new InputPortPtr(){ public void handler() { 
 		PORT_START
-	    PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT)
-	    PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT )
-	    PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN )
-	    PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP   )
-		PORT_BITX( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2, "B", CODE_DEFAULT, CODE_DEFAULT )
-		PORT_BITX( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1, "A", CODE_DEFAULT, CODE_DEFAULT )
-		PORT_BITX( 0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "select", KEYCODE_5, IP_JOY_DEFAULT )
-		PORT_BITX( 0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "start/pause",  KEYCODE_1, IP_JOY_DEFAULT )
-	INPUT_PORTS_END
+	    PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT);
+	    PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT );
+	    PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN );
+	    PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP   );
+		PORT_BITX( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2, "B", CODE_DEFAULT, CODE_DEFAULT );
+		PORT_BITX( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1, "A", CODE_DEFAULT, CODE_DEFAULT );
+		PORT_BITX( 0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "select", KEYCODE_5, IP_JOY_DEFAULT );
+		PORT_BITX( 0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "start/pause",  KEYCODE_1, IP_JOY_DEFAULT );
+	INPUT_PORTS_END(); }}; 
 	
 	/* most games contain their graphics in roms, and have hardware to
 	   draw complete rectangular objects */
 	/* look into src/drawgfx.h for more info */
 	/* this is for a console with monochrom hires graphics in ram
 	   1 byte/ 8 pixels are enlarged */
-	static struct GfxLayout svision_charlayout =
-	{
+	static GfxLayout svision_charlayout = new GfxLayout
+	(
 		8,	/* width of object */
 		1,	/* height of object */
 		256,/* 256 characters */
 		2,	/* bits per pixel */
-		{ 0,1 }, /* no bitplanes */
+		new int[] { 0,1 }, /* no bitplanes */
 		/* x offsets */
-		{ 6,4,2,0 },
+		new int[] { 6,4,2,0 },
 		/* y offsets */
-		{ 0 },
+		new int[] { 0 },
 		8*1 /* size of 1 object in bits */
-	};
+	);
 	
-	static struct GfxDecodeInfo svision_gfxdecodeinfo[] = {
-		{
+	static GfxDecodeInfo svision_gfxdecodeinfo[] ={
+		new GfxDecodeInfo(
 			REGION_GFX1, /* memory region */
 			0x0000, /* offset in memory region */
-			&svision_charlayout,
+			svision_charlayout,
 			0, /* index in the color lookup table where color codes start */
 			1  /* total number of color codes */
-		},
-	    { -1 } /* end of array */
+		),
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
 	/* palette in red, green, blue tribles */
@@ -371,10 +375,10 @@ public class svision
 	    }
 	};
 	
-	ROM_START(svision)
-		ROM_REGION(0x20000,REGION_CPU1, 0)
-		ROM_REGION(0x100,REGION_GFX1, 0)
-	ROM_END
+	static RomLoadPtr rom_svision = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x20000,REGION_CPU1, 0);
+		ROM_REGION(0x100,REGION_GFX1, 0);
+	ROM_END(); }}; 
 	
 	/* deltahero
 	 c000

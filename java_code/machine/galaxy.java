@@ -8,7 +8,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -54,16 +54,16 @@ public class galaxy
 		logerror("galaxy_stop_machine\n");
 	}
 	
-	READ_HANDLER( galaxy_kbd_r )
+	public static ReadHandlerPtr galaxy_kbd_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int port = offset/8;
 		int bit = offset%8;
 		return readinputport(port)&0x01<<bit ? 0xfe : 0xff;
-	}
+	} };
 	
-	WRITE_HANDLER( galaxy_kbd_w )
+	public static WriteHandlerPtr galaxy_kbd_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
-	}
+	} };
 	
 	int galaxy_init_wav(int id)
 	{

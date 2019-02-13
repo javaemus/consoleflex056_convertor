@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -220,7 +220,7 @@ public class vectrex
 		cpu_set_irq_line(0, M6809_IRQ_LINE, level);
 	}
 	
-	READ_HANDLER( v_via_pb_r )
+	public static ReadHandlerPtr v_via_pb_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		/* Joystick */
 		if (vectrex_via_out[PORTA] & 0x80)
@@ -238,9 +238,9 @@ public class vectrex
 				vectrex_via_out[PORTB] &= ~0x20;
 		}
 		return vectrex_via_out[PORTB];
-	}
+	} };
 	
-	READ_HANDLER( v_via_pa_r )
+	public static ReadHandlerPtr v_via_pa_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		if ((!(vectrex_via_out[PORTB] & 0x10)) && (vectrex_via_out[PORTB] & 0x08))
 			/* BDIR inactive, we can read the PSG. BC1 has to be active. */
@@ -250,12 +250,12 @@ public class vectrex
 			vectrex_imager_pinlevel &= ~0x80;
 		}
 		return vectrex_via_out[PORTA];
-	}
+	} };
 	
-	READ_HANDLER( s1_via_pb_r )
+	public static ReadHandlerPtr s1_via_pb_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return (vectrex_via_out[PORTB] & ~0x40) | ((input_port_1_r(0) & 0x1)<<6);
-	}
+	} };
 	
 	/*********************************************************************
 	  3D Imager support

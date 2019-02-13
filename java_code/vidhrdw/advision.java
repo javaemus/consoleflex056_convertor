@@ -10,7 +10,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -33,7 +33,7 @@ public class advision
 	{
 	    advision_vh_hpos = 0;
 		advision_display = (UINT8 *)malloc(8 * 8 * 256);
-		if( !advision_display )
+		if (advision_display == 0)
 			return 1;
 		memset(advision_display, 0, 8 * 8 * 256);
 	    return 0;

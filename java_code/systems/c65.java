@@ -9,7 +9,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -20,35 +20,38 @@ public class c65
 	#define VERBOSE_DBG 0
 	
 	
-	static MEMORY_READ_START( c65_readmem )
-		{0x00000, 0x00001, c64_m6510_port_r},
-		{0x00002, 0x07fff, MRA_RAM},
-		{0x08000, 0x09fff, MRA_BANK1},
-		{0x0a000, 0x0bfff, MRA_BANK2},
-		{0x0c000, 0x0cfff, MRA_BANK3},
-		{0x0d000, 0x0d7ff, MRA_BANK4},
-		{0x0d800, 0x0dbff, MRA_BANK6},
-		{0x0dc00, 0x0dfff, MRA_BANK8},
-		{0x0e000, 0x0ffff, MRA_BANK10},
-		{0x10000, 0x1ffff, MRA_RAM},
-		{0x20000, 0x3ffff, MRA_ROM},
-		{0x40000, 0x7ffff, MRA_NOP},
-		{0x80000, 0xfffff, MRA_RAM},
+	public static Memory_ReadAddress c65_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress(0x00000, 0x00001, c64_m6510_port_r),
+		new Memory_ReadAddress(0x00002, 0x07fff, MRA_RAM),
+		new Memory_ReadAddress(0x08000, 0x09fff, MRA_BANK1),
+		new Memory_ReadAddress(0x0a000, 0x0bfff, MRA_BANK2),
+		new Memory_ReadAddress(0x0c000, 0x0cfff, MRA_BANK3),
+		new Memory_ReadAddress(0x0d000, 0x0d7ff, MRA_BANK4),
+		new Memory_ReadAddress(0x0d800, 0x0dbff, MRA_BANK6),
+		new Memory_ReadAddress(0x0dc00, 0x0dfff, MRA_BANK8),
+		new Memory_ReadAddress(0x0e000, 0x0ffff, MRA_BANK10),
+		new Memory_ReadAddress(0x10000, 0x1ffff, MRA_RAM),
+		new Memory_ReadAddress(0x20000, 0x3ffff, MRA_ROM),
+		new Memory_ReadAddress(0x40000, 0x7ffff, MRA_NOP),
+		new Memory_ReadAddress(0x80000, 0xfffff, MRA_RAM),
 		/* 8 megabyte full address space! */
-	MEMORY_END
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( c65_writemem )
-		{0x00000, 0x00001, c64_m6510_port_w, &c64_memory},
-		{0x00002, 0x07fff, MWA_RAM},
-		{0x08000, 0x09fff, MWA_RAM},
-		{0x0a000, 0x0cfff, MWA_RAM},
-		{0x0d000, 0x0d7ff, MWA_BANK5},
-		{0x0d800, 0x0dbff, MWA_BANK7},
-		{0x0dc00, 0x0dfff, MWA_BANK9},
-		{0x0e000, 0x0ffff, MWA_RAM},
-		{0x10000, 0x1f7ff, MWA_RAM},
-		{0x1f800, 0x1ffff, MWA_RAM, &c64_colorram},
-		{0x20000, 0x23fff, MWA_ROM}, /* &c65_dos},	   maps to 0x8000    */
+	public static Memory_WriteAddress c65_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress(0x00000, 0x00001, c64_m6510_port_w, c64_memory),
+		new Memory_WriteAddress(0x00002, 0x07fff, MWA_RAM),
+		new Memory_WriteAddress(0x08000, 0x09fff, MWA_RAM),
+		new Memory_WriteAddress(0x0a000, 0x0cfff, MWA_RAM),
+		new Memory_WriteAddress(0x0d000, 0x0d7ff, MWA_BANK5),
+		new Memory_WriteAddress(0x0d800, 0x0dbff, MWA_BANK7),
+		new Memory_WriteAddress(0x0dc00, 0x0dfff, MWA_BANK9),
+		new Memory_WriteAddress(0x0e000, 0x0ffff, MWA_RAM),
+		new Memory_WriteAddress(0x10000, 0x1f7ff, MWA_RAM),
+		new Memory_WriteAddress(0x1f800, 0x1ffff, MWA_RAM, c64_colorram),
+		new Memory_WriteAddress(0x20000, 0x23fff, MWA_ROM), /* c65_dos},	   maps to 0x8000    */
 		{0x24000, 0x28fff, MWA_ROM}, /* reserved */
 		{0x29000, 0x29fff, MWA_ROM, &c65_chargen},
 		{0x2a000, 0x2bfff, MWA_ROM, &c64_basic},
@@ -66,31 +69,31 @@ public class c65
 	MEMORY_END
 	
 	#define DIPS_HELPER(bit, name, keycode) \
-	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, IP_JOY_NONE)
+	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, IP_JOY_NONE);
 	
 	#define C65_DIPS \
 	     PORT_START \
 		 DIPS_HELPER( 0x8000, "Quickload", KEYCODE_SLASH_PAD)\
-		 PORT_BIT (0x7c00, 0x0, IPT_UNUSED) /* no tape */\
-	     PORT_DIPNAME (0x300, 0x0, "Memory Expansion")\
-		 PORT_DIPSETTING (0, "None")\
-		 PORT_DIPSETTING (0x100, "512 KByte")\
-		 PORT_DIPSETTING (0x200, "4 MByte")\
-		PORT_DIPNAME   ( 0x80, 0x80, "Sid Chip Type")\
-		PORT_DIPSETTING(  0, "MOS6581" )\
-		PORT_DIPSETTING(0x80, "MOS8580" )\
-		 /*PORT_DIPNAME (0x1c, 0x00, "Cartridge Type")*/\
-		 /*PORT_DIPSETTING (0, "Automatic")*/\
-		 /*PORT_DIPSETTING (4, "Ultimax (GAME)")*/\
-		 /*PORT_DIPSETTING (8, "C64 (EXROM)")*/\
-		 /*PORT_DIPSETTING (0x10, "CBM Supergames")*/\
-		 /*PORT_DIPSETTING (0x14, "Ocean Robocop2")*/\
-		 PORT_DIPNAME (0x02, 0x02, "Serial Bus/Device 10")\
-		 PORT_DIPSETTING (0, "None")\
-		 PORT_DIPSETTING (2, "Floppy Drive Simulation")\
-		 PORT_DIPNAME (0x01, 0x01, "Serial Bus/Device 11")\
-		 PORT_DIPSETTING (0, "None")\
-		 PORT_DIPSETTING (1, "Floppy Drive Simulation")
+		 PORT_BIT (0x7c00, 0x0, IPT_UNUSED);/* no tape */\
+	     PORT_DIPNAME (0x300, 0x0, "Memory Expansion");
+		 PORT_DIPSETTING (0, "None");
+		 PORT_DIPSETTING (0x100, "512 KByte");
+		 PORT_DIPSETTING (0x200, "4 MByte");
+		PORT_DIPNAME   ( 0x80, 0x80, "Sid Chip Type");
+		PORT_DIPSETTING(  0, "MOS6581" );
+		PORT_DIPSETTING(0x80, "MOS8580" );
+		 /*PORT_DIPNAME (0x1c, 0x00, "Cartridge Type");/\
+		 /*PORT_DIPSETTING (0, "Automatic");/\
+		 /*PORT_DIPSETTING (4, "Ultimax (GAME);*/\
+		 /*PORT_DIPSETTING (8, "C64 (EXROM);*/\
+		 /*PORT_DIPSETTING (0x10, "CBM Supergames");/\
+		 /*PORT_DIPSETTING (0x14, "Ocean Robocop2");/\
+		 PORT_DIPNAME (0x02, 0x02, "Serial Bus/Device 10");
+		 PORT_DIPSETTING (0, "None");
+		 PORT_DIPSETTING (2, "Floppy Drive Simulation");
+		 PORT_DIPNAME (0x01, 0x01, "Serial Bus/Device 11");
+		 PORT_DIPSETTING (0, "None");
+		 PORT_DIPSETTING (1, "Floppy Drive Simulation");
 	
 	
 	INPUT_PORTS_START (c65)
@@ -132,10 +135,10 @@ public class c65
 		DIPS_HELPER (0x0001, "CTRL", KEYCODE_RCONTROL)
 		PORT_START
 		PORT_BITX (0x8000, 0, IPT_DIPSWITCH_NAME|IPF_TOGGLE,
-				   "(Left-Shift) SHIFT-LOCK (switch)",
+				   "(Left-Shift);SHIFT-LOCK (switch)",
 				   KEYCODE_CAPSLOCK, IP_JOY_NONE)
-		PORT_DIPSETTING(  0, DEF_STR(Off) )
-		PORT_DIPSETTING(0x8000, DEF_STR(On) )
+		PORT_DIPSETTING(  0, DEF_STR(Off);
+		PORT_DIPSETTING(0x8000, DEF_STR(On);
 		DIPS_HELPER (0x4000, "A", KEYCODE_A)
 		DIPS_HELPER (0x2000, "S", KEYCODE_S)
 		DIPS_HELPER (0x1000, "D", KEYCODE_D)
@@ -175,10 +178,10 @@ public class c65
 		DIPS_HELPER (0x4000, "(C65)ESC", KEYCODE_F1)
 		DIPS_HELPER (0x2000, "(C65)ALT", KEYCODE_F2)
 		PORT_BITX (0x1000, 0, IPT_DIPSWITCH_NAME|IPF_TOGGLE,
-				   "(C65)CAPSLOCK(switch)",
+				   "(C65);APSLOCK(switch)",
 				   KEYCODE_F3, IP_JOY_NONE)
-		PORT_DIPSETTING(  0, DEF_STR(Off) )
-		PORT_DIPSETTING(0x1000, DEF_STR(On) )
+		PORT_DIPSETTING(  0, DEF_STR(Off);
+		PORT_DIPSETTING(0x1000, DEF_STR(On);
 		DIPS_HELPER (0x0800, "(C65)NO SCRL", KEYCODE_F4)
 		DIPS_HELPER (0x0400, "f1 f2", KEYCODE_F5)
 		DIPS_HELPER (0x0200, "f3 f4", KEYCODE_F6)
@@ -188,7 +191,7 @@ public class c65
 		DIPS_HELPER (0x0020, "(C65)f11 f12", KEYCODE_F10)
 		DIPS_HELPER (0x0010, "(C65)f13 f14", KEYCODE_F11)
 		DIPS_HELPER (0x0008, "(C65)HELP", KEYCODE_F12)
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	INPUT_PORTS_START (c65ger)
 		 C64_DIPS
@@ -229,10 +232,10 @@ public class c65
 		 DIPS_HELPER (0x0001, "CTRL", KEYCODE_RCONTROL)
 		 PORT_START
 	     PORT_BITX (0x8000, 0, IPT_DIPSWITCH_NAME|IPF_TOGGLE,
-					"(Left-Shift)SHIFT-LOCK (switch)",
+					"(Left-Shift);HIFT-LOCK (switch)",
 					KEYCODE_CAPSLOCK, IP_JOY_NONE)
-		PORT_DIPSETTING(  0, DEF_STR(Off) )\
-		PORT_DIPSETTING(0x8000, DEF_STR(On) )\
+		PORT_DIPSETTING(  0, DEF_STR(Off);\
+		PORT_DIPSETTING(0x8000, DEF_STR(On);\
 		 DIPS_HELPER (0x4000, "A", KEYCODE_A)
 		 DIPS_HELPER (0x2000, "S", KEYCODE_S)
 		 DIPS_HELPER (0x1000, "D", KEYCODE_D)
@@ -275,10 +278,10 @@ public class c65
 		 DIPS_HELPER (0x4000, "(C65)ESC", KEYCODE_F1)
 		 DIPS_HELPER (0x2000, "(C65)ALT", KEYCODE_F2)
 		 PORT_BITX (0x1000, 0, IPT_DIPSWITCH_NAME|IPF_TOGGLE,
-					"(C65)DIN ASC(switch)",
+					"(C65);IN ASC(switch)",
 					KEYCODE_F3, IP_JOY_NONE)
-		PORT_DIPSETTING(  0, "ASC" )
-		PORT_DIPSETTING(0x1000, "DIN" )
+		PORT_DIPSETTING(  0, "ASC" );
+		PORT_DIPSETTING(0x1000, "DIN" );
 		DIPS_HELPER (0x0800, "(C65)NO SCRL", KEYCODE_F4)
 		DIPS_HELPER (0x0400, "f1 f2", KEYCODE_F5)
 		DIPS_HELPER (0x0200, "f3 f4", KEYCODE_F6)
@@ -288,7 +291,7 @@ public class c65
 		DIPS_HELPER (0x0020, "(C65)f11 f12", KEYCODE_F10)
 		DIPS_HELPER (0x0010, "(C65)f13 f14", KEYCODE_F11)
 		DIPS_HELPER (0x0008, "(C65)HELP", KEYCODE_F12)
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	static void c65_init_palette (unsigned char *sys_palette, unsigned short *sys_colortable, const unsigned char *color_prom)
 	{
@@ -298,60 +301,60 @@ public class c65
 	#if 0
 		/* caff */
 		/* dma routine alpha 1 (0x400000 reversed copy)*/
-		ROM_LOAD ("910111.bin", 0x20000, 0x20000, 0xc5d8d32e)
+		ROM_LOAD ("910111.bin", 0x20000, 0x20000, 0xc5d8d32e);
 		/* b96b */
 		/* dma routine alpha 2 */
-		ROM_LOAD ("910523.bin", 0x20000, 0x20000, 0xe8235dd4)
+		ROM_LOAD ("910523.bin", 0x20000, 0x20000, 0xe8235dd4);
 		/* 888c */
 		/* dma routine alpha 2 */
-		ROM_LOAD ("910626.bin", 0x20000, 0x20000, 0x12527742)
+		ROM_LOAD ("910626.bin", 0x20000, 0x20000, 0x12527742);
 		/* c9cd */
 		/* dma routine alpha 2 */
-		ROM_LOAD ("910828.bin", 0x20000, 0x20000, 0x3ee40b06)
+		ROM_LOAD ("910828.bin", 0x20000, 0x20000, 0x3ee40b06);
 		/* 4bcf loading demo disk??? */
 		/* basic program stored at 0x4000 ? */
 		/* dma routine alpha 2 */
-		ROM_LOAD ("911001.bin", 0x20000, 0x20000, 0x0888b50f)
+		ROM_LOAD ("911001.bin", 0x20000, 0x20000, 0x0888b50f);
 		/* german e96a */
 		/* dma routine alpha 1 */
-		ROM_LOAD ("910429.bin", 0x20000, 0x20000, 0xb025805c)
+		ROM_LOAD ("910429.bin", 0x20000, 0x20000, 0xb025805c);
 	#endif
 	
 	ROM_START (c65)
-		ROM_REGION (0x800000, REGION_CPU1, 0)
-	/*	ROM_REGION (0x100000, REGION_CPU1, 0) */
-		ROM_LOAD ("911001.bin", 0x20000, 0x20000, 0x0888b50f)
-	ROM_END
+		ROM_REGION (0x800000, REGION_CPU1, 0);
+	/*	ROM_REGION (0x100000, REGION_CPU1, 0);*/
+		ROM_LOAD ("911001.bin", 0x20000, 0x20000, 0x0888b50f);
+	ROM_END(); }}; 
 	
 	ROM_START (c65e)
-		ROM_REGION (0x800000, REGION_CPU1, 0)
-	/*	ROM_REGION (0x100000, REGION_CPU1, 0) */
-		ROM_LOAD ("910828.bin", 0x20000, 0x20000, 0x3ee40b06)
-	ROM_END
+		ROM_REGION (0x800000, REGION_CPU1, 0);
+	/*	ROM_REGION (0x100000, REGION_CPU1, 0);*/
+		ROM_LOAD ("910828.bin", 0x20000, 0x20000, 0x3ee40b06);
+	ROM_END(); }}; 
 	
 	ROM_START (c65d)
-		ROM_REGION (0x800000, REGION_CPU1, 0)
-	/*	ROM_REGION (0x100000, REGION_CPU1, 0) */
-		ROM_LOAD ("910626.bin", 0x20000, 0x20000, 0x12527742)
-	ROM_END
+		ROM_REGION (0x800000, REGION_CPU1, 0);
+	/*	ROM_REGION (0x100000, REGION_CPU1, 0);*/
+		ROM_LOAD ("910626.bin", 0x20000, 0x20000, 0x12527742);
+	ROM_END(); }}; 
 	
 	ROM_START (c65c)
-		ROM_REGION (0x800000, REGION_CPU1, 0)
-	/*	ROM_REGION (0x100000, REGION_CPU1, 0) */
-		ROM_LOAD ("910523.bin", 0x20000, 0x20000, 0xe8235dd4)
-	ROM_END
+		ROM_REGION (0x800000, REGION_CPU1, 0);
+	/*	ROM_REGION (0x100000, REGION_CPU1, 0);*/
+		ROM_LOAD ("910523.bin", 0x20000, 0x20000, 0xe8235dd4);
+	ROM_END(); }}; 
 	
 	ROM_START (c65ger)
-		ROM_REGION (0x800000, REGION_CPU1, 0)
-	/*	ROM_REGION (0x100000, REGION_CPU1, 0) */
-		ROM_LOAD ("910429.bin", 0x20000, 0x20000, 0xb025805c)
-	ROM_END
+		ROM_REGION (0x800000, REGION_CPU1, 0);
+	/*	ROM_REGION (0x100000, REGION_CPU1, 0);*/
+		ROM_LOAD ("910429.bin", 0x20000, 0x20000, 0xb025805c);
+	ROM_END(); }}; 
 	
 	ROM_START (c65a)
-		ROM_REGION (0x800000, REGION_CPU1, 0)
-	/*	ROM_REGION (0x100000, REGION_CPU1, 0) */
-		ROM_LOAD ("910111.bin", 0x20000, 0x20000, 0xc5d8d32e)
-	ROM_END
+		ROM_REGION (0x800000, REGION_CPU1, 0);
+	/*	ROM_REGION (0x100000, REGION_CPU1, 0);*/
+		ROM_LOAD ("910111.bin", 0x20000, 0x20000, 0xc5d8d32e);
+	ROM_END(); }}; 
 	
 	
 	static SID6581_interface ntsc_sound_interface =

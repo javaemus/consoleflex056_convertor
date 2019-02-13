@@ -98,7 +98,7 @@ FF00-FFFF       Jump table, vectors
  */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -350,12 +350,12 @@ public class vc1541
 	#if 0
 	INPUT_PORTS_START (vc1541)
 	PORT_START
-	PORT_DIPNAME (0x60, 0x00, "Device #", IP_KEY_NONE)
-	PORT_DIPSETTING (0x00, "8")
-	PORT_DIPSETTING (0x20, "9")
-	PORT_DIPSETTING (0x40, "10")
-	PORT_DIPSETTING (0x60, "11")
-	INPUT_PORTS_END
+	PORT_DIPNAME (0x60, 0x00, "Device #", IP_KEY_NONE);
+	PORT_DIPSETTING (0x00, "8");
+	PORT_DIPSETTING (0x20, "9");
+	PORT_DIPSETTING (0x40, "10");
+	PORT_DIPSETTING (0x60, "11");
+	INPUT_PORTS_END(); }}; 
 	#endif
 	
 	static void vc1541_timer(int param)
@@ -418,7 +418,7 @@ public class vc1541
 						  M6502_IRQ_LINE, vc1541->via1irq || vc1541->via0irq);
 	}
 	
-	static READ_HANDLER( vc1541_via0_read_portb )
+	public static ReadHandlerPtr vc1541_via0_read_portb  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		static int old=-1;
 		int value = 0x7a;
@@ -458,7 +458,7 @@ public class vc1541
 		}
 	
 		return value;
-	}
+	} };
 	
 	static void vc1541_acka(void)
 	{
@@ -472,7 +472,7 @@ public class vc1541
 		}
 	}
 	
-	static WRITE_HANDLER( vc1541_via0_write_portb )
+	public static WriteHandlerPtr vc1541_via0_write_portb = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		DBG_LOG(2, "vc1541 serial write",("%s %s %s\n",
 										 data&0x10?"ATN":"atn",
@@ -494,7 +494,7 @@ public class vc1541
 			vc1541_serial_clock_write (1, vc1541->drive.serial.serial_clock = !(data & 8));
 		}
 		vc1541_serial_atn_write (1, vc1541->drive.serial.serial_atn = 1);
-	}
+	} };
 	
 	/*
 	 * via 6522 at 0x1c00
@@ -531,19 +531,19 @@ public class vc1541
 						  M6502_IRQ_LINE, vc1541->via1irq || vc1541->via0irq);
 	}
 	
-	static READ_HANDLER( vc1541_via1_read_porta )
+	public static ReadHandlerPtr vc1541_via1_read_porta  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int data=vc1541->head.data[vc1541->d64.pos];
 		DBG_LOG(2, "vc1541 drive",("port a read %.2x\n", data));
 		return data;
-	}
+	} };
 	
-	static WRITE_HANDLER( vc1541_via1_write_porta )
+	public static WriteHandlerPtr vc1541_via1_write_porta = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		DBG_LOG(1, "vc1541 drive",("port a write %.2x\n", data));
-	}
+	} };
 	
-	static READ_HANDLER( vc1541_via1_read_portb )
+	public static ReadHandlerPtr vc1541_via1_read_portb  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		UINT8 value = 0xff;
 	
@@ -556,9 +556,9 @@ public class vc1541
 		}
 	
 		return value;
-	}
+	} };
 	
-	static WRITE_HANDLER( vc1541_via1_write_portb )
+	public static WriteHandlerPtr vc1541_via1_write_portb = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		static int old=0;
 		if (data!=old) {
@@ -605,7 +605,7 @@ public class vc1541
 			old=data;
 		}
 		vc1541->led = data & 8;
-	}
+	} };
 	
 	static struct via6522_interface via2 =
 	{
@@ -642,7 +642,7 @@ public class vc1541
 	
 		/*memset (&(drive->d64), 0, sizeof (drive->d64)); */
 		in = (FILE*)image_fopen (IO_FLOPPY, id, OSD_FILETYPE_IMAGE, 0);
-		if (!in)
+		if (in == 0)
 			return INIT_FAIL;
 	
 		size = osd_fsize (in);

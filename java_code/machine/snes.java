@@ -28,7 +28,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -228,7 +228,7 @@ public class snes
 	    FILE *romfile,*sramFile;
 		int numBanks,a;
 	
-		if(!rom_name)
+		if (rom_name == 0)
 		{
 			printf("SNES requires cartridge!\n");
 			return INIT_FAIL;

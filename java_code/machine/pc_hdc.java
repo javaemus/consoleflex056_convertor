@@ -16,7 +16,7 @@
 
 ***************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -158,7 +158,7 @@ public class pc_hdc
 					if( read == 0 )
 					{
 						osd_fseek(f, offset_[idx], SEEK_SET);
-						if( !first )
+						if (first == 0)
 						{
 							HDC_LOG(2,"hdc_PIO_read next",("C:%02d H:%d S:%02d N:%d $%08x, $%04x\n",
 								cylinder[idx], head[idx], sector[idx], sector_cnt[idx], offset_[idx], size));
@@ -198,7 +198,7 @@ public class pc_hdc
 					if (read == 0)
 					{
 						osd_fseek(f, offset_[idx], SEEK_SET);
-						if (!first)
+						if (first == 0)
 						{
 							HDC_LOG(2,"hdc_DMA_read next",("C:%02d H:%d S:%02d N:%d $%08x -> $%06x, $%04x\n",
 								cylinder[idx], head[idx], sector[idx], sector_cnt[idx], offset_[idx],
@@ -321,7 +321,7 @@ public class pc_hdc
 								cylinder[idx]++;				/* next cylinder */
 	                        }
 	                    }
-						if( !first )
+						if (first == 0)
 						{
 							HDC_LOG(2,"hdc_DMA_write next",("C:%02d H:%d S:%02d N:%d $%08x -> $%06x, $%04x\n",
 								cylinder[idx], head[idx], sector[idx], sector_cnt[idx], offset_[idx],

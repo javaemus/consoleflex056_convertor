@@ -5,7 +5,7 @@
 ******************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -81,115 +81,139 @@ public class pocketc
 	/* special keys
 	   red c-ce and reset; warm boot, program NOT lost*/
 	
-	static MEMORY_READ_START( pc1401_readmem )
-		{ 0x0000, 0x1fff, MRA_ROM },
-		{ 0x2000, 0x47ff, MRA_RAM },
-	/*	{ 0x5000, 0x57ff, ? }, */
-		{ 0x6000, 0x67ff, pc1401_lcd_read },
-		{ 0x7000, 0x77ff, pc1401_lcd_read },
-		{ 0x8000, 0xffff, MRA_ROM },
-	MEMORY_END
+	public static Memory_ReadAddress pc1401_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress( 0x0000, 0x1fff, MRA_ROM ),
+		new Memory_ReadAddress( 0x2000, 0x47ff, MRA_RAM ),
+	/*	new Memory_ReadAddress( 0x5000, 0x57ff, ? ), */
+		new Memory_ReadAddress( 0x6000, 0x67ff, pc1401_lcd_read ),
+		new Memory_ReadAddress( 0x7000, 0x77ff, pc1401_lcd_read ),
+		new Memory_ReadAddress( 0x8000, 0xffff, MRA_ROM ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( pc1401_writemem )
-		{ 0x0000, 0x1fff, MWA_ROM },
-	/*	{ 0x2000, 0x3fff, MWA_RAM }, // done in pc1401_machine_init */
-		{ 0x4000, 0x47ff, MWA_RAM },
-	/*	{ 0x5000, 0x57ff, ? }, */
-		{ 0x6000, 0x67ff, pc1401_lcd_write },
-		{ 0x7000, 0x77ff, pc1401_lcd_write },
-		{ 0x8000, 0xffff, MWA_ROM },
-	MEMORY_END
+	public static Memory_WriteAddress pc1401_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x0000, 0x1fff, MWA_ROM ),
+	/*	new Memory_WriteAddress( 0x2000, 0x3fff, MWA_RAM ), // done in pc1401_machine_init */
+		new Memory_WriteAddress( 0x4000, 0x47ff, MWA_RAM ),
+	/*	new Memory_WriteAddress( 0x5000, 0x57ff, ? ), */
+		new Memory_WriteAddress( 0x6000, 0x67ff, pc1401_lcd_write ),
+		new Memory_WriteAddress( 0x7000, 0x77ff, pc1401_lcd_write ),
+		new Memory_WriteAddress( 0x8000, 0xffff, MWA_ROM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_READ_START( pc1251_readmem )
-		{ 0x0000, 0x1fff, MRA_ROM },
-	//	{ 0x2000, 0x3fff, MRA_RAM },
-		{ 0x4000, 0x7fff, MRA_ROM },
-		{ 0xa000, 0xcbff, MRA_ROM },
-		{ 0xf800, 0xf8ff, pc1251_lcd_read },
-	MEMORY_END
+	public static Memory_ReadAddress pc1251_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress( 0x0000, 0x1fff, MRA_ROM ),
+	//	new Memory_ReadAddress( 0x2000, 0x3fff, MRA_RAM ),
+		new Memory_ReadAddress( 0x4000, 0x7fff, MRA_ROM ),
+		new Memory_ReadAddress( 0xa000, 0xcbff, MRA_ROM ),
+		new Memory_ReadAddress( 0xf800, 0xf8ff, pc1251_lcd_read ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( pc1251_writemem )
-		{ 0x0000, 0x1fff, MWA_ROM },
-		{ 0x4000, 0x7fff, MWA_ROM },
-	//	{ 0xa000, 0xcbff, MWA_ROM }, // c600 b800 b000 a000 tested
-		{ 0xf800, 0xf8ff, pc1251_lcd_write },
-	MEMORY_END
+	public static Memory_WriteAddress pc1251_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x0000, 0x1fff, MWA_ROM ),
+		new Memory_WriteAddress( 0x4000, 0x7fff, MWA_ROM ),
+	//	new Memory_WriteAddress( 0xa000, 0xcbff, MWA_ROM ), // c600 b800 b000 a000 tested
+		new Memory_WriteAddress( 0xf800, 0xf8ff, pc1251_lcd_write ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_READ_START( pc1350_readmem )
-		{ 0x0000, 0x1fff, MRA_ROM },
-		{ 0x2000, 0x3fff, MRA_RAM },
-		{ 0x4000, 0x5fff, MRA_RAM },
-		{ 0x6000, 0x6fff, MRA_RAM },
-		{ 0x7000, 0x7eff, pc1350_lcd_read },
-		{ 0x8000, 0xffff, MRA_ROM },
-	MEMORY_END
+	public static Memory_ReadAddress pc1350_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress( 0x0000, 0x1fff, MRA_ROM ),
+		new Memory_ReadAddress( 0x2000, 0x3fff, MRA_RAM ),
+		new Memory_ReadAddress( 0x4000, 0x5fff, MRA_RAM ),
+		new Memory_ReadAddress( 0x6000, 0x6fff, MRA_RAM ),
+		new Memory_ReadAddress( 0x7000, 0x7eff, pc1350_lcd_read ),
+		new Memory_ReadAddress( 0x8000, 0xffff, MRA_ROM ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( pc1350_writemem )
-		{ 0x0000, 0x1fff, MWA_ROM },
-		{ 0x2000, 0x3fff, MWA_RAM }, /*ram card 16k */
-		{ 0x4000, 0x5fff, MWA_RAM }, /*ram card 16k oder 8k */
-		{ 0x6000, 0x6fff, MWA_RAM },
-		{ 0x7000, 0x7eff, pc1350_lcd_write },
-		{ 0x8000, 0xffff, MWA_ROM },
-	MEMORY_END
+	public static Memory_WriteAddress pc1350_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x0000, 0x1fff, MWA_ROM ),
+		new Memory_WriteAddress( 0x2000, 0x3fff, MWA_RAM ), /*ram card 16k */
+		new Memory_WriteAddress( 0x4000, 0x5fff, MWA_RAM ), /*ram card 16k oder 8k */
+		new Memory_WriteAddress( 0x6000, 0x6fff, MWA_RAM ),
+		new Memory_WriteAddress( 0x7000, 0x7eff, pc1350_lcd_write ),
+		new Memory_WriteAddress( 0x8000, 0xffff, MWA_ROM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_READ_START( pc1403_readmem )
-		{ 0x0000, 0x1fff, MRA_ROM },
-	{ 0x3000, 0x30bf, pc1403_lcd_read },    
-	{ 0x3800, 0x3fff, pc1403_asic_read },    
-	{ 0x4000, 0x7fff, MRA_BANK1 },
-	{ 0xe000,0xffff, MRA_RAM },
-	MEMORY_END
+	public static Memory_ReadAddress pc1403_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress( 0x0000, 0x1fff, MRA_ROM ),
+	new Memory_ReadAddress( 0x3000, 0x30bf, pc1403_lcd_read ),    
+	new Memory_ReadAddress( 0x3800, 0x3fff, pc1403_asic_read ),    
+	new Memory_ReadAddress( 0x4000, 0x7fff, MRA_BANK1 ),
+	new Memory_ReadAddress( 0xe000,0xffff, MRA_RAM ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( pc1403_writemem )
-		{ 0x0000, 0x1fff, MWA_ROM },
-	{ 0x3000, 0x30bf, pc1403_lcd_write },    
-	{ 0x3800, 0x3fff, pc1403_asic_write },    
-	{ 0xe000,0xffff, MWA_RAM },
-	MEMORY_END
+	public static Memory_WriteAddress pc1403_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x0000, 0x1fff, MWA_ROM ),
+	new Memory_WriteAddress( 0x3000, 0x30bf, pc1403_lcd_write ),    
+	new Memory_WriteAddress( 0x3800, 0x3fff, pc1403_asic_write ),    
+	new Memory_WriteAddress( 0xe000,0xffff, MWA_RAM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
 	
 	
 	#if 0
-	static MEMORY_READ_START( pc1421_readmem )
-		{ 0x0000, 0x1fff, MRA_ROM },
-		{ 0x3800, 0x47ff, MRA_RAM },
-		{ 0x8000, 0xffff, MRA_ROM },
-	MEMORY_END
+	public static Memory_ReadAddress pc1421_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress( 0x0000, 0x1fff, MRA_ROM ),
+		new Memory_ReadAddress( 0x3800, 0x47ff, MRA_RAM ),
+		new Memory_ReadAddress( 0x8000, 0xffff, MRA_ROM ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( pc1421_writemem )
-		{ 0x0000, 0x1fff, MWA_ROM },
-		{ 0x2000, 0x37ff, MWA_RAM },
-		{ 0x3800, 0x47ff, MWA_RAM },
-		{ 0x8000, 0xffff, MWA_ROM },
-	MEMORY_END
+	public static Memory_WriteAddress pc1421_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x0000, 0x1fff, MWA_ROM ),
+		new Memory_WriteAddress( 0x2000, 0x37ff, MWA_RAM ),
+		new Memory_WriteAddress( 0x3800, 0x47ff, MWA_RAM ),
+		new Memory_WriteAddress( 0x8000, 0xffff, MWA_ROM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_READ_START( pc1260_readmem )
-		{ 0x0000, 0x1fff, MRA_ROM },
-		{ 0x4000, 0x5fff, MRA_RAM },
-		{ 0x8000, 0xffff, MRA_ROM },
-	MEMORY_END
+	public static Memory_ReadAddress pc1260_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress( 0x0000, 0x1fff, MRA_ROM ),
+		new Memory_ReadAddress( 0x4000, 0x5fff, MRA_RAM ),
+		new Memory_ReadAddress( 0x8000, 0xffff, MRA_ROM ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( pc1260_writemem )
-		{ 0x0000, 0x1fff, MWA_ROM },
-		{ 0x4000, 0x57ff, MWA_RAM }, /* 1261 */
-		{ 0x5800, 0x67ff, MWA_RAM },
-		{ 0x6000, 0x6fff, MWA_RAM },
+	public static Memory_WriteAddress pc1260_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x0000, 0x1fff, MWA_ROM ),
+		new Memory_WriteAddress( 0x4000, 0x57ff, MWA_RAM ), /* 1261 */
+		new Memory_WriteAddress( 0x5800, 0x67ff, MWA_RAM ),
+		new Memory_WriteAddress( 0x6000, 0x6fff, MWA_RAM ),
 	
-		{ 0x8000, 0xffff, MWA_ROM },
-	MEMORY_END
+		new Memory_WriteAddress( 0x8000, 0xffff, MWA_ROM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	#endif
 	
 	#define DIPS_HELPER(bit, name, keycode, r) \
-	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r)
+	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r);
 	
 	
 	#define PC1401_HELPER1 \
 		PORT_START \
 		PORT_BITX (0x80, 0x00, IPT_DIPSWITCH_NAME|IPF_TOGGLE, \
-				   "Power",CODE_DEFAULT, CODE_NONE) \
-		PORT_DIPSETTING( 0x80, DEF_STR( Off ) ) \
-		PORT_DIPSETTING( 0x00, DEF_STR( On ) ) \
+				   "Power",CODE_DEFAULT, CODE_NONE);\
+		PORT_DIPSETTING( 0x80, DEF_STR( "Off") ); \
+		PORT_DIPSETTING( 0x00, DEF_STR( "On") ); \
 		DIPS_HELPER( 0x40, "CAL", KEYCODE_F1, CODE_NONE) \
 		DIPS_HELPER( 0x20, "BASIC", KEYCODE_F2, CODE_NONE) \
 		DIPS_HELPER( 0x10, "BRK   ON", KEYCODE_F4, CODE_NONE) \
@@ -279,55 +303,55 @@ public class pocketc
 		DIPS_HELPER( 0x04, "=", KEYCODE_ENTER_PAD, CODE_NONE)\
 		DIPS_HELPER( 0x02, "Reset", KEYCODE_F3, CODE_NONE)
 	
-	INPUT_PORTS_START( pc1401 )
+	static InputPortPtr input_ports_pc1401 = new InputPortPtr(){ public void handler() { 
 	    PC1401_HELPER1
-		PORT_BIT ( 0x40, 0x0,	 IPT_UNUSED )
+		PORT_BIT ( 0x40, 0x0,	 IPT_UNUSED );
 	    PC1401_HELPER2
 		PORT_START
-	    PORT_DIPNAME   ( 0xc0, 0x80, "RAM")
-		PORT_DIPSETTING( 0x00, "2KB" )
-		PORT_DIPSETTING( 0x40, "PC1401(4KB)" )
-		PORT_DIPSETTING( 0x80, "PC1402(10KB)" )
-	    PORT_DIPNAME   ( 7, 2, "Contrast")
-		PORT_DIPSETTING( 0, "0/Low" )
-		PORT_DIPSETTING( 1, "1" )
-		PORT_DIPSETTING( 2, "2" )
-		PORT_DIPSETTING( 3, "3" )
-		PORT_DIPSETTING( 4, "4" )
-		PORT_DIPSETTING( 5, "5" )
-		PORT_DIPSETTING( 6, "6" )
-		PORT_DIPSETTING( 7, "7/High" )
-	INPUT_PORTS_END
+	    PORT_DIPNAME   ( 0xc0, 0x80, "RAM");
+		PORT_DIPSETTING( 0x00, "2KB" );
+		PORT_DIPSETTING( 0x40, "PC1401(4KB); )
+		PORT_DIPSETTING( 0x80, "PC1402(10KB); )
+	    PORT_DIPNAME   ( 7, 2, "Contrast");
+		PORT_DIPSETTING( 0, "0/Low" );
+		PORT_DIPSETTING( 1, "1" );
+		PORT_DIPSETTING( 2, "2" );
+		PORT_DIPSETTING( 3, "3" );
+		PORT_DIPSETTING( 4, "4" );
+		PORT_DIPSETTING( 5, "5" );
+		PORT_DIPSETTING( 6, "6" );
+		PORT_DIPSETTING( 7, "7/High" );
+	INPUT_PORTS_END(); }}; 
 	
-	INPUT_PORTS_START( pc1403 )
+	static InputPortPtr input_ports_pc1403 = new InputPortPtr(){ public void handler() { 
 	    PC1401_HELPER1
 		DIPS_HELPER( 0x40, "SML", KEYCODE_CAPSLOCK, CODE_NONE)
 	    PC1401_HELPER2
 		PORT_START
-	    PORT_DIPNAME   ( 0x80, 0x80, "RAM")
-		PORT_DIPSETTING( 0x00, "PC1403(8KB)" )
-		PORT_DIPSETTING( 0x80, "PC1403H(32KB)" )
+	    PORT_DIPNAME   ( 0x80, 0x80, "RAM");
+		PORT_DIPSETTING( 0x00, "PC1403(8KB); )
+		PORT_DIPSETTING( 0x80, "PC1403H(32KB); )
 	
 	    // normally no contrast control!
-	    PORT_DIPNAME   ( 7, 2, "Contrast")
-		PORT_DIPSETTING( 0, "0/Low" )
-		PORT_DIPSETTING( 1, "1" )
-		PORT_DIPSETTING( 2, "2" )
-		PORT_DIPSETTING( 3, "3" )
-		PORT_DIPSETTING( 4, "4" )
-		PORT_DIPSETTING( 5, "5" )
-		PORT_DIPSETTING( 6, "6" )
-		PORT_DIPSETTING( 7, "7/High" )
-	INPUT_PORTS_END
+	    PORT_DIPNAME   ( 7, 2, "Contrast");
+		PORT_DIPSETTING( 0, "0/Low" );
+		PORT_DIPSETTING( 1, "1" );
+		PORT_DIPSETTING( 2, "2" );
+		PORT_DIPSETTING( 3, "3" );
+		PORT_DIPSETTING( 4, "4" );
+		PORT_DIPSETTING( 5, "5" );
+		PORT_DIPSETTING( 6, "6" );
+		PORT_DIPSETTING( 7, "7/High" );
+	INPUT_PORTS_END(); }}; 
 	
 	
-	INPUT_PORTS_START( pc1251 )
+	static InputPortPtr input_ports_pc1251 = new InputPortPtr(){ public void handler() { 
 		PORT_START
-	    PORT_DIPNAME   ( 7, 0, "Mode")
-		PORT_DIPSETTING( 4, DEF_STR(Off) )
-		PORT_DIPSETTING( 0, "On/RUN" )
-		PORT_DIPSETTING( 2, "On/PRO" )
-		PORT_DIPSETTING( 1, "On/RSV" )
+	    PORT_DIPNAME   ( 7, 0, "Mode");
+		PORT_DIPSETTING( 4, DEF_STR(Off);
+		PORT_DIPSETTING( 0, "On/RUN" );
+		PORT_DIPSETTING( 2, "On/PRO" );
+		PORT_DIPSETTING( 1, "On/RSV" );
 		DIPS_HELPER( 0x100, "DEF", KEYCODE_LALT, KEYCODE_RALT)
 		DIPS_HELPER( 0x80, "SHIFT", KEYCODE_LSHIFT, KEYCODE_RSHIFT)
 		DIPS_HELPER( 0x40, "DOWN  (", KEYCODE_DOWN, CODE_NONE)
@@ -388,29 +412,29 @@ public class pocketc
 		DIPS_HELPER( 0x04, "-     >", KEYCODE_MINUS, KEYCODE_MINUS_PAD)
 		PORT_START
 	#if 0
-	    PORT_DIPNAME   ( 0xc0, 0xc0, "RAM")
-		PORT_DIPSETTING( 0x00, "1KB" )
-		PORT_DIPSETTING( 0x40, "3.5KB" )
-		PORT_DIPSETTING( 0x80, "6KB" )
-		PORT_DIPSETTING( 0xc0, "11KB" )
+	    PORT_DIPNAME   ( 0xc0, 0xc0, "RAM");
+		PORT_DIPSETTING( 0x00, "1KB" );
+		PORT_DIPSETTING( 0x40, "3.5KB" );
+		PORT_DIPSETTING( 0x80, "6KB" );
+		PORT_DIPSETTING( 0xc0, "11KB" );
 	#endif
-	    PORT_DIPNAME   ( 7, 2, "Contrast")
-		PORT_DIPSETTING( 0, "0/Low" )
-		PORT_DIPSETTING( 1, "1" )
-		PORT_DIPSETTING( 2, "2" )
-		PORT_DIPSETTING( 3, "3" )
-		PORT_DIPSETTING( 4, "4" )
-		PORT_DIPSETTING( 5, "5" )
-		PORT_DIPSETTING( 6, "6" )
-		PORT_DIPSETTING( 7, "7/High" )
-	INPUT_PORTS_END
+	    PORT_DIPNAME   ( 7, 2, "Contrast");
+		PORT_DIPSETTING( 0, "0/Low" );
+		PORT_DIPSETTING( 1, "1" );
+		PORT_DIPSETTING( 2, "2" );
+		PORT_DIPSETTING( 3, "3" );
+		PORT_DIPSETTING( 4, "4" );
+		PORT_DIPSETTING( 5, "5" );
+		PORT_DIPSETTING( 6, "6" );
+		PORT_DIPSETTING( 7, "7/High" );
+	INPUT_PORTS_END(); }}; 
 	
-	INPUT_PORTS_START( pc1350 )
+	static InputPortPtr input_ports_pc1350 = new InputPortPtr(){ public void handler() { 
 		PORT_START
 	    PORT_BITX (0x80, 0x00, IPT_DIPSWITCH_NAME|IPF_TOGGLE,
-				   "Power",CODE_DEFAULT, CODE_NONE)
-		PORT_DIPSETTING( 0x80, DEF_STR( Off ) )
-		PORT_DIPSETTING( 0x00, DEF_STR( On ) )
+				   "Power",CODE_DEFAULT, CODE_NONE);
+		PORT_DIPSETTING( 0x80, DEF_STR( "Off") );
+		PORT_DIPSETTING( 0x00, DEF_STR( "On") );
 		DIPS_HELPER( 0x40, "DOWN", KEYCODE_DOWN, CODE_NONE)
 		DIPS_HELPER( 0x20, "UP", KEYCODE_UP, CODE_NONE)
 		DIPS_HELPER( 0x10, "MODE", KEYCODE_F1, CODE_NONE)
@@ -481,31 +505,31 @@ public class pocketc
 		DIPS_HELPER( 0x04, "SPC", KEYCODE_SPACE, CODE_NONE)
 		DIPS_HELPER( 0x02, "ENTER P<->NP", KEYCODE_ENTER, KEYCODE_ENTER_PAD)
 		PORT_START
-	    PORT_DIPNAME   ( 0xc0, 0x80, "RAM")
-		PORT_DIPSETTING( 0x00, "4KB" )
-		PORT_DIPSETTING( 0x40, "12KB" )
-		PORT_DIPSETTING( 0x80, "20KB" )
-	    PORT_DIPNAME   ( 7, 2, "Contrast")
-		PORT_DIPSETTING( 0, "0/Low" )
-		PORT_DIPSETTING( 1, "1" )
-		PORT_DIPSETTING( 2, "2" )
-		PORT_DIPSETTING( 3, "3" )
-		PORT_DIPSETTING( 4, "4" )
-		PORT_DIPSETTING( 5, "5" )
-		PORT_DIPSETTING( 6, "6" )
-		PORT_DIPSETTING( 7, "7/High" )
-	INPUT_PORTS_END
+	    PORT_DIPNAME   ( 0xc0, 0x80, "RAM");
+		PORT_DIPSETTING( 0x00, "4KB" );
+		PORT_DIPSETTING( 0x40, "12KB" );
+		PORT_DIPSETTING( 0x80, "20KB" );
+	    PORT_DIPNAME   ( 7, 2, "Contrast");
+		PORT_DIPSETTING( 0, "0/Low" );
+		PORT_DIPSETTING( 1, "1" );
+		PORT_DIPSETTING( 2, "2" );
+		PORT_DIPSETTING( 3, "3" );
+		PORT_DIPSETTING( 4, "4" );
+		PORT_DIPSETTING( 5, "5" );
+		PORT_DIPSETTING( 6, "6" );
+		PORT_DIPSETTING( 7, "7/High" );
+	INPUT_PORTS_END(); }}; 
 	
-	static struct GfxLayout pc1401_charlayout =
-	{
+	static GfxLayout pc1401_charlayout = new GfxLayout
+	(
 	        2,21,
 	        128,                                    /* 256 characters */
 	        1,                      /* 1 bits per pixel */
-	        { 0,0 },                  /* no bitplanes; 1 bit per pixel */
+	        new int[] { 0,0 },                  /* no bitplanes; 1 bit per pixel */
 	        /* x offsets */
-	        { 0,0 },
+	        new int[] { 0,0 },
 	        /* y offsets */
-	        {
+	        new int[] {
 				7, 7, 7,
 				6, 6, 6,
 				5, 5, 5,
@@ -515,18 +539,18 @@ public class pocketc
 				1, 1, 1
 	        },
 	        1*8
-	};
+	);
 	
-	static struct GfxLayout pc1251_charlayout =
-	{
+	static GfxLayout pc1251_charlayout = new GfxLayout
+	(
 	        3,21,
 	        128,                                    /* 256 characters */
 	        1,                      /* 1 bits per pixel */
-	        { 0, },                  /* no bitplanes; 1 bit per pixel */
+	        new int[] { 0, },                  /* no bitplanes; 1 bit per pixel */
 	        /* x offsets */
-	        { 0,0,0 },
+	        new int[] { 0,0,0 },
 	        /* y offsets */
-	        {
+	        new int[] {
 				7, 7, 7,
 				6, 6, 6,
 				5, 5, 5,
@@ -536,36 +560,36 @@ public class pocketc
 				1, 1, 1
 	        },
 	        1*8
-	};
+	);
 	
-	static struct GfxLayout pc1350_charlayout =
-	{
+	static GfxLayout pc1350_charlayout = new GfxLayout
+	(
 	        2,16,
 	        256,                                    /* 256 characters */
 	        1,                      /* 1 bits per pixel */
-	        { 0,0 },                  /* no bitplanes; 1 bit per pixel */
+	        new int[] { 0,0 },                  /* no bitplanes; 1 bit per pixel */
 	        /* x offsets */
-	        { 0 },
+	        new int[] { 0 },
 	        /* y offsets */
-	        {
+	        new int[] {
 				7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1, 0, 0
 	        },
 	        1*8
+	);
+	
+	static GfxDecodeInfo pc1401_gfxdecodeinfo[] ={
+		new GfxDecodeInfo( REGION_GFX1, 0x0000, pc1401_charlayout,                     0, 8 ),
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
-	static struct GfxDecodeInfo pc1401_gfxdecodeinfo[] = {
-		{ REGION_GFX1, 0x0000, &pc1401_charlayout,                     0, 8 },
-	    { -1 } /* end of array */
+	static GfxDecodeInfo pc1251_gfxdecodeinfo[] ={
+		new GfxDecodeInfo( REGION_GFX1, 0x0000, pc1251_charlayout,                     0, 8 ),
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
-	static struct GfxDecodeInfo pc1251_gfxdecodeinfo[] = {
-		{ REGION_GFX1, 0x0000, &pc1251_charlayout,                     0, 8 },
-	    { -1 } /* end of array */
-	};
-	
-	static struct GfxDecodeInfo pc1350_gfxdecodeinfo[] = {
-		{ REGION_GFX1, 0x0000, &pc1350_charlayout,                     0, 8 },
-	    { -1 } /* end of array */
+	static GfxDecodeInfo pc1350_gfxdecodeinfo[] ={
+		new GfxDecodeInfo( REGION_GFX1, 0x0000, pc1350_charlayout,                     0, 8 ),
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
 	#if 0
@@ -792,46 +816,46 @@ public class pocketc
 	    }
 	};
 	
-	ROM_START(pc1401)
-		ROM_REGION(0x10000,REGION_CPU1,0)
+	static RomLoadPtr rom_pc1401 = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x10000,REGION_CPU1,0);
 		/* SC61860A08 5H 13LD cpu with integrated rom*/
-		ROM_LOAD("sc61860.a08", 0x0000, 0x2000, 0x44bee438)
+		ROM_LOAD("sc61860.a08", 0x0000, 0x2000, 0x44bee438);
 	/* 5S1 SC613256 D30
 	   or SC43536LD 5G 13 (LCD chip?) */
-		ROM_LOAD("sc613256.d30", 0x8000, 0x8000, 0x69b9d587)
-		ROM_REGION(0x80,REGION_GFX1,0)
-	ROM_END
+		ROM_LOAD("sc613256.d30", 0x8000, 0x8000, 0x69b9d587);
+		ROM_REGION(0x80,REGION_GFX1,0);
+	ROM_END(); }}; 
 	
 	#define rom_pc1402 rom_pc1401
 	
-	ROM_START(pc1251)
-		ROM_REGION(0x10000,REGION_CPU1,0)
+	static RomLoadPtr rom_pc1251 = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x10000,REGION_CPU1,0);
 		/* sc61860a13 6c 13 ld */
-		ROM_LOAD("cpu1251.rom", 0x0000, 0x2000, 0xf7287aca)
-		ROM_LOAD("bas1251.rom", 0x4000, 0x4000, 0x93ecb629)
-		ROM_REGION(0x80,REGION_GFX1,0)
-	ROM_END
+		ROM_LOAD("cpu1251.rom", 0x0000, 0x2000, 0xf7287aca);
+		ROM_LOAD("bas1251.rom", 0x4000, 0x4000, 0x93ecb629);
+		ROM_REGION(0x80,REGION_GFX1,0);
+	ROM_END(); }}; 
 	
 	#define rom_trs80pc3 rom_pc1251
 	
-	ROM_START(pc1350)
-		ROM_REGION(0x10000,REGION_CPU1,0)
+	static RomLoadPtr rom_pc1350 = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x10000,REGION_CPU1,0);
 		/* sc61860a13 6c 13 ld */
-		ROM_LOAD("cpu.rom", 0x0000, 0x2000, 0x79a924bc)
-		ROM_LOAD("basic.rom", 0x8000, 0x8000, 0x158b28e2)
-		ROM_REGION(0x100,REGION_GFX1,0)
-	ROM_END
+		ROM_LOAD("cpu.rom", 0x0000, 0x2000, 0x79a924bc);
+		ROM_LOAD("basic.rom", 0x8000, 0x8000, 0x158b28e2);
+		ROM_REGION(0x100,REGION_GFX1,0);
+	ROM_END(); }}; 
 	
-	ROM_START(pc1403)
-		ROM_REGION(0x10000,REGION_CPU1,0)
-	    ROM_LOAD("introm.bin", 0x0000, 0x2000, 0x588c500b )
-		ROM_REGION(0x10000,REGION_USER1,0)
-	    ROM_LOAD("extrom08.bin", 0x0000, 0x4000, 0x1fa65140 )
-	    ROM_LOAD("extrom09.bin", 0x4000, 0x4000, 0x4a7da6ab )
-	    ROM_LOAD("extrom0a.bin", 0x8000, 0x4000, 0x9925174f )
-	    ROM_LOAD("extrom0b.bin", 0xc000, 0x4000, 0xfa5df9ec )
-		ROM_REGION(0x100,REGION_GFX1,0)
-	ROM_END
+	static RomLoadPtr rom_pc1403 = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x10000,REGION_CPU1,0);
+	    ROM_LOAD("introm.bin", 0x0000, 0x2000, 0x588c500b );
+		ROM_REGION(0x10000,REGION_USER1,0);
+	    ROM_LOAD("extrom08.bin", 0x0000, 0x4000, 0x1fa65140 );
+	    ROM_LOAD("extrom09.bin", 0x4000, 0x4000, 0x4a7da6ab );
+	    ROM_LOAD("extrom0a.bin", 0x8000, 0x4000, 0x9925174f );
+	    ROM_LOAD("extrom0b.bin", 0xc000, 0x4000, 0xfa5df9ec );
+		ROM_REGION(0x100,REGION_GFX1,0);
+	ROM_END(); }}; 
 	
 	#define rom_pc1403h rom_pc1403
 	

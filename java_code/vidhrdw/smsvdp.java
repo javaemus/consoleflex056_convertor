@@ -5,7 +5,7 @@
 */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -106,7 +106,7 @@ public class smsvdp
 	
 	    /* Make temp bitmap for rendering */
 	    tmpbitmap = bitmap_alloc(256, 224);
-	    if(!tmpbitmap) return (1);
+	    if (tmpbitmap == 0) return (1);
 	
 	    return (0);
 	}

@@ -69,7 +69,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -165,164 +165,164 @@ public class vtech1
 	    { 0x10, 0x1f, vtech1_fdc_w },
 	PORT_END
 	
-	INPUT_PORTS_START( vtech1 )
+	static InputPortPtr input_ports_vtech1 = new InputPortPtr(){ public void handler() { 
 	    PORT_START /* IN0 */
-	    PORT_DIPNAME( 0x80, 0x80, "16K RAM module")
-	    PORT_DIPSETTING(    0x00, DEF_STR( No ))
-	    PORT_DIPSETTING(    0x80, DEF_STR( Yes ))
-	    PORT_DIPNAME( 0x40, 0x40, "DOS extension")
-	    PORT_DIPSETTING(    0x00, DEF_STR( No ))
-	    PORT_DIPSETTING(    0x40, DEF_STR( Yes ))
-	    PORT_BITX(0x20, 0x00, IPT_KEYBOARD | IPF_RESETCPU, "Reset",         KEYCODE_F3, IP_JOY_NONE )
-	    PORT_BIT( 0x1f, 0x1f, IPT_UNUSED )
+	    PORT_DIPNAME( 0x80, 0x80, "16K RAM module");
+	    PORT_DIPSETTING(    0x00, DEF_STR( "No") );
+	    PORT_DIPSETTING(    0x80, DEF_STR( "Yes") );
+	    PORT_DIPNAME( 0x40, 0x40, "DOS extension");
+	    PORT_DIPSETTING(    0x00, DEF_STR( "No") );
+	    PORT_DIPSETTING(    0x40, DEF_STR( "Yes") );
+	    PORT_BITX(0x20, 0x00, IPT_KEYBOARD | IPF_RESETCPU, "Reset",         KEYCODE_F3, IP_JOY_NONE );
+	    PORT_BIT( 0x1f, 0x1f, IPT_UNUSED );
 	
 	    PORT_START /* IN1 KEY ROW 0 */
-	    PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED )
-	    PORT_BITX(0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "R       RETURN  LEFT$",   KEYCODE_R,          IP_JOY_NONE )
-	    PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "Q       FOR     CHR$",    KEYCODE_Q,          IP_JOY_NONE )
-	    PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "E       NEXT    LEN(",    KEYCODE_E,          IP_JOY_NONE )
-	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "n/a",                     IP_KEY_NONE,        IP_JOY_NONE )
-	    PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "W       TO      VAL(",    KEYCODE_W,          IP_JOY_NONE )
-	    PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "T       THEN    MID$",    KEYCODE_T,          IP_JOY_NONE )
+	    PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED );
+	    PORT_BITX(0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "R       RETURN  LEFT$",   KEYCODE_R,          IP_JOY_NONE );
+	    PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "Q       FOR     CHR$",    KEYCODE_Q,          IP_JOY_NONE );
+	    PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "E       NEXT    LEN(",    KEYCODE_E,          IP_JOY_NONE );
+	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "n/a",                     IP_KEY_NONE,        IP_JOY_NONE );
+	    PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "W       TO      VAL(",    KEYCODE_W,          IP_JOY_NONE );
+	    PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "T       THEN    MID$",    KEYCODE_T,          IP_JOY_NONE );
 	
 	    PORT_START /* IN2 KEY ROW 1 */
-	    PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED )
-	    PORT_BITX(0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "F       GOSUB   RND(",    KEYCODE_F,          IP_JOY_NONE )
-	    PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "A       MODE(   ASC(",    KEYCODE_A,          IP_JOY_NONE )
-	    PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "D               RESTORE", KEYCODE_D,          IP_JOY_NONE )
-	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "L-CTRL",                  KEYCODE_LCONTROL,   IP_JOY_NONE )
-	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "R-CTRL",                  KEYCODE_RCONTROL,   IP_JOY_NONE )
-	    PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "S       STEP    SINS(",   KEYCODE_S,          IP_JOY_NONE )
-	    PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "G       GOTO    STOP",    KEYCODE_G,          IP_JOY_NONE )
+	    PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED );
+	    PORT_BITX(0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "F       GOSUB   RND(",    KEYCODE_F,          IP_JOY_NONE );
+	    PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "A       MODE(   ASC(",    KEYCODE_A,          IP_JOY_NONE );
+	    PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "D               RESTORE", KEYCODE_D,          IP_JOY_NONE );
+	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "L-CTRL",                  KEYCODE_LCONTROL,   IP_JOY_NONE );
+	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "R-CTRL",                  KEYCODE_RCONTROL,   IP_JOY_NONE );
+	    PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "S       STEP    SINS(",   KEYCODE_S,          IP_JOY_NONE );
+	    PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "G       GOTO    STOP",    KEYCODE_G,          IP_JOY_NONE );
 	
 	    PORT_START /* IN3 KEY ROW 2 */
-	    PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED )
-	    PORT_BITX(0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "V       LPRINT  USR",     KEYCODE_V,          IP_JOY_NONE )
-	    PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "Z       PEEK(   INP",     KEYCODE_Z,          IP_JOY_NONE )
-	    PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "C       CONT    COPY",    KEYCODE_C,          IP_JOY_NONE )
-	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "L-SHIFT",                 KEYCODE_LSHIFT,     IP_JOY_NONE )
-	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "R-SHIFT",                 KEYCODE_RSHIFT,     IP_JOY_NONE )
-	    PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "X       POKE    OUT",     KEYCODE_X,          IP_JOY_NONE )
-	    PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "B       LLIST   SOUND",   KEYCODE_B,          IP_JOY_NONE )
+	    PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED );
+	    PORT_BITX(0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "V       LPRINT  USR",     KEYCODE_V,          IP_JOY_NONE );
+	    PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "Z       PEEK(   INP",     KEYCODE_Z,          IP_JOY_NONE );
+	    PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "C       CONT    COPY",    KEYCODE_C,          IP_JOY_NONE );
+	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "L-SHIFT",                 KEYCODE_LSHIFT,     IP_JOY_NONE );
+	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "R-SHIFT",                 KEYCODE_RSHIFT,     IP_JOY_NONE );
+	    PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "X       POKE    OUT",     KEYCODE_X,          IP_JOY_NONE );
+	    PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "B       LLIST   SOUND",   KEYCODE_B,          IP_JOY_NONE );
 	
 	    PORT_START /* IN4 KEY ROW 3 */
-	    PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED )
-	    PORT_BITX(0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "4  $    VERFY   ATN(",    KEYCODE_4,          IP_JOY_NONE )
-	    PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "1  !    CSAVE   SIN(",    KEYCODE_1,          IP_JOY_NONE )
-	    PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "3  #    CALL??  TAN(",    KEYCODE_3,          IP_JOY_NONE )
-	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "n/a",                                         IP_KEY_NONE,        IP_JOY_NONE )
-	    PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "2  \"    CLOAD   COS(",   KEYCODE_2,          IP_JOY_NONE )
-	    PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "5  %    LIST    LOG(",    KEYCODE_5,          IP_JOY_NONE )
+	    PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED );
+	    PORT_BITX(0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "4  $    VERFY   ATN(",    KEYCODE_4,          IP_JOY_NONE );
+	    PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "1  !    CSAVE   SIN(",    KEYCODE_1,          IP_JOY_NONE );
+	    PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "3  #    CALL??  TAN(",    KEYCODE_3,          IP_JOY_NONE );
+	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "n/a",                                         IP_KEY_NONE,        IP_JOY_NONE );
+	    PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "2  \"    CLOAD   COS(",   KEYCODE_2,          IP_JOY_NONE );
+	    PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "5  %    LIST    LOG(",    KEYCODE_5,          IP_JOY_NONE );
 	
 	    PORT_START /* IN5 KEY ROW 4 */
-	    PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED )
-	    PORT_BITX(0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "M       [Left]",          KEYCODE_M,          IP_JOY_NONE )
-	    PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "SPACE   [Down]",          KEYCODE_SPACE,      IP_JOY_NONE )
-	    PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, ",       [Right]",         KEYCODE_COMMA,      IP_JOY_NONE )
-	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "n/a",                     IP_KEY_NONE,        IP_JOY_NONE )
-	    PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, ".       [Up]",            KEYCODE_STOP,       IP_JOY_NONE )
-	    PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "N       COLOR   USING",   KEYCODE_N,          IP_JOY_NONE )
+	    PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED );
+	    PORT_BITX(0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "M       [Left]",          KEYCODE_M,          IP_JOY_NONE );
+	    PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "SPACE   [Down]",          KEYCODE_SPACE,      IP_JOY_NONE );
+	    PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, ",       [Right]",         KEYCODE_COMMA,      IP_JOY_NONE );
+	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "n/a",                     IP_KEY_NONE,        IP_JOY_NONE );
+	    PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, ".       [Up]",            KEYCODE_STOP,       IP_JOY_NONE );
+	    PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "N       COLOR   USING",   KEYCODE_N,          IP_JOY_NONE );
 	
 	    PORT_START /* IN6 KEY ROW 5 */
-	    PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED )
-	    PORT_BITX(0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "7  '    END     ???",     KEYCODE_7,          IP_JOY_NONE )
-	    PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "0  @    ????    INT(",    KEYCODE_0,          IP_JOY_NONE )
-	    PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "8  (    NEW     SQR(",    KEYCODE_8,          IP_JOY_NONE )
-	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "-  =    [Break]",         KEYCODE_MINUS,      IP_JOY_NONE )
-	    PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "9  )    READ    ABS(",    KEYCODE_9,          IP_JOY_NONE )
-	    PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "6  &    RUN     EXP(",    KEYCODE_6,          IP_JOY_NONE )
+	    PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED );
+	    PORT_BITX(0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "7  '    END     ???",     KEYCODE_7,          IP_JOY_NONE );
+	    PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "0  @    ????    INT(",    KEYCODE_0,          IP_JOY_NONE );
+	    PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "8  (    NEW     SQR(",    KEYCODE_8,          IP_JOY_NONE );
+	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "-  =    [Break]",         KEYCODE_MINUS,      IP_JOY_NONE );
+	    PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "9  );   READ    ABS(",    KEYCODE_9,          IP_JOY_NONE )
+	    PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "6  &    RUN     EXP(",    KEYCODE_6,          IP_JOY_NONE );
 	
 	    PORT_START /* IN7 KEY ROW 6 */
-	    PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED )
-	    PORT_BITX(0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "U       IF      INKEY$",  KEYCODE_U,          IP_JOY_NONE )
-	    PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "P       PRINT   NOT",     KEYCODE_P,          IP_JOY_NONE )
-	    PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "I       INPUT   AND",     KEYCODE_I,          IP_JOY_NONE )
-	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "RETURN  [Function]",      KEYCODE_ENTER,      IP_JOY_NONE )
-	    PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "O       LET     OR",      KEYCODE_O,          IP_JOY_NONE )
-	    PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "Y       ELSE    RIGHT$",  KEYCODE_Y,          IP_JOY_NONE )
+	    PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED );
+	    PORT_BITX(0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "U       IF      INKEY$",  KEYCODE_U,          IP_JOY_NONE );
+	    PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "P       PRINT   NOT",     KEYCODE_P,          IP_JOY_NONE );
+	    PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "I       INPUT   AND",     KEYCODE_I,          IP_JOY_NONE );
+	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "RETURN  [Function]",      KEYCODE_ENTER,      IP_JOY_NONE );
+	    PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "O       LET     OR",      KEYCODE_O,          IP_JOY_NONE );
+	    PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "Y       ELSE    RIGHT$",  KEYCODE_Y,          IP_JOY_NONE );
 	
 	    PORT_START /* IN8 KEY ROW 7 */
-	    PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED )
-	    PORT_BITX(0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "J       REM     RESET",   KEYCODE_J,          IP_JOY_NONE )
-	    PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, ";       [Rubout]",        KEYCODE_QUOTE,      IP_JOY_NONE )
-	    PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "K       TAB(    PRINT",   KEYCODE_K,          IP_JOY_NONE )
-	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, ":       [Inverse]",       KEYCODE_COLON,      IP_JOY_NONE )
-	    PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "L       [Insert]",        KEYCODE_L,          IP_JOY_NONE )
-	    PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "H       CLS     SET",     KEYCODE_H,          IP_JOY_NONE )
+	    PORT_BIT( 0xc0, IP_ACTIVE_LOW, IPT_UNUSED );
+	    PORT_BITX(0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "J       REM     RESET",   KEYCODE_J,          IP_JOY_NONE );
+	    PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, ";       [Rubout]",        KEYCODE_QUOTE,      IP_JOY_NONE );
+	    PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "K       TAB(    PRINT",   KEYCODE_K,          IP_JOY_NONE );
+	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, ":       [Inverse]",       KEYCODE_COLON,      IP_JOY_NONE );
+	    PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "L       [Insert]",        KEYCODE_L,          IP_JOY_NONE );
+	    PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "H       CLS     SET",     KEYCODE_H,          IP_JOY_NONE );
 	
 	    PORT_START /* IN9 EXTRA KEYS */
-	    PORT_BITX(0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "(Inverse)",               KEYCODE_LALT,       IP_JOY_NONE )
-	    PORT_BITX(0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "(Rubout)",                KEYCODE_DEL,        IP_JOY_NONE )
-	    PORT_BITX(0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "(Cursor left)",           KEYCODE_LEFT,       IP_JOY_NONE )
-	    PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "(Cursor down)",           KEYCODE_DOWN,       IP_JOY_NONE )
-	    PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "(Cursor right)",          KEYCODE_RIGHT,      IP_JOY_NONE )
-	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "(Backspace)",             KEYCODE_BACKSPACE,  IP_JOY_NONE )
-	    PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "(Cursor up)",             KEYCODE_UP,         IP_JOY_NONE )
-	    PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "(Insert)",                KEYCODE_INSERT,     IP_JOY_NONE )
+	    PORT_BITX(0x80, IP_ACTIVE_LOW, IPT_KEYBOARD, "(Inverse);,               KEYCODE_LALT,       IP_JOY_NONE )
+	    PORT_BITX(0x40, IP_ACTIVE_LOW, IPT_KEYBOARD, "(Rubout);,                KEYCODE_DEL,        IP_JOY_NONE )
+	    PORT_BITX(0x20, IP_ACTIVE_LOW, IPT_KEYBOARD, "(Cursor left);,           KEYCODE_LEFT,       IP_JOY_NONE )
+	    PORT_BITX(0x10, IP_ACTIVE_LOW, IPT_KEYBOARD, "(Cursor down);,           KEYCODE_DOWN,       IP_JOY_NONE )
+	    PORT_BITX(0x08, IP_ACTIVE_LOW, IPT_KEYBOARD, "(Cursor right);,          KEYCODE_RIGHT,      IP_JOY_NONE )
+	    PORT_BITX(0x04, IP_ACTIVE_LOW, IPT_KEYBOARD, "(Backspace);,             KEYCODE_BACKSPACE,  IP_JOY_NONE )
+	    PORT_BITX(0x02, IP_ACTIVE_LOW, IPT_KEYBOARD, "(Cursor up);,             KEYCODE_UP,         IP_JOY_NONE )
+	    PORT_BITX(0x01, IP_ACTIVE_LOW, IPT_KEYBOARD, "(Insert);,                KEYCODE_INSERT,     IP_JOY_NONE )
 	
 	    PORT_START /* IN10 JOYSTICK #1 */
-	    PORT_BIT(0xe0, IP_ACTIVE_LOW, IPT_UNUSED )
-	    PORT_BIT(0x10, IP_ACTIVE_LOW, IPF_PLAYER1 | IPT_BUTTON1 )
-	    PORT_BIT(0x08, IP_ACTIVE_LOW, IPF_PLAYER1 | IPT_JOYSTICK_RIGHT )
-	    PORT_BIT(0x04, IP_ACTIVE_LOW, IPF_PLAYER1 | IPT_JOYSTICK_LEFT )
-	    PORT_BIT(0x02, IP_ACTIVE_LOW, IPF_PLAYER1 | IPT_JOYSTICK_DOWN )
-	    PORT_BIT(0x01, IP_ACTIVE_LOW, IPF_PLAYER1 | IPT_JOYSTICK_UP )
+	    PORT_BIT(0xe0, IP_ACTIVE_LOW, IPT_UNUSED );
+	    PORT_BIT(0x10, IP_ACTIVE_LOW, IPF_PLAYER1 | IPT_BUTTON1 );
+	    PORT_BIT(0x08, IP_ACTIVE_LOW, IPF_PLAYER1 | IPT_JOYSTICK_RIGHT );
+	    PORT_BIT(0x04, IP_ACTIVE_LOW, IPF_PLAYER1 | IPT_JOYSTICK_LEFT );
+	    PORT_BIT(0x02, IP_ACTIVE_LOW, IPF_PLAYER1 | IPT_JOYSTICK_DOWN );
+	    PORT_BIT(0x01, IP_ACTIVE_LOW, IPF_PLAYER1 | IPT_JOYSTICK_UP );
 	
 	    PORT_START /* IN11 JOYSTICK #1 'Arm' */
-	    PORT_BIT(0xe0, IP_ACTIVE_LOW, IPT_UNUSED )
-	    PORT_BIT(0x10, IP_ACTIVE_LOW, IPF_PLAYER1 | IPT_BUTTON2 )
-	    PORT_BIT(0x0f, IP_ACTIVE_LOW, IPT_UNUSED )
+	    PORT_BIT(0xe0, IP_ACTIVE_LOW, IPT_UNUSED );
+	    PORT_BIT(0x10, IP_ACTIVE_LOW, IPF_PLAYER1 | IPT_BUTTON2 );
+	    PORT_BIT(0x0f, IP_ACTIVE_LOW, IPT_UNUSED );
 	
 	    PORT_START /* IN12 JOYSTICK #2 */
-	    PORT_BIT(0xe0, IP_ACTIVE_LOW, IPT_UNUSED )
-	    PORT_BIT(0x10, IP_ACTIVE_LOW, IPF_PLAYER2 | IPT_BUTTON1 )
-	    PORT_BIT(0x08, IP_ACTIVE_LOW, IPF_PLAYER2 | IPT_JOYSTICK_RIGHT )
-	    PORT_BIT(0x04, IP_ACTIVE_LOW, IPF_PLAYER2 | IPT_JOYSTICK_LEFT )
-	    PORT_BIT(0x02, IP_ACTIVE_LOW, IPF_PLAYER2 | IPT_JOYSTICK_DOWN )
-	    PORT_BIT(0x01, IP_ACTIVE_LOW, IPF_PLAYER2 | IPT_JOYSTICK_UP )
+	    PORT_BIT(0xe0, IP_ACTIVE_LOW, IPT_UNUSED );
+	    PORT_BIT(0x10, IP_ACTIVE_LOW, IPF_PLAYER2 | IPT_BUTTON1 );
+	    PORT_BIT(0x08, IP_ACTIVE_LOW, IPF_PLAYER2 | IPT_JOYSTICK_RIGHT );
+	    PORT_BIT(0x04, IP_ACTIVE_LOW, IPF_PLAYER2 | IPT_JOYSTICK_LEFT );
+	    PORT_BIT(0x02, IP_ACTIVE_LOW, IPF_PLAYER2 | IPT_JOYSTICK_DOWN );
+	    PORT_BIT(0x01, IP_ACTIVE_LOW, IPF_PLAYER2 | IPT_JOYSTICK_UP );
 	
 	    PORT_START /* IN13 JOYSTICK #2 'Arm' */
-	    PORT_BIT(0xe0, IP_ACTIVE_LOW, IPT_UNUSED )
-	    PORT_BIT(0x10, IP_ACTIVE_LOW, IPF_PLAYER2 | IPT_BUTTON2 )
-	    PORT_BIT(0x0f, IP_ACTIVE_LOW, IPT_UNUSED )
-	INPUT_PORTS_END
+	    PORT_BIT(0xe0, IP_ACTIVE_LOW, IPT_UNUSED );
+	    PORT_BIT(0x10, IP_ACTIVE_LOW, IPF_PLAYER2 | IPT_BUTTON2 );
+	    PORT_BIT(0x0f, IP_ACTIVE_LOW, IPT_UNUSED );
+	INPUT_PORTS_END(); }}; 
 	
 	#ifdef OLD_VIDEO
-	static struct GfxLayout charlayout =
-	{
+	static GfxLayout charlayout = new GfxLayout
+	(
 	    8,12,                   /* 8 x 12 characters */
 	    256,                    /* 256 characters */
 	    1,                      /* 1 bits per pixel */
-	    { 0 },                  /* no bitplanes; 1 bit per pixel */
+	    new int[] { 0 },                  /* no bitplanes; 1 bit per pixel */
 	    /* x offsets */
-	    { 7, 6, 5, 4, 3, 2, 1, 0 },
+	    new int[] { 7, 6, 5, 4, 3, 2, 1, 0 },
 	    /* y offsets */
-	    {  0*8,  1*8,  2*8,  3*8,  4*8,  5*8,
+	    new int[] {  0*8,  1*8,  2*8,  3*8,  4*8,  5*8,
 	       6*8,  7*8,  8*8,  9*8, 10*8, 11*8 },
 	    8*12                    /* every char takes 12 bytes */
-	};
+	);
 	
-	static struct GfxLayout gfxlayout =
-	{
+	static GfxLayout gfxlayout = new GfxLayout
+	(
 	    8,3,                    /* 4 times 2x3 pixels */
 	    256,                    /* 256 codes */
 	    2,                      /* 2 bits per pixel */
-	    { 0,1 },                /* two bitplanes */
+	    new int[] { 0,1 },                /* two bitplanes */
 	    /* x offsets */
-	    { 0,0, 2,2, 4,4, 6,6 },
+	    new int[] { 0,0, 2,2, 4,4, 6,6 },
 	    /* y offsets */
-	    {  0, 0, 0  },
+	    new int[] {  0, 0, 0  },
 	    8                       /* one byte per code */
-	};
+	);
 	
-	static struct GfxDecodeInfo gfxdecodeinfo[] =
+	static GfxDecodeInfo gfxdecodeinfo[] =
 	{
-	    { 1, 0x0000, &charlayout,   0, 10 },
-	    { 1, 0x0c00, &gfxlayout, 2*10, 2 },
+	    new GfxDecodeInfo( 1, 0x0000, charlayout,   0, 10 ),
+	    new GfxDecodeInfo( 1, 0x0c00, gfxlayout, 2*10, 2 ),
 	MEMORY_END   /* end of array */
 	
 	static unsigned short colortable[] =
-	{
+	new GfxDecodeInfo(
 	/* block graphics in text mode */
 	     0, 1,      /* green */
 	     0, 2,      /* yellow */
@@ -338,11 +338,11 @@ public class vtech1
 	/* graphics mode */
 	    1,2,3,4,    /* green, yellow, blue, red */
 	    5,6,8,7     /* buff, cyan, orange, magenta */
-	};
+	);
 	#endif
 	
 	static unsigned char palette[] =
-	{
+	new GfxDecodeInfo(
 	      0,  0,  0,    /* black (block graphics) */
 	      0,224,  0,    /* green */
 	    208,255,  0,    /* yellow (greenish) */
@@ -356,11 +356,11 @@ public class vtech1
 	      0,224, 24,    /* bright green (alphanumeric characters) */
 	     64, 16,  0,    /* dark orange (alphanumeric characters) */
 	    255,196, 24,    /* bright orange (alphanumeric characters) */
-	};
+	);
 	
 	/* Initialise the palette */
 	static void init_palette_monochrome(unsigned char *sys_palette, unsigned short *sys_colortable,const unsigned char *color_prom)
-	{
+	new GfxDecodeInfo(
 	    int i;
 	    for (i = 0; i < sizeof(palette)/(sizeof(unsigned char)*3); i++)
 	    {
@@ -373,33 +373,33 @@ public class vtech1
 	#ifdef OLD_VIDEO
 	    memcpy(sys_colortable,colortable,sizeof(colortable));
 	#endif
-	}
+	)
 	
 	/* Initialise the palette */
 	static void init_palette_color(unsigned char *sys_palette, unsigned short *sys_colortable,const unsigned char *color_prom)
-	{
+	new GfxDecodeInfo(
 	    memcpy(sys_palette,palette,sizeof(palette));
 	#ifdef OLD_VIDEO
 	    memcpy(sys_colortable,colortable,sizeof(colortable));
 	#endif
-	}
+	)
 	
-	static INT16 speaker_levels[] = {-32768,0,32767,0};
+	static INT16 speaker_levels[] = new GfxDecodeInfo(-32768,0,32767,0);
 	
-	static struct Speaker_interface speaker_interface = {
+	static struct Speaker_interface speaker_interface = new GfxDecodeInfo(
 	    1,
 	    { 75 },
 	    { 4 },
 	    { speaker_levels }
-	};
+	);
 	
-	static struct Wave_interface wave_interface = {
+	static struct Wave_interface wave_interface = new GfxDecodeInfo(
 	    1,
 	    { 25 }
-	};
+	);
 	
 	static struct MachineDriver machine_driver_laser110 =
-	{
+	new GfxDecodeInfo(
 	    /* basic machine hardware */
 	    {
 	        {
@@ -451,17 +451,17 @@ public class vtech1
 	    {
 	        {
 	            SOUND_SPEAKER,
-	            &speaker_interface
+	            speaker_interface
 	        },
 	        {
 	            SOUND_WAVE,
-	            &wave_interface
+	            wave_interface
 	        }
 	    }
-	};
+	);
 	
 	static struct MachineDriver machine_driver_laser210 =
-	{
+	new GfxDecodeInfo(
 	    /* basic machine hardware */
 	    {
 	        {
@@ -512,17 +512,17 @@ public class vtech1
 	    {
 	        {
 	            SOUND_SPEAKER,
-	            &speaker_interface
+	            speaker_interface
 	        },
 	        {
 	            SOUND_WAVE,
-	            &wave_interface
+	            wave_interface
 	        }
 	    }
-	};
+	);
 	
 	static struct MachineDriver machine_driver_laser310 =
-	{
+	new GfxDecodeInfo(
 	    /* basic machine hardware */
 	    {
 	        {
@@ -572,47 +572,47 @@ public class vtech1
 	    {
 	        {
 	            SOUND_SPEAKER,
-	            &speaker_interface
+	            speaker_interface
 	        },
 	        {
 	            SOUND_WAVE,
-	            &wave_interface
+	            wave_interface
 	        }
 	    }
-	};
+	);
 	
-	ROM_START( laser110 )
-	    ROM_REGION(0x10000,REGION_CPU1,0)
-	    ROM_LOAD("vtechv12.lo",  0x0000, 0x2000, 0x99412d43)
-	    ROM_LOAD("vtechv12.hi",  0x2000, 0x2000, 0xe4c24e8b)
+	static RomLoadPtr rom_laser110 = new RomLoadPtr(){ public void handler(){ 
+	    ROM_REGION(0x10000,REGION_CPU1,0);
+	    ROM_LOAD("vtechv12.lo",  0x0000, 0x2000, 0x99412d43);
+	    ROM_LOAD("vtechv12.hi",  0x2000, 0x2000, 0xe4c24e8b);
 	#ifdef OLD_VIDEO
-	    ROM_REGION(0x0d00,REGION_GFX1,0)
-	    ROM_LOAD("vtech1.chr",   0x0000, 0x0c00, 0xead006a1)
+	    ROM_REGION(0x0d00,REGION_GFX1,0);
+	    ROM_LOAD("vtech1.chr",   0x0000, 0x0c00, 0xead006a1);
 	#endif
-	ROM_END
+	ROM_END(); }}; 
 	#define rom_laser200    rom_laser110
 	#define rom_tx8000      rom_laser110
 	
-	ROM_START( laser210 )
-	    ROM_REGION(0x10000,REGION_CPU1,0)
-	    ROM_LOAD("vtechv20.lo",  0x0000, 0x2000, 0xcc854fe9)
-	    ROM_LOAD("vtechv20.hi",  0x2000, 0x2000, 0x7060f91a)
+	static RomLoadPtr rom_laser210 = new RomLoadPtr(){ public void handler(){ 
+	    ROM_REGION(0x10000,REGION_CPU1,0);
+	    ROM_LOAD("vtechv20.lo",  0x0000, 0x2000, 0xcc854fe9);
+	    ROM_LOAD("vtechv20.hi",  0x2000, 0x2000, 0x7060f91a);
 	#ifdef OLD_VIDEO
-	    ROM_REGION(0x0d00,REGION_GFX1,0)
-	    ROM_LOAD("vtech1.chr",   0x0000, 0x0c00, 0xead006a1)
+	    ROM_REGION(0x0d00,REGION_GFX1,0);
+	    ROM_LOAD("vtech1.chr",   0x0000, 0x0c00, 0xead006a1);
 	#endif
-	ROM_END
+	ROM_END(); }}; 
 	#define rom_vz200       rom_laser210
 	#define rom_fellow      rom_laser210
 	
-	ROM_START( laser310 )
-	    ROM_REGION(0x10000,REGION_CPU1,0)
-	    ROM_LOAD("vtechv20.rom", 0x0000, 0x4000, 0x613de12c)
+	static RomLoadPtr rom_laser310 = new RomLoadPtr(){ public void handler(){ 
+	    ROM_REGION(0x10000,REGION_CPU1,0);
+	    ROM_LOAD("vtechv20.rom", 0x0000, 0x4000, 0x613de12c);
 	#ifdef OLD_VIDEO
-	    ROM_REGION(0x0d00,REGION_GFX1,0)
-	    ROM_LOAD("vtech1.chr",   0x0000, 0x0c00, 0xead006a1)
+	    ROM_REGION(0x0d00,REGION_GFX1,0);
+	    ROM_LOAD("vtech1.chr",   0x0000, 0x0c00, 0xead006a1);
 	#endif
-	ROM_END
+	ROM_END(); }}; 
 	#define rom_vz300       rom_laser310
 	
 	/***************************************************************************
@@ -621,7 +621,7 @@ public class vtech1
 	
 	***************************************************************************/
 	
-	static const struct IODevice io_laser[] = {
+	static const struct IODevice io_laser[] = new GfxDecodeInfo(
 	    IO_CASSETTE_WAVE(1,"wav\0cas\0",0,vtech1_cassette_init,vtech1_cassette_exit),
 	    {
 	        IO_SNAPSHOT,            /* type */
@@ -662,7 +662,7 @@ public class vtech1
 	        NULL                    /* output_chunk */
 	    },
 	    { IO_END }
-	};
+	);
 	
 	#define io_laser110 io_laser
 	#define io_laser210 io_laser
@@ -685,18 +685,18 @@ public class vtech1
 	
 	#ifdef RUNTIME_LOADER
 	extern void vtech1_runtime_loader_init(void)
-	{
+	new GfxDecodeInfo(
 		int i;
 		for (i=0; drivers[i]; i++) {
-			if ( strcmp(drivers[i]->name,"laser110")==0) drivers[i]=&driver_laser110;
-			if ( strcmp(drivers[i]->name,"laser210")==0) drivers[i]=&driver_laser210;
-			if ( strcmp(drivers[i]->name,"laser200")==0) drivers[i]=&driver_laser200;
-			if ( strcmp(drivers[i]->name,"vz200")==0) drivers[i]=&driver_vz200;
-			if ( strcmp(drivers[i]->name,"fellow")==0) drivers[i]=&driver_fellow;
-			if ( strcmp(drivers[i]->name,"tx8000")==0) drivers[i]=&driver_tx8000;
-			if ( strcmp(drivers[i]->name,"laser310")==0) drivers[i]=&driver_laser310;
-			if ( strcmp(drivers[i]->name,"vz300")==0) drivers[i]=&driver_vz300;
+			if ( strcmp(drivers[i]->name,"laser110")==0) drivers[i]=driver_laser110;
+			if ( strcmp(drivers[i]->name,"laser210")==0) drivers[i]=driver_laser210;
+			if ( strcmp(drivers[i]->name,"laser200")==0) drivers[i]=driver_laser200;
+			if ( strcmp(drivers[i]->name,"vz200")==0) drivers[i]=driver_vz200;
+			if ( strcmp(drivers[i]->name,"fellow")==0) drivers[i]=driver_fellow;
+			if ( strcmp(drivers[i]->name,"tx8000")==0) drivers[i]=driver_tx8000;
+			if ( strcmp(drivers[i]->name,"laser310")==0) drivers[i]=driver_laser310;
+			if ( strcmp(drivers[i]->name,"vz300")==0) drivers[i]=driver_vz300;
 		}
-	}
+	)
 	#endif
 }

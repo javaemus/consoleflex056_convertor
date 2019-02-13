@@ -3,7 +3,7 @@
 ******************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -47,45 +47,49 @@ public class mk2
 	  83, 84 contains display variables
 	 */
 	// only lower 12 address bits on bus!
-	static MEMORY_READ_START( mk2_readmem )
+	public static Memory_ReadAddress mk2_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
 	#ifdef M6504_MEMORY_LAYOUT
 		MEMORY_ADDRESS_BITS(13) // m6504
-		{ 0x0000, 0x01ff, MRA_RAM }, // 2 2111, should be mirrored
-		{ 0x0b00, 0x0b0f, rriot_0_r },
-		{ 0x0b80, 0x0bbf, MRA_RAM }, // rriot ram
-		{ 0x0c00, 0x0fff, MRA_ROM }, // rriot rom
-		{ 0x1000, 0x1fff, MRA_ROM },
+		new Memory_ReadAddress( 0x0000, 0x01ff, MRA_RAM ), // 2 2111, should be mirrored
+		new Memory_ReadAddress( 0x0b00, 0x0b0f, rriot_0_r ),
+		new Memory_ReadAddress( 0x0b80, 0x0bbf, MRA_RAM ), // rriot ram
+		new Memory_ReadAddress( 0x0c00, 0x0fff, MRA_ROM ), // rriot rom
+		new Memory_ReadAddress( 0x1000, 0x1fff, MRA_ROM ),
 	#else
-		{ 0x0000, 0x01ff, MRA_RAM }, // 2 2111, should be mirrored
-		{ 0x8009, 0x8009, MRA_NOP },// bit $8009 (ora #$80) causes false accesses
-		{ 0x8b00, 0x8b0f, rriot_0_r },
-		{ 0x8b80, 0x8bbf, MRA_RAM }, // rriot ram
-		{ 0x8c00, 0x8fff, MRA_ROM }, // rriot rom
-		{ 0xf000, 0xffff, MRA_ROM },
+		new Memory_ReadAddress( 0x0000, 0x01ff, MRA_RAM ), // 2 2111, should be mirrored
+		new Memory_ReadAddress( 0x8009, 0x8009, MRA_NOP ),// bit $8009 (ora #$80) causes false accesses
+		new Memory_ReadAddress( 0x8b00, 0x8b0f, rriot_0_r ),
+		new Memory_ReadAddress( 0x8b80, 0x8bbf, MRA_RAM ), // rriot ram
+		new Memory_ReadAddress( 0x8c00, 0x8fff, MRA_ROM ), // rriot rom
+		new Memory_ReadAddress( 0xf000, 0xffff, MRA_ROM ),
 	#endif
-	MEMORY_END
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( mk2_writemem )
+	public static Memory_WriteAddress mk2_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
 	#ifdef M6504_MEMORY_LAYOUT
 		MEMORY_ADDRESS_BITS(13) // m6504
-		{ 0x0000, 0x01ff, MWA_RAM },
-		{ 0x0b00, 0x0b0f, rriot_0_w },
-		{ 0x0b80, 0x0bbf, MWA_RAM },
-		{ 0x0c00, 0x0fff, MWA_ROM },
-		{ 0x1000, 0x1fff, MWA_ROM },
+		new Memory_WriteAddress( 0x0000, 0x01ff, MWA_RAM ),
+		new Memory_WriteAddress( 0x0b00, 0x0b0f, rriot_0_w ),
+		new Memory_WriteAddress( 0x0b80, 0x0bbf, MWA_RAM ),
+		new Memory_WriteAddress( 0x0c00, 0x0fff, MWA_ROM ),
+		new Memory_WriteAddress( 0x1000, 0x1fff, MWA_ROM ),
 	#else
-		{ 0x0000, 0x01ff, MWA_RAM },
-		{ 0x8b00, 0x8b0f, rriot_0_w },
-		{ 0x8b80, 0x8bbf, MWA_RAM },
-		{ 0x8c00, 0x8fff, MWA_ROM },
-		{ 0xf000, 0xffff, MWA_ROM },
+		new Memory_WriteAddress( 0x0000, 0x01ff, MWA_RAM ),
+		new Memory_WriteAddress( 0x8b00, 0x8b0f, rriot_0_w ),
+		new Memory_WriteAddress( 0x8b80, 0x8bbf, MWA_RAM ),
+		new Memory_WriteAddress( 0x8c00, 0x8fff, MWA_ROM ),
+		new Memory_WriteAddress( 0xf000, 0xffff, MWA_ROM ),
 	#endif
-	MEMORY_END
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
 	#define DIPS_HELPER(bit, name, keycode, r) \
-	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r)
+	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r);
 	
-	INPUT_PORTS_START( mk2 )
+	static InputPortPtr input_ports_mk2 = new InputPortPtr(){ public void handler() { 
 		PORT_START
 	DIPS_HELPER( 0x001, "NEW GAME", KEYCODE_F3, CODE_NONE) // seams to be direct wired to reset
 		DIPS_HELPER( 0x002, "CLEAR", KEYCODE_F1, CODE_NONE)
@@ -119,7 +123,7 @@ public class mk2
 		DIPS_HELPER( 0x040, "Test 7", KEYCODE_7_PAD, CODE_NONE)
 		DIPS_HELPER( 0x080, "Test 8", KEYCODE_8_PAD, CODE_NONE)
 	#endif
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	static int mk2_frame_int(void)
 	{
@@ -169,16 +173,16 @@ public class mk2
 	    }
 	};
 	
-	ROM_START(mk2)
-		ROM_REGION(0x10000,REGION_CPU1,0)
+	static RomLoadPtr rom_mk2 = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x10000,REGION_CPU1,0);
 	#ifdef M6504_MEMORY_LAYOUT
-		ROM_LOAD("024_1879", 0x0c00, 0x0400, 0x4f28c443)
-		ROM_LOAD("005_2179", 0x1000, 0x1000, 0x6f10991b) // chess mate 7.5
+		ROM_LOAD("024_1879", 0x0c00, 0x0400, 0x4f28c443);
+		ROM_LOAD("005_2179", 0x1000, 0x1000, 0x6f10991b);// chess mate 7.5
 	#else
-		ROM_LOAD("024_1879", 0x8c00, 0x0400, 0x4f28c443)
-		ROM_LOAD("005_2179", 0xf000, 0x1000, 0x6f10991b) // chess mate 7.5
+		ROM_LOAD("024_1879", 0x8c00, 0x0400, 0x4f28c443);
+		ROM_LOAD("005_2179", 0xf000, 0x1000, 0x6f10991b);// chess mate 7.5
 	#endif
-	ROM_END
+	ROM_END(); }}; 
 	
 	static const struct IODevice io_mk2[] = {
 	    { IO_END }

@@ -4,7 +4,7 @@
     peter.trauner@jk.uni-linz.ac.at
 ***************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -142,9 +142,9 @@ public class cbmb
 		if ( (cbmb_keyline[10]&~cbmb_keyline_a)||
 			 (cbmb_keyline[11]&~cbmb_keyline_b)) data|=0x20;
 	
-		if (!cbm500) {
-			if (!VIDEO_NTSC) data|=0x40;
-			if (!MODELL_700) data|=0x80;
+		if (cbm500 == 0) {
+			if (VIDEO_NTSC == 0) data|=0x40;
+			if (MODELL_700 == 0) data|=0x80;
 		}
 		return data^0xff;
 	}

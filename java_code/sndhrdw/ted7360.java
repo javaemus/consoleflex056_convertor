@@ -6,7 +6,7 @@
   main part in vidhrdw
 ***************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package sndhrdw;
@@ -157,7 +157,7 @@ public class ted7360
 		 * so we have enough data for min 5 second */
 		noisesize = NOISE_FREQUENCY_MAX * NOISE_BUFFER_SIZE_SEC;
 		noise = (UINT8*)malloc (noisesize * sizeof (noise[0]));
-		if (!noise)
+		if (noise == 0)
 		{
 			return 1;
 		}

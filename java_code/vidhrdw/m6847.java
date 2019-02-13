@@ -10,7 +10,7 @@
  */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -1018,7 +1018,7 @@ public class m6847
 	
 		if (callback) {
 			ci = (struct callback_info *) malloc(sizeof(struct callback_info));
-			if (!ci)
+			if (ci == 0)
 				return;
 			ci->callback = callback;
 			ci->value = value;
@@ -1417,16 +1417,16 @@ public class m6847
 		m6847_set_row_height(rowheight);
 	}
 	
-	READ_HANDLER( m6847_ag_r )		{ return (the_state.modebits & M6847_MODEBIT_AG) ? 1 : 0; }
-	READ_HANDLER( m6847_as_r )		{ return (the_state.modebits & M6847_MODEBIT_AS) ? 1 : 0; }
-	READ_HANDLER( m6847_intext_r )	{ return (the_state.modebits & M6847_MODEBIT_INTEXT) ? 1 : 0; }
-	READ_HANDLER( m6847_inv_r )		{ return (the_state.modebits & M6847_MODEBIT_INV) ? 1 : 0; }
-	READ_HANDLER( m6847_css_r )		{ return (the_state.modebits & M6847_MODEBIT_CSS) ? 1 : 0; }
-	READ_HANDLER( m6847_gm2_r )		{ return (the_state.modebits & M6847_MODEBIT_GM2) ? 1 : 0; }
-	READ_HANDLER( m6847_gm1_r )		{ return (the_state.modebits & M6847_MODEBIT_GM1) ? 1 : 0; }
-	READ_HANDLER( m6847_gm0_r )		{ return (the_state.modebits & M6847_MODEBIT_GM0) ? 1 : 0; }
-	READ_HANDLER( m6847_fs_r )		{ return the_state.fs; }
-	READ_HANDLER( m6847_hs_r )		{ return the_state.hs; }
+	public static ReadHandlerPtr m6847_ag_r  = new ReadHandlerPtr() { public int handler(int offset)		{ return (the_state.modebits & M6847_MODEBIT_AG) ? 1 : 0; } };
+	public static ReadHandlerPtr m6847_as_r  = new ReadHandlerPtr() { public int handler(int offset)		{ return (the_state.modebits & M6847_MODEBIT_AS) ? 1 : 0; } };
+	public static ReadHandlerPtr m6847_intext_r  = new ReadHandlerPtr() { public int handler(int offset)	{ return (the_state.modebits & M6847_MODEBIT_INTEXT) ? 1 : 0; } };
+	public static ReadHandlerPtr m6847_inv_r  = new ReadHandlerPtr() { public int handler(int offset)		{ return (the_state.modebits & M6847_MODEBIT_INV) ? 1 : 0; } };
+	public static ReadHandlerPtr m6847_css_r  = new ReadHandlerPtr() { public int handler(int offset)		{ return (the_state.modebits & M6847_MODEBIT_CSS) ? 1 : 0; } };
+	public static ReadHandlerPtr m6847_gm2_r  = new ReadHandlerPtr() { public int handler(int offset)		{ return (the_state.modebits & M6847_MODEBIT_GM2) ? 1 : 0; } };
+	public static ReadHandlerPtr m6847_gm1_r  = new ReadHandlerPtr() { public int handler(int offset)		{ return (the_state.modebits & M6847_MODEBIT_GM1) ? 1 : 0; } };
+	public static ReadHandlerPtr m6847_gm0_r  = new ReadHandlerPtr() { public int handler(int offset)		{ return (the_state.modebits & M6847_MODEBIT_GM0) ? 1 : 0; } };
+	public static ReadHandlerPtr m6847_fs_r  = new ReadHandlerPtr() { public int handler(int offset)		{ return the_state.fs; } };
+	public static ReadHandlerPtr m6847_hs_r  = new ReadHandlerPtr() { public int handler(int offset)		{ return the_state.hs; } };
 	
 	static void write_modebits(int data, int mask, int causesrefresh)
 	{
@@ -1444,12 +1444,12 @@ public class m6847
 		}
 	}
 	
-	WRITE_HANDLER( m6847_ag_w )		{ write_modebits(data, M6847_MODEBIT_AG, 1); }
-	WRITE_HANDLER( m6847_as_w )		{ write_modebits(data, M6847_MODEBIT_AS, 0); }
-	WRITE_HANDLER( m6847_intext_w )	{ write_modebits(data, M6847_MODEBIT_INTEXT, 0); }
-	WRITE_HANDLER( m6847_inv_w )	{ write_modebits(data, M6847_MODEBIT_INV, 0); }
-	WRITE_HANDLER( m6847_css_w )	{ write_modebits(data, M6847_MODEBIT_CSS, 1); }
-	WRITE_HANDLER( m6847_gm2_w )	{ write_modebits(data, M6847_MODEBIT_GM2, 1); }
-	WRITE_HANDLER( m6847_gm1_w )	{ write_modebits(data, M6847_MODEBIT_GM1, 1); }
-	WRITE_HANDLER( m6847_gm0_w )	{ write_modebits(data, M6847_MODEBIT_GM0, 1); }
+	public static WriteHandlerPtr m6847_ag_w = new WriteHandlerPtr() {public void handler(int offset, int data)		{ write_modebits(data, M6847_MODEBIT_AG, 1); } };
+	public static WriteHandlerPtr m6847_as_w = new WriteHandlerPtr() {public void handler(int offset, int data)		{ write_modebits(data, M6847_MODEBIT_AS, 0); } };
+	public static WriteHandlerPtr m6847_intext_w = new WriteHandlerPtr() {public void handler(int offset, int data)	{ write_modebits(data, M6847_MODEBIT_INTEXT, 0); } };
+	public static WriteHandlerPtr m6847_inv_w = new WriteHandlerPtr() {public void handler(int offset, int data)	{ write_modebits(data, M6847_MODEBIT_INV, 0); } };
+	public static WriteHandlerPtr m6847_css_w = new WriteHandlerPtr() {public void handler(int offset, int data)	{ write_modebits(data, M6847_MODEBIT_CSS, 1); } };
+	public static WriteHandlerPtr m6847_gm2_w = new WriteHandlerPtr() {public void handler(int offset, int data)	{ write_modebits(data, M6847_MODEBIT_GM2, 1); } };
+	public static WriteHandlerPtr m6847_gm1_w = new WriteHandlerPtr() {public void handler(int offset, int data)	{ write_modebits(data, M6847_MODEBIT_GM1, 1); } };
+	public static WriteHandlerPtr m6847_gm0_w = new WriteHandlerPtr() {public void handler(int offset, int data)	{ write_modebits(data, M6847_MODEBIT_GM0, 1); } };
 }

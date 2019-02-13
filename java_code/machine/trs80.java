@@ -7,7 +7,7 @@
 
 ***************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -485,7 +485,7 @@ public class trs80
 		/* TODO: remove this */
 		unsigned char *RAM = memory_region(REGION_CPU1);
 	
-		if (!tape_get_file)
+		if (tape_get_file == 0)
 		{
 			char filename[12+1];
 	
@@ -502,12 +502,12 @@ public class trs80
 	 *
 	 *************************************/
 	
-	READ_HANDLER( trs80_port_xx_r )
+	public static ReadHandlerPtr trs80_port_xx_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return 0;
-	}
+	} };
 	
-	WRITE_HANDLER( trs80_port_ff_w )
+	public static WriteHandlerPtr trs80_port_ff_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		int changes = trs80_port_ff ^ data;
 	
@@ -604,9 +604,9 @@ public class trs80
 			memset(dirtybuffer, 1, 64 * 16);
 	
 		trs80_port_ff = data;
-	}
+	} };
 	
-	READ_HANDLER( trs80_port_ff_r )
+	public static ReadHandlerPtr trs80_port_ff_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int now_cycles = cpu_gettotalcycles();
 		/* virtual tape ? */
@@ -650,7 +650,7 @@ public class trs80
 			get_cycles = now_cycles;
 		}
 		return (trs80_port_ff << 3) & 0xc0;
-	}
+	} };
 	
 	/*************************************
 	 *
@@ -715,24 +715,24 @@ public class trs80
 		return 0;
 	}
 	
-	WRITE_HANDLER( trs80_printer_w )
+	public static WriteHandlerPtr trs80_printer_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		/* nothing yet :( */
-	}
+	} };
 	
-	READ_HANDLER( trs80_irq_status_r )
+	public static ReadHandlerPtr trs80_irq_status_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int result = irq_status;
 		irq_status &= ~(IRQ_TIMER | IRQ_FDC);
 		return result;
-	}
+	} };
 	
-	WRITE_HANDLER( trs80_irq_mask_w )
+	public static WriteHandlerPtr trs80_irq_mask_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		irq_mask = data;
-	}
+	} };
 	
-	WRITE_HANDLER( trs80_motor_w )
+	public static WriteHandlerPtr trs80_motor_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		UINT8 drive = 255;
 	
@@ -776,12 +776,12 @@ public class trs80
 	    wd179x_set_drive(drive);
 		wd179x_set_side(head);
 	
-	}
+	} };
 	
 	/*************************************
 	 *		Keyboard					 *
 	 *************************************/
-	READ_HANDLER( trs80_keyboard_r )
+	public static ReadHandlerPtr trs80_keyboard_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int result = 0;
 	
@@ -806,7 +806,7 @@ public class trs80
 			result |= input_port_8_r(0);
 	
 		return result;
-	}
+	} };
 	
 	
 }

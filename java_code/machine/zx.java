@@ -11,7 +11,7 @@
 ****************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -341,7 +341,7 @@ public class zx
 	
 						strcpy(ext, ".P");
 						tape_file = osd_fopen(Machine->gamedrv->name, tape_name, OSD_FILETYPE_ROM, 0);
-						if (!tape_file)
+						if (tape_file == 0)
 						{
 							strcpy(ext, ".81");
 							tape_file = osd_fopen(Machine->gamedrv->name, tape_name, OSD_FILETYPE_ROM, 0);

@@ -16,7 +16,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -242,7 +242,7 @@ public class ay3600
 		}
 	
 		/* If no keys have been pressed, reset the repeat time and return */
-		if( !any_key_pressed )
+		if (any_key_pressed == 0)
 		{
 			time_until_repeat = MAGIC_KEY_REPEAT_NUMBER;
 			last_key = 0xff;

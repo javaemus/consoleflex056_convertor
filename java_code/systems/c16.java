@@ -154,7 +154,7 @@ when problems start with -log and look into error.log file
 
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -198,170 +198,182 @@ public class c16
 	 * at 0xfc00 till 0xfcff is ram or rom kernal readable
 	 */
 	
-	static MEMORY_READ_START( c16_readmem )
-		{0x0000, 0x0001, c16_m7501_port_r},
-		{0x0002, 0x3fff, MRA_RAM},
-		{0x4000, 0x7fff, MRA_BANK1},	   /* only ram memory configuration */
-		{0x8000, 0xbfff, MRA_BANK2},
-		{0xc000, 0xfbff, MRA_BANK3},
-		{0xfc00, 0xfcff, MRA_BANK4},
-		{0xfd10, 0xfd1f, c16_fd1x_r},
-		{0xfd30, 0xfd3f, c16_6529_port_r}, /* 6529 keyboard matrix */
+	public static Memory_ReadAddress c16_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress(0x0000, 0x0001, c16_m7501_port_r),
+		new Memory_ReadAddress(0x0002, 0x3fff, MRA_RAM),
+		new Memory_ReadAddress(0x4000, 0x7fff, MRA_BANK1),	   /* only ram memory configuration */
+		new Memory_ReadAddress(0x8000, 0xbfff, MRA_BANK2),
+		new Memory_ReadAddress(0xc000, 0xfbff, MRA_BANK3),
+		new Memory_ReadAddress(0xfc00, 0xfcff, MRA_BANK4),
+		new Memory_ReadAddress(0xfd10, 0xfd1f, c16_fd1x_r),
+		new Memory_ReadAddress(0xfd30, 0xfd3f, c16_6529_port_r), /* 6529 keyboard matrix */
 	#if 0
-		{ 0xfd40, 0xfd5f, sid6581_0_port_r }, /* sidcard, eoroidpro ... */
-		{0xfec0, 0xfedf, c16_iec9_port_r}, /* configured in c16_common_init */
-		{0xfee0, 0xfeff, c16_iec8_port_r}, /* configured in c16_common_init */
+		new Memory_ReadAddress( 0xfd40, 0xfd5f, sid6581_0_port_r ), /* sidcard, eoroidpro ... */
+		new Memory_ReadAddress(0xfec0, 0xfedf, c16_iec9_port_r), /* configured in c16_common_init */
+		new Memory_ReadAddress(0xfee0, 0xfeff, c16_iec8_port_r), /* configured in c16_common_init */
 	#endif
-		{0xff00, 0xff1f, ted7360_port_r},
-		{0xff20, 0xffff, MRA_BANK8},
-	/*	{ 0x10000, 0x3ffff, MRA_ROM }, */
-	MEMORY_END
+		new Memory_ReadAddress(0xff00, 0xff1f, ted7360_port_r),
+		new Memory_ReadAddress(0xff20, 0xffff, MRA_BANK8),
+	/*	new Memory_ReadAddress( 0x10000, 0x3ffff, MRA_ROM ), */
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( c16_writemem )
-		{0x0000, 0x0001, c16_m7501_port_w, &c16_memory},
-		{0x0002, 0x3fff, MWA_RAM},
+	public static Memory_WriteAddress c16_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress(0x0000, 0x0001, c16_m7501_port_w, c16_memory),
+		new Memory_WriteAddress(0x0002, 0x3fff, MWA_RAM),
 	#ifndef NEW_BANKHANDLER
-		{0x4000, 0x7fff, MWA_BANK5},
-		{0x8000, 0xbfff, MWA_BANK6},
-		{0xc000, 0xfcff, MWA_BANK7},
+		new Memory_WriteAddress(0x4000, 0x7fff, MWA_BANK5),
+		new Memory_WriteAddress(0x8000, 0xbfff, MWA_BANK6),
+		new Memory_WriteAddress(0xc000, 0xfcff, MWA_BANK7),
 	#endif
 	#if 0
-		{0x4000, 0x7fff, c16_write_4000},  /*configured in c16_common_init */
-		{0x8000, 0xbfff, c16_write_8000},  /*configured in c16_common_init */
-		{0xc000, 0xfcff, c16_write_c000},  /*configured in c16_common_init */
+		new Memory_WriteAddress(0x4000, 0x7fff, c16_write_4000),  /*configured in c16_common_init */
+		new Memory_WriteAddress(0x8000, 0xbfff, c16_write_8000),  /*configured in c16_common_init */
+		new Memory_WriteAddress(0xc000, 0xfcff, c16_write_c000),  /*configured in c16_common_init */
 	#endif
-		{0xfd30, 0xfd3f, c16_6529_port_w}, /* 6529 keyboard matrix */
+		new Memory_WriteAddress(0xfd30, 0xfd3f, c16_6529_port_w), /* 6529 keyboard matrix */
 	#if 0
-		{0xfd40, 0xfd5f, sid6581_0_port_w},
+		new Memory_WriteAddress(0xfd40, 0xfd5f, sid6581_0_port_w),
 	#endif
-		{0xfdd0, 0xfddf, c16_select_roms}, /* rom chips selection */
+		new Memory_WriteAddress(0xfdd0, 0xfddf, c16_select_roms), /* rom chips selection */
 	#if 0
-		{0xfec0, 0xfedf, c16_iec9_port_w}, /*configured in c16_common_init */
-		{0xfee0, 0xfeff, c16_iec8_port_w}, /*configured in c16_common_init */
+		new Memory_WriteAddress(0xfec0, 0xfedf, c16_iec9_port_w), /*configured in c16_common_init */
+		new Memory_WriteAddress(0xfee0, 0xfeff, c16_iec8_port_w), /*configured in c16_common_init */
 	#endif
-		{0xff00, 0xff1f, ted7360_port_w},
+		new Memory_WriteAddress(0xff00, 0xff1f, ted7360_port_w),
 	#if 0
-		{0xff20, 0xff3d, c16_write_ff20},  /*configure in c16_common_init */
+		new Memory_WriteAddress(0xff20, 0xff3d, c16_write_ff20),  /*configure in c16_common_init */
 	#endif
-		{0xff3e, 0xff3e, c16_switch_to_rom},
-		{0xff3f, 0xff3f, c16_switch_to_ram},
+		new Memory_WriteAddress(0xff3e, 0xff3e, c16_switch_to_rom),
+		new Memory_WriteAddress(0xff3f, 0xff3f, c16_switch_to_ram),
 	#if 0
-		{0xff40, 0xffff, c16_write_ff40},  /*configure in c16_common_init */
-	//	{0x10000, 0x3ffff, MWA_ROM},
+		new Memory_WriteAddress(0xff40, 0xffff, c16_write_ff40),  /*configure in c16_common_init */
+	//	new Memory_WriteAddress(0x10000, 0x3ffff, MWA_ROM),
 	#endif
-	MEMORY_END
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_READ_START( plus4_readmem )
-		{0x0000, 0x0001, c16_m7501_port_r},
-		{0x0002, 0x7fff, MRA_RAM},
-		{0x8000, 0xbfff, MRA_BANK2},
-		{0xc000, 0xfbff, MRA_BANK3},
-		{0xfc00, 0xfcff, MRA_BANK4},
-		{0xfd00, 0xfd0f, c16_6551_port_r},
-		{0xfd10, 0xfd1f, plus4_6529_port_r},
-		{0xfd30, 0xfd3f, c16_6529_port_r}, /* 6529 keyboard matrix */
+	public static Memory_ReadAddress plus4_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress(0x0000, 0x0001, c16_m7501_port_r),
+		new Memory_ReadAddress(0x0002, 0x7fff, MRA_RAM),
+		new Memory_ReadAddress(0x8000, 0xbfff, MRA_BANK2),
+		new Memory_ReadAddress(0xc000, 0xfbff, MRA_BANK3),
+		new Memory_ReadAddress(0xfc00, 0xfcff, MRA_BANK4),
+		new Memory_ReadAddress(0xfd00, 0xfd0f, c16_6551_port_r),
+		new Memory_ReadAddress(0xfd10, 0xfd1f, plus4_6529_port_r),
+		new Memory_ReadAddress(0xfd30, 0xfd3f, c16_6529_port_r), /* 6529 keyboard matrix */
 	#if 0
-		{ 0xfd40, 0xfd5f, sid6581_0_port_r }, /* sidcard, eoroidpro ... */
-		{0xfec0, 0xfedf, c16_iec9_port_r}, /* configured in c16_common_init */
-		{0xfee0, 0xfeff, c16_iec8_port_r}, /* configured in c16_common_init */
+		new Memory_ReadAddress( 0xfd40, 0xfd5f, sid6581_0_port_r ), /* sidcard, eoroidpro ... */
+		new Memory_ReadAddress(0xfec0, 0xfedf, c16_iec9_port_r), /* configured in c16_common_init */
+		new Memory_ReadAddress(0xfee0, 0xfeff, c16_iec8_port_r), /* configured in c16_common_init */
 	#endif
-		{0xff00, 0xff1f, ted7360_port_r},
-		{0xff20, 0xffff, MRA_BANK8},
-	/*	{ 0x10000, 0x3ffff, MRA_ROM }, */
-	MEMORY_END
+		new Memory_ReadAddress(0xff00, 0xff1f, ted7360_port_r),
+		new Memory_ReadAddress(0xff20, 0xffff, MRA_BANK8),
+	/*	new Memory_ReadAddress( 0x10000, 0x3ffff, MRA_ROM ), */
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( plus4_writemem )
-		{0x0000, 0x0001, c16_m7501_port_w, &c16_memory},
-		{0x0002, 0xfcff, MWA_RAM},
-		{0xfd00, 0xfd0f, c16_6551_port_w},
-		{0xfd10, 0xfd1f, plus4_6529_port_w},
-		{0xfd30, 0xfd3f, c16_6529_port_w}, /* 6529 keyboard matrix */
+	public static Memory_WriteAddress plus4_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress(0x0000, 0x0001, c16_m7501_port_w, c16_memory),
+		new Memory_WriteAddress(0x0002, 0xfcff, MWA_RAM),
+		new Memory_WriteAddress(0xfd00, 0xfd0f, c16_6551_port_w),
+		new Memory_WriteAddress(0xfd10, 0xfd1f, plus4_6529_port_w),
+		new Memory_WriteAddress(0xfd30, 0xfd3f, c16_6529_port_w), /* 6529 keyboard matrix */
 	#if 0
-		{0xfd40, 0xfd5f, sid6581_0_port_w},
+		new Memory_WriteAddress(0xfd40, 0xfd5f, sid6581_0_port_w),
 	#endif
-		{0xfdd0, 0xfddf, c16_select_roms}, /* rom chips selection */
+		new Memory_WriteAddress(0xfdd0, 0xfddf, c16_select_roms), /* rom chips selection */
 	#if 0
-		{0xfec0, 0xfedf, c16_iec9_port_w}, /*configured in c16_common_init */
-		{0xfee0, 0xfeff, c16_iec8_port_w}, /*configured in c16_common_init */
+		new Memory_WriteAddress(0xfec0, 0xfedf, c16_iec9_port_w), /*configured in c16_common_init */
+		new Memory_WriteAddress(0xfee0, 0xfeff, c16_iec8_port_w), /*configured in c16_common_init */
 	#endif
-		{0xff00, 0xff1f, ted7360_port_w},
-		{0xff20, 0xff3d, MWA_RAM},
-		{0xff3e, 0xff3e, c16_switch_to_rom},
-		{0xff3f, 0xff3f, plus4_switch_to_ram},
-		{0xff40, 0xffff, MWA_RAM},
-	//	{0x10000, 0x3ffff, MWA_ROM},
-	MEMORY_END
+		new Memory_WriteAddress(0xff00, 0xff1f, ted7360_port_w),
+		new Memory_WriteAddress(0xff20, 0xff3d, MWA_RAM),
+		new Memory_WriteAddress(0xff3e, 0xff3e, c16_switch_to_rom),
+		new Memory_WriteAddress(0xff3f, 0xff3f, plus4_switch_to_ram),
+		new Memory_WriteAddress(0xff40, 0xffff, MWA_RAM),
+	//	new Memory_WriteAddress(0x10000, 0x3ffff, MWA_ROM),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_READ_START( c364_readmem )
-		{0x0000, 0x0001, c16_m7501_port_r},
-		{0x0002, 0x7fff, MRA_RAM},
-		{0x8000, 0xbfff, MRA_BANK2},
-		{0xc000, 0xfbff, MRA_BANK3},
-		{0xfc00, 0xfcff, MRA_BANK4},
-		{0xfd00, 0xfd0f, c16_6551_port_r},
-		{0xfd10, 0xfd1f, plus4_6529_port_r},
-		{0xfd20, 0xfd2f, c364_speech_r },
-		{0xfd30, 0xfd3f, c16_6529_port_r}, /* 6529 keyboard matrix */
+	public static Memory_ReadAddress c364_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress(0x0000, 0x0001, c16_m7501_port_r),
+		new Memory_ReadAddress(0x0002, 0x7fff, MRA_RAM),
+		new Memory_ReadAddress(0x8000, 0xbfff, MRA_BANK2),
+		new Memory_ReadAddress(0xc000, 0xfbff, MRA_BANK3),
+		new Memory_ReadAddress(0xfc00, 0xfcff, MRA_BANK4),
+		new Memory_ReadAddress(0xfd00, 0xfd0f, c16_6551_port_r),
+		new Memory_ReadAddress(0xfd10, 0xfd1f, plus4_6529_port_r),
+		new Memory_ReadAddress(0xfd20, 0xfd2f, c364_speech_r ),
+		new Memory_ReadAddress(0xfd30, 0xfd3f, c16_6529_port_r), /* 6529 keyboard matrix */
 	#if 0
-		{ 0xfd40, 0xfd5f, sid6581_0_port_r }, /* sidcard, eoroidpro ... */
-		{0xfec0, 0xfedf, c16_iec9_port_r}, /* configured in c16_common_init */
-		{0xfee0, 0xfeff, c16_iec8_port_r}, /* configured in c16_common_init */
+		new Memory_ReadAddress( 0xfd40, 0xfd5f, sid6581_0_port_r ), /* sidcard, eoroidpro ... */
+		new Memory_ReadAddress(0xfec0, 0xfedf, c16_iec9_port_r), /* configured in c16_common_init */
+		new Memory_ReadAddress(0xfee0, 0xfeff, c16_iec8_port_r), /* configured in c16_common_init */
 	#endif
-		{0xff00, 0xff1f, ted7360_port_r},
-		{0xff20, 0xffff, MRA_BANK8},
-	/*	{ 0x10000, 0x3ffff, MRA_ROM }, */
-	MEMORY_END
+		new Memory_ReadAddress(0xff00, 0xff1f, ted7360_port_r),
+		new Memory_ReadAddress(0xff20, 0xffff, MRA_BANK8),
+	/*	new Memory_ReadAddress( 0x10000, 0x3ffff, MRA_ROM ), */
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( c364_writemem )
-		{0x0000, 0x0001, c16_m7501_port_w, &c16_memory},
-		{0x0002, 0xfcff, MWA_RAM},
-		{0xfd00, 0xfd0f, c16_6551_port_w},
-		{0xfd10, 0xfd1f, plus4_6529_port_w},
-		{0xfd20, 0xfd2f, c364_speech_w },
-		{0xfd30, 0xfd3f, c16_6529_port_w}, /* 6529 keyboard matrix */
+	public static Memory_WriteAddress c364_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress(0x0000, 0x0001, c16_m7501_port_w, c16_memory),
+		new Memory_WriteAddress(0x0002, 0xfcff, MWA_RAM),
+		new Memory_WriteAddress(0xfd00, 0xfd0f, c16_6551_port_w),
+		new Memory_WriteAddress(0xfd10, 0xfd1f, plus4_6529_port_w),
+		new Memory_WriteAddress(0xfd20, 0xfd2f, c364_speech_w ),
+		new Memory_WriteAddress(0xfd30, 0xfd3f, c16_6529_port_w), /* 6529 keyboard matrix */
 	#if 0
-		{0xfd40, 0xfd5f, sid6581_0_port_w},
+		new Memory_WriteAddress(0xfd40, 0xfd5f, sid6581_0_port_w),
 	#endif
-		{0xfdd0, 0xfddf, c16_select_roms}, /* rom chips selection */
+		new Memory_WriteAddress(0xfdd0, 0xfddf, c16_select_roms), /* rom chips selection */
 	#if 0
-		{0xfec0, 0xfedf, c16_iec9_port_w}, /*configured in c16_common_init */
-		{0xfee0, 0xfeff, c16_iec8_port_w}, /*configured in c16_common_init */
+		new Memory_WriteAddress(0xfec0, 0xfedf, c16_iec9_port_w), /*configured in c16_common_init */
+		new Memory_WriteAddress(0xfee0, 0xfeff, c16_iec8_port_w), /*configured in c16_common_init */
 	#endif
-		{0xff00, 0xff1f, ted7360_port_w},
-		{0xff20, 0xff3d, MWA_RAM},
-		{0xff3e, 0xff3e, c16_switch_to_rom},
-		{0xff3f, 0xff3f, plus4_switch_to_ram},
-		{0xff40, 0xffff, MWA_RAM},
-	//	{0x10000, 0x3ffff, MWA_ROM},
-	MEMORY_END
+		new Memory_WriteAddress(0xff00, 0xff1f, ted7360_port_w),
+		new Memory_WriteAddress(0xff20, 0xff3d, MWA_RAM),
+		new Memory_WriteAddress(0xff3e, 0xff3e, c16_switch_to_rom),
+		new Memory_WriteAddress(0xff3f, 0xff3f, plus4_switch_to_ram),
+		new Memory_WriteAddress(0xff40, 0xffff, MWA_RAM),
+	//	new Memory_WriteAddress(0x10000, 0x3ffff, MWA_ROM),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
 	#define DIPS_HELPER(bit, name, keycode) \
-	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, IP_JOY_NONE)
+	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, IP_JOY_NONE);
 	
 	#define DIPS_BOTH \
 		PORT_START \
-		PORT_BIT( 8, IP_ACTIVE_HIGH, IPT_BUTTON1) \
-		PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_8WAY )\
-		PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY )\
-		PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP | IPF_8WAY ) \
-		PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN | IPF_8WAY )\
-		PORT_BIT ( 0x7, 0x0,	 IPT_UNUSED )\
+		PORT_BIT( 8, IP_ACTIVE_HIGH, IPT_BUTTON1);\
+		PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT | IPF_8WAY );
+		PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_8WAY );
+		PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP | IPF_8WAY );\
+		PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN | IPF_8WAY );
+		PORT_BIT ( 0x7, 0x0,	 IPT_UNUSED );
 		PORT_START \
 		PORT_BITX( 8, IP_ACTIVE_HIGH, IPT_BUTTON1|IPF_PLAYER2, \
-			   "P2 Button", KEYCODE_LALT,JOYCODE_2_BUTTON1 )\
+			   "P2 Button", KEYCODE_LALT,JOYCODE_2_BUTTON1 );
 		PORT_BITX( 0x80, IP_ACTIVE_HIGH, \
 			   IPT_JOYSTICK_LEFT|IPF_PLAYER2 | IPF_8WAY,\
-			   "P2 Left", KEYCODE_DEL,JOYCODE_2_LEFT )\
+			   "P2 Left", KEYCODE_DEL,JOYCODE_2_LEFT );
 		PORT_BITX( 0x40, IP_ACTIVE_HIGH, \
 			   IPT_JOYSTICK_RIGHT|IPF_PLAYER2 | IPF_8WAY,\
-			   "P2 Right",KEYCODE_PGDN,JOYCODE_2_RIGHT )\
+			   "P2 Right",KEYCODE_PGDN,JOYCODE_2_RIGHT );
 		PORT_BITX( 0x20, IP_ACTIVE_HIGH, \
 			   IPT_JOYSTICK_UP|IPF_PLAYER2 | IPF_8WAY,"P2 Up", \
-			   KEYCODE_HOME, JOYCODE_2_UP)\
+			   KEYCODE_HOME, JOYCODE_2_UP);
 		PORT_BITX( 0x10, IP_ACTIVE_HIGH, \
 			   IPT_JOYSTICK_DOWN|IPF_PLAYER2 | IPF_8WAY,\
-			   "P2 Down", KEYCODE_END, JOYCODE_2_DOWN)\
-		PORT_BIT ( 0x7, 0x0,	 IPT_UNUSED )\
+			   "P2 Down", KEYCODE_END, JOYCODE_2_DOWN);
+		PORT_BIT ( 0x7, 0x0,	 IPT_UNUSED );
 		PORT_START\
 		DIPS_HELPER( 0x8000, "ESC", KEYCODE_TILDE)\
 		DIPS_HELPER( 0x4000, "1 !   BLK   ORNG", KEYCODE_1)\
@@ -398,11 +410,11 @@ public class c16
 		DIPS_HELPER( 0x0001, "STOP RUN", KEYCODE_TAB)\
 		PORT_START\
 		PORT_BITX ( 0x8000, 0, IPT_DIPSWITCH_NAME | IPF_TOGGLE, \
-					"SHIFT-Lock (switch)", KEYCODE_CAPSLOCK, CODE_NONE)\
-		PORT_DIPSETTING(  0, DEF_STR(Off) )\
-		PORT_DIPSETTING( 0x8000, DEF_STR(On) )\
+					"SHIFT-Lock (switch);, KEYCODE_CAPSLOCK, CODE_NONE)\
+		PORT_DIPSETTING(  0, DEF_STR(Off);\
+		PORT_DIPSETTING( 0x8000, DEF_STR(On);\
 		/*PORT_BITX( 0x8000, IP_ACTIVE_HIGH, IPF_TOGGLE,*/\
-				 /*"SHIFT-LOCK (switch)", KEYCODE_CAPSLOCK, IP_JOY_NONE)*/\
+				 /*"SHIFT-LOCK (switch);, KEYCODE_CAPSLOCK, IP_JOY_NONE)*/\
 		DIPS_HELPER( 0x4000, "A", KEYCODE_A)\
 		DIPS_HELPER( 0x2000, "S", KEYCODE_S)\
 		DIPS_HELPER( 0x1000, "D", KEYCODE_D)\
@@ -439,181 +451,181 @@ public class c16
 		DIPS_HELPER( 0x8000, "f3 f6", KEYCODE_F3)\
 		DIPS_HELPER( 0x4000, "HELP f7", KEYCODE_F4)\
 		PORT_BITX ( 0x2000, 0, IPT_DIPSWITCH_NAME|IPF_TOGGLE,\
-					"Swap Gameport 1 and 2", KEYCODE_NUMLOCK, CODE_NONE)\
-		PORT_DIPSETTING(  0, DEF_STR(No) )\
-		PORT_DIPSETTING( 0x2000, DEF_STR(Yes) )\
+					"Swap Gameport 1 and 2", KEYCODE_NUMLOCK, CODE_NONE);
+		PORT_DIPSETTING(  0, DEF_STR(No);\
+		PORT_DIPSETTING( 0x2000, DEF_STR(Yes);\
 	/*PORT_BITX( 0x2000, IP_ACTIVE_HIGH, IPF_TOGGLE,*/\
-	/*"Swap Gameport 1 and 2", KEYCODE_NUMLOCK, IP_JOY_NONE)*/\
+	/*"Swap Gameport 1 and 2", KEYCODE_NUMLOCK, IP_JOY_NONE);/\
 		DIPS_HELPER( 0x08, "Quickload", KEYCODE_F8)\
 		DIPS_HELPER( 0x04, "Tape Drive Play",       KEYCODE_F5)\
 		DIPS_HELPER( 0x02, "Tape Drive Record",     KEYCODE_F6)\
 		DIPS_HELPER( 0x01, "Tape Drive Stop",       KEYCODE_F7)\
 		PORT_START \
-		PORT_DIPNAME ( 0x80, 0x80, "Joystick 1")\
-		PORT_DIPSETTING(  0, DEF_STR( Off ) )\
-		PORT_DIPSETTING(	0x80, DEF_STR( On ) )\
-		PORT_DIPNAME ( 0x40, 0x40, "Joystick 2")\
-		PORT_DIPSETTING(  0, DEF_STR( Off ) )\
-		PORT_DIPSETTING(0x40, DEF_STR( On ) )\
-		PORT_DIPNAME   ( 0x20, 0x20, "Tape Drive/Device 1")\
-		PORT_DIPSETTING(  0, DEF_STR( Off ) )\
-		PORT_DIPSETTING(0x20, DEF_STR( On ) )\
-		PORT_DIPNAME   ( 0x10, 0x00, " Tape Sound")\
-		PORT_DIPSETTING(  0, DEF_STR( Off ) )\
-		PORT_DIPSETTING(0x10, DEF_STR( On ) )
+		PORT_DIPNAME ( 0x80, 0x80, "Joystick 1");
+		PORT_DIPSETTING(  0, DEF_STR( "Off") );\
+		PORT_DIPSETTING(	0x80, DEF_STR( "On") );\
+		PORT_DIPNAME ( 0x40, 0x40, "Joystick 2");
+		PORT_DIPSETTING(  0, DEF_STR( "Off") );\
+		PORT_DIPSETTING(0x40, DEF_STR( "On") );\
+		PORT_DIPNAME   ( 0x20, 0x20, "Tape Drive/Device 1");
+		PORT_DIPSETTING(  0, DEF_STR( "Off") );\
+		PORT_DIPSETTING(0x20, DEF_STR( "On") );\
+		PORT_DIPNAME   ( 0x10, 0x00, " Tape Sound");
+		PORT_DIPSETTING(  0, DEF_STR( "Off") );\
+		PORT_DIPSETTING(0x10, DEF_STR( "On") );
 	
 	INPUT_PORTS_START (c16)
 		DIPS_BOTH
 		PORT_START
-		PORT_BIT (0xc0, 0x0, IPT_UNUSED)		   /* no real floppy */
-		PORT_DIPNAME ( 0x38, 8, "Device 8")\
-		PORT_DIPSETTING(  0, "None" )\
-		PORT_DIPSETTING( 8, "C1551 Floppy Drive Simulation" )\
-		PORT_DIPSETTING( 0x18, "Serial Bus/VC1541 Floppy Drive Simulation" )\
-		PORT_DIPNAME ( 0x07, 0x01, "Device 9")\
-		PORT_DIPSETTING(  0, "None" )\
-		PORT_DIPSETTING(  1, "C1551 Floppy Drive Simulation" )\
-		PORT_DIPSETTING(  3, "Serial Bus/VC1541 Floppy Drive Simulation" )\
+		PORT_BIT (0xc0, 0x0, IPT_UNUSED);	   /* no real floppy */
+		PORT_DIPNAME ( 0x38, 8, "Device 8");
+		PORT_DIPSETTING(  0, "None" );
+		PORT_DIPSETTING( 8, "C1551 Floppy Drive Simulation" );
+		PORT_DIPSETTING( 0x18, "Serial Bus/VC1541 Floppy Drive Simulation" );
+		PORT_DIPNAME ( 0x07, 0x01, "Device 9");
+		PORT_DIPSETTING(  0, "None" );
+		PORT_DIPSETTING(  1, "C1551 Floppy Drive Simulation" );
+		PORT_DIPSETTING(  3, "Serial Bus/VC1541 Floppy Drive Simulation" );
 		PORT_START
-		PORT_DIPNAME ( 0x80, 0x80, "Sidcard")
-		PORT_DIPSETTING(  0, DEF_STR(Off) )
-		PORT_DIPSETTING( 0x80, DEF_STR(On) )
-		PORT_DIPNAME ( 0x40, 0, " SID 0xd400 hack")
-		PORT_DIPSETTING(  0, DEF_STR(Off) )
-		PORT_DIPSETTING( 0x40, DEF_STR(On) )
-		PORT_BIT (0x10, 0x0, IPT_UNUSED)		   /* pal */
-		PORT_BIT (0xc, 0x0, IPT_UNUSED) 	   /* c16 */
-		PORT_DIPNAME (3, 3, "Memory")
-		PORT_DIPSETTING (0, "16 KByte")
-		PORT_DIPSETTING (2, "32 KByte")
-		PORT_DIPSETTING (3, "64 KByte")
-	INPUT_PORTS_END
+		PORT_DIPNAME ( 0x80, 0x80, "Sidcard");
+		PORT_DIPSETTING(  0, DEF_STR(Off);
+		PORT_DIPSETTING( 0x80, DEF_STR(On);
+		PORT_DIPNAME ( 0x40, 0, " SID 0xd400 hack");
+		PORT_DIPSETTING(  0, DEF_STR(Off);
+		PORT_DIPSETTING( 0x40, DEF_STR(On);
+		PORT_BIT (0x10, 0x0, IPT_UNUSED);	   /* pal */
+		PORT_BIT (0xc, 0x0, IPT_UNUSED);	   /* c16 */
+		PORT_DIPNAME (3, 3, "Memory");
+		PORT_DIPSETTING (0, "16 KByte");
+		PORT_DIPSETTING (2, "32 KByte");
+		PORT_DIPSETTING (3, "64 KByte");
+	INPUT_PORTS_END(); }}; 
 	
 	INPUT_PORTS_START (c16c)
 		DIPS_BOTH
 		PORT_START
-		PORT_BIT (0xc0, 0x40, IPT_UNUSED)		   /* c1551 floppy */
-		PORT_BIT (0x38, 0x10, IPT_UNUSED)
-		PORT_BIT (0x7, 0x0, IPT_UNUSED)
+		PORT_BIT (0xc0, 0x40, IPT_UNUSED);	   /* c1551 floppy */
+		PORT_BIT (0x38, 0x10, IPT_UNUSED);
+		PORT_BIT (0x7, 0x0, IPT_UNUSED);
 		PORT_START
-		PORT_DIPNAME ( 0x80, 0x80, "Sidcard")
-		PORT_DIPSETTING(  0, DEF_STR(Off) )
-		PORT_DIPSETTING( 0x80, DEF_STR(On) )
-		PORT_DIPNAME ( 0x40, 0, " SID 0xd400 hack")
-		PORT_DIPSETTING(  0, DEF_STR(Off) )
-		PORT_DIPSETTING( 0x40, DEF_STR(On) )
-		PORT_BIT (0x10, 0x0, IPT_UNUSED)		   /* pal */
-		PORT_BIT (0xc, 0x0, IPT_UNUSED) 	   /* c16 */
-		PORT_DIPNAME (3, 3, "Memory")
-		PORT_DIPSETTING (0, "16 KByte")
-		PORT_DIPSETTING (2, "32 KByte")
-		PORT_DIPSETTING (3, "64 KByte")
-	INPUT_PORTS_END
+		PORT_DIPNAME ( 0x80, 0x80, "Sidcard");
+		PORT_DIPSETTING(  0, DEF_STR(Off);
+		PORT_DIPSETTING( 0x80, DEF_STR(On);
+		PORT_DIPNAME ( 0x40, 0, " SID 0xd400 hack");
+		PORT_DIPSETTING(  0, DEF_STR(Off);
+		PORT_DIPSETTING( 0x40, DEF_STR(On);
+		PORT_BIT (0x10, 0x0, IPT_UNUSED);	   /* pal */
+		PORT_BIT (0xc, 0x0, IPT_UNUSED);	   /* c16 */
+		PORT_DIPNAME (3, 3, "Memory");
+		PORT_DIPSETTING (0, "16 KByte");
+		PORT_DIPSETTING (2, "32 KByte");
+		PORT_DIPSETTING (3, "64 KByte");
+	INPUT_PORTS_END(); }}; 
 	
 	INPUT_PORTS_START (c16v)
 		DIPS_BOTH
 		PORT_START
-		PORT_BIT (0xc0, 0x80, IPT_UNUSED)		   /* vc1541 floppy */
-		PORT_BIT (0x38, 0x20, IPT_UNUSED)
-		PORT_BIT (0x7, 0x0, IPT_UNUSED)
+		PORT_BIT (0xc0, 0x80, IPT_UNUSED);	   /* vc1541 floppy */
+		PORT_BIT (0x38, 0x20, IPT_UNUSED);
+		PORT_BIT (0x7, 0x0, IPT_UNUSED);
 		PORT_START
-		PORT_DIPNAME ( 0x80, 0x80, "Sidcard")
-		PORT_DIPSETTING(  0, DEF_STR(Off) )
-		PORT_DIPSETTING( 0x80, DEF_STR(On) )
-		PORT_DIPNAME ( 0x40, 0, " SID 0xd400 hack")
-		PORT_DIPSETTING(  0, DEF_STR(Off) )
-		PORT_DIPSETTING( 0x40, DEF_STR(On) )
-		PORT_BIT (0x10, 0x0, IPT_UNUSED)		   /* pal */
-		PORT_BIT (0xc, 0x0, IPT_UNUSED) 	   /* c16 */
-		PORT_DIPNAME (3, 3, "Memory")
-		PORT_DIPSETTING (0, "16 KByte")
-		PORT_DIPSETTING (2, "32 KByte")
-		PORT_DIPSETTING (3, "64 KByte")
-	INPUT_PORTS_END
+		PORT_DIPNAME ( 0x80, 0x80, "Sidcard");
+		PORT_DIPSETTING(  0, DEF_STR(Off);
+		PORT_DIPSETTING( 0x80, DEF_STR(On);
+		PORT_DIPNAME ( 0x40, 0, " SID 0xd400 hack");
+		PORT_DIPSETTING(  0, DEF_STR(Off);
+		PORT_DIPSETTING( 0x40, DEF_STR(On);
+		PORT_BIT (0x10, 0x0, IPT_UNUSED);	   /* pal */
+		PORT_BIT (0xc, 0x0, IPT_UNUSED);	   /* c16 */
+		PORT_DIPNAME (3, 3, "Memory");
+		PORT_DIPSETTING (0, "16 KByte");
+		PORT_DIPSETTING (2, "32 KByte");
+		PORT_DIPSETTING (3, "64 KByte");
+	INPUT_PORTS_END(); }}; 
 	
 	INPUT_PORTS_START (plus4)
 		DIPS_BOTH
 		PORT_START
-		PORT_BIT (0xc0, 0x00, IPT_UNUSED)		   /* no real floppy */
-		PORT_DIPNAME ( 0x38, 0x8, "Device 8")\
-		PORT_DIPSETTING(  0, "None" )\
-		PORT_DIPSETTING(  8, "C1551 Floppy Drive Simulation" )\
-		PORT_DIPSETTING(  0x18, "Serial Bus/VC1541 Floppy Drive Simulation" )\
-		PORT_DIPNAME ( 0x07, 0x01, "Device 9")\
-		PORT_DIPSETTING(  0, "None" )\
-		PORT_DIPSETTING(  1, "C1551 Floppy Drive Simulation" )\
-		PORT_DIPSETTING(  3, "Serial Bus/VC1541 Floppy Drive Simulation" )\
+		PORT_BIT (0xc0, 0x00, IPT_UNUSED);	   /* no real floppy */
+		PORT_DIPNAME ( 0x38, 0x8, "Device 8");
+		PORT_DIPSETTING(  0, "None" );
+		PORT_DIPSETTING(  8, "C1551 Floppy Drive Simulation" );
+		PORT_DIPSETTING(  0x18, "Serial Bus/VC1541 Floppy Drive Simulation" );
+		PORT_DIPNAME ( 0x07, 0x01, "Device 9");
+		PORT_DIPSETTING(  0, "None" );
+		PORT_DIPSETTING(  1, "C1551 Floppy Drive Simulation" );
+		PORT_DIPSETTING(  3, "Serial Bus/VC1541 Floppy Drive Simulation" );
 		PORT_START
-		PORT_DIPNAME ( 0x80, 0x80, "Sidcard")
-		PORT_DIPSETTING(  0, DEF_STR(Off) )
-		PORT_DIPSETTING( 0x80, DEF_STR(On) )
-		PORT_DIPNAME ( 0x40, 0, " SID 0xd400 hack")
-		PORT_DIPSETTING(  0, DEF_STR(Off) )
-		PORT_DIPSETTING( 0x40, DEF_STR(On) )
-		PORT_BIT (0x10, 0x10, IPT_UNUSED)		   /* ntsc */
-		PORT_BIT (0xc, 0x4, IPT_UNUSED) 	   /* plus4 */
-		PORT_BIT (0x3, 0x3, IPT_UNUSED) 	   /* 64K Memory */
-	INPUT_PORTS_END
+		PORT_DIPNAME ( 0x80, 0x80, "Sidcard");
+		PORT_DIPSETTING(  0, DEF_STR(Off);
+		PORT_DIPSETTING( 0x80, DEF_STR(On);
+		PORT_DIPNAME ( 0x40, 0, " SID 0xd400 hack");
+		PORT_DIPSETTING(  0, DEF_STR(Off);
+		PORT_DIPSETTING( 0x40, DEF_STR(On);
+		PORT_BIT (0x10, 0x10, IPT_UNUSED);	   /* ntsc */
+		PORT_BIT (0xc, 0x4, IPT_UNUSED);	   /* plus4 */
+		PORT_BIT (0x3, 0x3, IPT_UNUSED);	   /* 64K Memory */
+	INPUT_PORTS_END(); }}; 
 	
 	INPUT_PORTS_START (plus4c)
 		DIPS_BOTH
 		PORT_START
-		PORT_BIT (0xc0, 0x40, IPT_UNUSED)		   /* c1551 floppy */
-		PORT_BIT (0x38, 0x10, IPT_UNUSED)
-		PORT_BIT (0x7, 0x0, IPT_UNUSED)
+		PORT_BIT (0xc0, 0x40, IPT_UNUSED);	   /* c1551 floppy */
+		PORT_BIT (0x38, 0x10, IPT_UNUSED);
+		PORT_BIT (0x7, 0x0, IPT_UNUSED);
 		PORT_START
-		PORT_DIPNAME ( 0x80, 0x80, "Sidcard")
-		PORT_DIPSETTING(  0, DEF_STR(Off) )
-		PORT_DIPSETTING( 0x80, DEF_STR(On) )
-		PORT_DIPNAME ( 0x40, 0, " SID 0xd400 hack")
-		PORT_DIPSETTING(  0, DEF_STR(Off) )
-		PORT_DIPSETTING( 0x40, DEF_STR(On) )
-		PORT_BIT (0x10, 0x10, IPT_UNUSED)		   /* ntsc */
-		PORT_BIT (0xc, 0x4, IPT_UNUSED) 	   /* plus4 */
-		PORT_BIT (0x3, 0x3, IPT_UNUSED) 	   /* 64K Memory */
-	INPUT_PORTS_END
+		PORT_DIPNAME ( 0x80, 0x80, "Sidcard");
+		PORT_DIPSETTING(  0, DEF_STR(Off);
+		PORT_DIPSETTING( 0x80, DEF_STR(On);
+		PORT_DIPNAME ( 0x40, 0, " SID 0xd400 hack");
+		PORT_DIPSETTING(  0, DEF_STR(Off);
+		PORT_DIPSETTING( 0x40, DEF_STR(On);
+		PORT_BIT (0x10, 0x10, IPT_UNUSED);	   /* ntsc */
+		PORT_BIT (0xc, 0x4, IPT_UNUSED);	   /* plus4 */
+		PORT_BIT (0x3, 0x3, IPT_UNUSED);	   /* 64K Memory */
+	INPUT_PORTS_END(); }}; 
 	
 	INPUT_PORTS_START (plus4v)
 		DIPS_BOTH
 		PORT_START
-		PORT_BIT (0xc0, 0x80, IPT_UNUSED)		   /* vc1541 floppy */
-		PORT_BIT (0x38, 0x20, IPT_UNUSED)
-		PORT_BIT (0x7, 0x0, IPT_UNUSED)
+		PORT_BIT (0xc0, 0x80, IPT_UNUSED);	   /* vc1541 floppy */
+		PORT_BIT (0x38, 0x20, IPT_UNUSED);
+		PORT_BIT (0x7, 0x0, IPT_UNUSED);
 		PORT_START
-		PORT_DIPNAME ( 0x80, 0x80, "Sidcard")
-		PORT_DIPSETTING(  0, DEF_STR(Off) )
-		PORT_DIPSETTING( 0x80, DEF_STR(On) )
-		PORT_DIPNAME ( 0x40, 0, " SID 0xd400 hack")
-		PORT_DIPSETTING(  0, DEF_STR(Off) )
-		PORT_DIPSETTING( 0x40, DEF_STR(On) )
-		PORT_BIT (0x10, 0x10, IPT_UNUSED)		   /* ntsc */
-		PORT_BIT (0xc, 0x4, IPT_UNUSED) 	   /* plus4 */
-		PORT_BIT (0x3, 0x3, IPT_UNUSED) 	   /* 64K Memory */
-	INPUT_PORTS_END
+		PORT_DIPNAME ( 0x80, 0x80, "Sidcard");
+		PORT_DIPSETTING(  0, DEF_STR(Off);
+		PORT_DIPSETTING( 0x80, DEF_STR(On);
+		PORT_DIPNAME ( 0x40, 0, " SID 0xd400 hack");
+		PORT_DIPSETTING(  0, DEF_STR(Off);
+		PORT_DIPSETTING( 0x40, DEF_STR(On);
+		PORT_BIT (0x10, 0x10, IPT_UNUSED);	   /* ntsc */
+		PORT_BIT (0xc, 0x4, IPT_UNUSED);	   /* plus4 */
+		PORT_BIT (0x3, 0x3, IPT_UNUSED);	   /* 64K Memory */
+	INPUT_PORTS_END(); }}; 
 	
 	#if 0
 	INPUT_PORTS_START (c364)
 		DIPS_BOTH
 		PORT_START
-		PORT_BIT (0xc0, 0x00, IPT_UNUSED)		   /* no real floppy */
-		PORT_DIPNAME ( 0x38, 0x10, "Device 8")\
-		PORT_DIPSETTING(  0, "None" )\
-		PORT_DIPSETTING(  8, "C1551 Floppy Drive Simulation" )\
-		PORT_DIPSETTING(  0x18, "Serial Bus/VC1541 Floppy Drive Simulation" )\
-		PORT_DIPNAME ( 0x03, 0x01, "Device 9")\
-		PORT_DIPSETTING(  0, "None" )\
-		PORT_DIPSETTING(  1, "C1551 Floppy Drive Simulation" )\
-		PORT_DIPSETTING(  3, "Serial Bus/VC1541 Floppy Drive Simulation" )\
+		PORT_BIT (0xc0, 0x00, IPT_UNUSED);	   /* no real floppy */
+		PORT_DIPNAME ( 0x38, 0x10, "Device 8");
+		PORT_DIPSETTING(  0, "None" );
+		PORT_DIPSETTING(  8, "C1551 Floppy Drive Simulation" );
+		PORT_DIPSETTING(  0x18, "Serial Bus/VC1541 Floppy Drive Simulation" );
+		PORT_DIPNAME ( 0x03, 0x01, "Device 9");
+		PORT_DIPSETTING(  0, "None" );
+		PORT_DIPSETTING(  1, "C1551 Floppy Drive Simulation" );
+		PORT_DIPSETTING(  3, "Serial Bus/VC1541 Floppy Drive Simulation" );
 		PORT_START
-		PORT_DIPNAME ( 0x80, 0x80, "Sidcard")
-		PORT_DIPSETTING(  0, DEF_STR(Off) )
-		PORT_DIPSETTING( 0x80, DEF_STR(On) )
-		PORT_DIPNAME ( 0x40, 0, " SID 0xd400 hack")
-		PORT_DIPSETTING(  0, DEF_STR(Off) )
-		PORT_DIPSETTING( 0x40, DEF_STR(On) )
-		PORT_BIT (0x10, 0x10, IPT_UNUSED)		   /* ntsc */
-		PORT_BIT (0xc, 0x8, IPT_UNUSED) 	   /* 364 */
-		PORT_BIT (0x3, 0x3, IPT_UNUSED) 	   /* 64K Memory */
+		PORT_DIPNAME ( 0x80, 0x80, "Sidcard");
+		PORT_DIPSETTING(  0, DEF_STR(Off);
+		PORT_DIPSETTING( 0x80, DEF_STR(On);
+		PORT_DIPNAME ( 0x40, 0, " SID 0xd400 hack");
+		PORT_DIPSETTING(  0, DEF_STR(Off);
+		PORT_DIPSETTING( 0x40, DEF_STR(On);
+		PORT_BIT (0x10, 0x10, IPT_UNUSED);	   /* ntsc */
+		PORT_BIT (0xc, 0x8, IPT_UNUSED);	   /* 364 */
+		PORT_BIT (0x3, 0x3, IPT_UNUSED);	   /* 64K Memory */
 		 /* numeric block
 			hardware wired to other keys?
 			@ + - =
@@ -622,7 +634,7 @@ public class c16
 			1 2 3
 			? ? ? ?
 			( 0 , . Return ???) */
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	#endif
 	
 	/* Initialise the c16 palette */
@@ -636,88 +648,88 @@ public class c16
 	   0x80 means pal version */
 	
 		 /* basic */
-		 ROM_LOAD ("318006.01", 0x10000, 0x4000, 0x74eaae87)
+		 ROM_LOAD ("318006.01", 0x10000, 0x4000, 0x74eaae87);
 	
 		 /* kernal pal */
-		 ROM_LOAD("318004.05",    0x14000, 0x4000, 0x71c07bd4)
-		 ROM_LOAD ("318004.03", 0x14000, 0x4000, 0x77bab934)
+		 ROM_LOAD("318004.05",    0x14000, 0x4000, 0x71c07bd4);
+		 ROM_LOAD ("318004.03", 0x14000, 0x4000, 0x77bab934);
 	
 		 /* kernal ntsc */
-		 ROM_LOAD ("318005.05", 0x14000, 0x4000, 0x70295038)
-		 ROM_LOAD ("318005.04", 0x14000, 0x4000, 0x799a633d)
+		 ROM_LOAD ("318005.05", 0x14000, 0x4000, 0x70295038);
+		 ROM_LOAD ("318005.04", 0x14000, 0x4000, 0x799a633d);
 	
 		 /* 3plus1 program */
-		 ROM_LOAD ("317053.01", 0x18000, 0x4000, 0x4fd1d8cb)
-		 ROM_LOAD ("317054.01", 0x1c000, 0x4000, 0x109de2fc)
+		 ROM_LOAD ("317053.01", 0x18000, 0x4000, 0x4fd1d8cb);
+		 ROM_LOAD ("317054.01", 0x1c000, 0x4000, 0x109de2fc);
 	
 		 /* same as 109de2fc, but saved from running machine, so
 			io area different ! */
-		 ROM_LOAD ("3plus1hi.rom", 0x1c000, 0x4000, 0xaab61387)
+		 ROM_LOAD ("3plus1hi.rom", 0x1c000, 0x4000, 0xaab61387);
 		 /* same but lo and hi in one rom */
-		 ROM_LOAD ("3plus1.rom", 0x18000, 0x8000, 0x7d464449)
+		 ROM_LOAD ("3plus1.rom", 0x18000, 0x8000, 0x7d464449);
 	#endif
 	
 	ROM_START (c16)
-		 ROM_REGION (0x40000, REGION_CPU1, 0)
-		 ROM_LOAD ("318006.01", 0x10000, 0x4000, 0x74eaae87)
-		 ROM_LOAD("318004.05",    0x14000, 0x4000, 0x71c07bd4)
-	ROM_END
+		 ROM_REGION (0x40000, REGION_CPU1, 0);
+		 ROM_LOAD ("318006.01", 0x10000, 0x4000, 0x74eaae87);
+		 ROM_LOAD("318004.05",    0x14000, 0x4000, 0x71c07bd4);
+	ROM_END(); }}; 
 	
 	ROM_START (c16hun)
-		 ROM_REGION (0x40000, REGION_CPU1, 0)
-		 ROM_LOAD ("318006.01", 0x10000, 0x4000, 0x74eaae87)
-		 ROM_LOAD("hungary.bin",    0x14000, 0x4000, 0x775f60c5)
-	ROM_END
+		 ROM_REGION (0x40000, REGION_CPU1, 0);
+		 ROM_LOAD ("318006.01", 0x10000, 0x4000, 0x74eaae87);
+		 ROM_LOAD("hungary.bin",    0x14000, 0x4000, 0x775f60c5);
+	ROM_END(); }}; 
 	
 	ROM_START (c16c)
-		 ROM_REGION (0x40000, REGION_CPU1, 0)
-		 ROM_LOAD ("318006.01", 0x10000, 0x4000, 0x74eaae87)
-		 ROM_LOAD("318004.05",    0x14000, 0x4000, 0x71c07bd4)
+		 ROM_REGION (0x40000, REGION_CPU1, 0);
+		 ROM_LOAD ("318006.01", 0x10000, 0x4000, 0x74eaae87);
+		 ROM_LOAD("318004.05",    0x14000, 0x4000, 0x71c07bd4);
 		 C1551_ROM (REGION_CPU2)
-	ROM_END
+	ROM_END(); }}; 
 	
 	ROM_START (c16v)
-		 ROM_REGION (0x40000, REGION_CPU1, 0)
-		 ROM_LOAD ("318006.01", 0x10000, 0x4000, 0x74eaae87)
-		 ROM_LOAD("318004.05",    0x14000, 0x4000, 0x71c07bd4)
+		 ROM_REGION (0x40000, REGION_CPU1, 0);
+		 ROM_LOAD ("318006.01", 0x10000, 0x4000, 0x74eaae87);
+		 ROM_LOAD("318004.05",    0x14000, 0x4000, 0x71c07bd4);
 		 VC1541_ROM (REGION_CPU2)
-	ROM_END
+	ROM_END(); }}; 
 	
 	ROM_START (plus4)
-		 ROM_REGION (0x40000, REGION_CPU1, 0)
-		 ROM_LOAD ("318006.01", 0x10000, 0x4000, 0x74eaae87)
-		 ROM_LOAD ("318005.05", 0x14000, 0x4000, 0x70295038)
-		 ROM_LOAD ("317053.01", 0x18000, 0x4000, 0x4fd1d8cb)
-		 ROM_LOAD ("317054.01", 0x1c000, 0x4000, 0x109de2fc)
-	ROM_END
+		 ROM_REGION (0x40000, REGION_CPU1, 0);
+		 ROM_LOAD ("318006.01", 0x10000, 0x4000, 0x74eaae87);
+		 ROM_LOAD ("318005.05", 0x14000, 0x4000, 0x70295038);
+		 ROM_LOAD ("317053.01", 0x18000, 0x4000, 0x4fd1d8cb);
+		 ROM_LOAD ("317054.01", 0x1c000, 0x4000, 0x109de2fc);
+	ROM_END(); }}; 
 	
 	ROM_START (plus4c)
-		 ROM_REGION (0x40000, REGION_CPU1, 0)
-		 ROM_LOAD ("318006.01", 0x10000, 0x4000, 0x74eaae87)
-		 ROM_LOAD ("318005.05", 0x14000, 0x4000, 0x70295038)
-		 ROM_LOAD ("317053.01", 0x18000, 0x4000, 0x4fd1d8cb)
-		 ROM_LOAD ("317054.01", 0x1c000, 0x4000, 0x109de2fc)
+		 ROM_REGION (0x40000, REGION_CPU1, 0);
+		 ROM_LOAD ("318006.01", 0x10000, 0x4000, 0x74eaae87);
+		 ROM_LOAD ("318005.05", 0x14000, 0x4000, 0x70295038);
+		 ROM_LOAD ("317053.01", 0x18000, 0x4000, 0x4fd1d8cb);
+		 ROM_LOAD ("317054.01", 0x1c000, 0x4000, 0x109de2fc);
 		 C1551_ROM (REGION_CPU2)
-	ROM_END
+	ROM_END(); }}; 
 	
 	ROM_START (plus4v)
-		 ROM_REGION (0x40000, REGION_CPU1, 0)
-		 ROM_LOAD ("318006.01", 0x10000, 0x4000, 0x74eaae87)
-		 ROM_LOAD ("318005.05", 0x14000, 0x4000, 0x70295038)
-		 ROM_LOAD ("317053.01", 0x18000, 0x4000, 0x4fd1d8cb)
-		 ROM_LOAD ("317054.01", 0x1c000, 0x4000, 0x109de2fc)
+		 ROM_REGION (0x40000, REGION_CPU1, 0);
+		 ROM_LOAD ("318006.01", 0x10000, 0x4000, 0x74eaae87);
+		 ROM_LOAD ("318005.05", 0x14000, 0x4000, 0x70295038);
+		 ROM_LOAD ("317053.01", 0x18000, 0x4000, 0x4fd1d8cb);
+		 ROM_LOAD ("317054.01", 0x1c000, 0x4000, 0x109de2fc);
 		 VC1541_ROM (REGION_CPU2)
-	ROM_END
+	ROM_END(); }}; 
 	
 	ROM_START (c364)
-		 ROM_REGION (0x40000, REGION_CPU1, 0)
-		 ROM_LOAD ("318006.01", 0x10000, 0x4000, 0x74eaae87)
-		 ROM_LOAD ("kern364p.bin", 0x14000, 0x4000, 0x84fd4f7a)
-		 ROM_LOAD ("317053.01", 0x18000, 0x4000, 0x4fd1d8cb)
-		 ROM_LOAD ("317054.01", 0x1c000, 0x4000, 0x109de2fc)
+		 ROM_REGION (0x40000, REGION_CPU1, 0);
+		 ROM_LOAD ("318006.01", 0x10000, 0x4000, 0x74eaae87);
+		 ROM_LOAD ("kern364p.bin", 0x14000, 0x4000, 0x84fd4f7a);
+		 ROM_LOAD ("317053.01", 0x18000, 0x4000, 0x4fd1d8cb);
+		 ROM_LOAD ("317054.01", 0x1c000, 0x4000, 0x109de2fc);
 		 /* at address 0x20000 not so good */
-		 ROM_LOAD ("spk3cc4.bin", 0x28000, 0x4000, 0x5227c2ee)
-	ROM_END
+		 ROM_LOAD ("spk3cc4.bin", 0x28000, 0x4000, 0x5227c2ee);
+	ROM_END(); }}; 
 	
 	static SID6581_interface sidc16_sound_interface =
 	{

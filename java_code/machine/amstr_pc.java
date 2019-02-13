@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -146,7 +146,7 @@ public class amstr_pc
 	   7d 01 01 mouse button right
 	*/
 	
-	WRITE_HANDLER( pc1640_port60_w )
+	public static WriteHandlerPtr pc1640_port60_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		switch (offset) {
 		case 1:
@@ -170,10 +170,10 @@ public class amstr_pc
 		}
 		
 		logerror("pc1640 write %.2x %.2x\n",offset,data);
-	}
+	} };
 	
 	
-	READ_HANDLER( pc1640_port60_r )
+	public static ReadHandlerPtr pc1640_port60_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int data=0;
 		switch (offset) {
@@ -192,18 +192,18 @@ public class amstr_pc
 			break;
 		}
 		return data;
-	}
+	} };
 	
-	READ_HANDLER( pc200_port378_r )
+	public static ReadHandlerPtr pc200_port378_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int data=pc_parallelport1_r(offset);
 		if (offset==1) data=(data&~7)|(input_port_1_r(0)&7);
 		if (offset==2) data=(data&~0xe0)|(input_port_1_r(0)&0xe0);
 		return data;
-	}
+	} };
 	
 	
-	READ_HANDLER( pc1640_port378_r )
+	public static ReadHandlerPtr pc1640_port378_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int data=pc_parallelport1_r(offset);
 		if (offset==1) data=(data&~7)|(input_port_1_r(0)&7);
@@ -222,46 +222,46 @@ public class amstr_pc
 			}
 		}
 		return data;
-	}
+	} };
 	
-	READ_HANDLER( pc1640_port3d0_r )
+	public static ReadHandlerPtr pc1640_port3d0_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		if (offset==0xa) pc1640.dipstate=0;
 		return vga_port_03d0_r(offset);
-	}
+	} };
 	
-	READ_HANDLER( pc1640_port4278_r )
+	public static ReadHandlerPtr pc1640_port4278_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		if (offset==2) pc1640.dipstate=1;
 		// read parallelport
 		return 0;
-	}
+	} };
 	
-	READ_HANDLER( pc1640_port278_r )
+	public static ReadHandlerPtr pc1640_port278_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		if ((offset==2)||(offset==0)) pc1640.dipstate=2;
 		// read parallelport
 		return 0;
-	}
+	} };
 	
-	READ_HANDLER( pc1640_mouse_x_r )
+	public static ReadHandlerPtr pc1640_mouse_x_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return pc1640.mouse.x-input_port_13_r(0);
-	}
+	} };
 	
-	READ_HANDLER( pc1640_mouse_y_r )
+	public static ReadHandlerPtr pc1640_mouse_y_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return pc1640.mouse.y-input_port_14_r(0);
-	}
+	} };
 	
-	WRITE_HANDLER( pc1640_mouse_x_w )
+	public static WriteHandlerPtr pc1640_mouse_x_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		pc1640.mouse.x=data+input_port_13_r(0);
-	}
+	} };
 	
-	WRITE_HANDLER( pc1640_mouse_y_w )
+	public static WriteHandlerPtr pc1640_mouse_y_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		pc1640.mouse.y=data+input_port_14_r(0);
-	}
+	} };
 	
 }

@@ -14,7 +14,7 @@
 
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -322,7 +322,7 @@ public class a2600
 	  RIOT Reads.
 	
 	***************************************************************************/
-	READ_HANDLER( a2600_riot_r )
+	public static ReadHandlerPtr a2600_riot_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		UINT8 *ROM = memory_region(REGION_CPU1);
 		INT32 riotdiff = (global_tia_cycle + TIME_TO_CYCLES(0, timer_timeelapsed(HSYNC_timer))) - previous_tia_cycle;
@@ -348,14 +348,14 @@ public class a2600
 		}
 	
 		return ROM[offset];
-	}
+	} };
 	
 	/***************************************************************************
 	
 	  RIOT Writes.
 	
 	***************************************************************************/
-	WRITE_HANDLER( a2600_riot_w )
+	public static WriteHandlerPtr a2600_riot_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	
 		UINT8 *ROM = memory_region(REGION_CPU1);
@@ -405,7 +405,7 @@ public class a2600
 		}
 	
 		ROM[offset] = data;
-	}
+	} };
 	
 	
 	/***************************************************************************
@@ -413,7 +413,7 @@ public class a2600
 	  TIA Reads.
 	
 	***************************************************************************/
-	READ_HANDLER( a2600_TIA_r )
+	public static ReadHandlerPtr a2600_TIA_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		UINT8 *ROM = memory_region(REGION_CPU1);
 		unsigned int pc;
@@ -483,7 +483,7 @@ public class a2600
 		}
 		return ROM[offset];
 	
-	}
+	} };
 	
 	
 	/***************************************************************************
@@ -491,7 +491,7 @@ public class a2600
 	  TIA Writes.
 	
 	***************************************************************************/
-	WRITE_HANDLER( a2600_TIA_w )
+	public static WriteHandlerPtr a2600_TIA_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		UINT8 *ROM = memory_region(REGION_CPU1);
 	
@@ -830,7 +830,7 @@ public class a2600
 			/* all others */
 			ROM[offset] = data;
 		}
-	}
+	} };
 	
 	
 	/***************************************************************************
@@ -1091,7 +1091,7 @@ public class a2600
 	
 						if(TIA_pixel_clock == 4)
 						{
-							if(!PF_Ref)
+							if (PF_Ref == 0)
 							{
 								SHIFT_RIGHT20(TIA_pf_mask)
 							}
@@ -1120,10 +1120,10 @@ public class a2600
 			if ((TIA_player_0_mask_tmp & 0x01) && (TIA_reset_player_0) && (((HSYNC_Period - 1) >= (plyr0)) && ((HSYNC_Period - 1) <= ((TIA_reset_player_0 + 7) + TIA_motion_player_0 + TIA_player_0_offset))) && (!TIA_player_0_finished))
 			{
 				//logerror("motion player 0 %d \n", TIA_motion_player_0);
-				if (!TIA_player_0_reflect)
+				if (TIA_player_0_reflect == 0)
 				{
 					UINT8 tmpbit = 0;
-					if (!TIA_player_delay_0)
+					if (TIA_player_delay_0 == 0)
 					{
 						if ((TIA_player_pattern_0_tmp & 0x80))
 						{
@@ -1141,13 +1141,13 @@ public class a2600
 					}
 					//logerror("Hsync Period = %02x\n", HSYNC_Period);
 					TIA_player_0_pixel_delay_tmp--;
-					if(!TIA_player_0_pixel_delay_tmp)
+					if (TIA_player_0_pixel_delay_tmp == 0)
 					{
 						TIA_player_0_pixel_delay_tmp = TIA_player_0_pixel_delay;
 						SHIFT_LEFT8(TIA_player_pattern_0_tmp)
 						SHIFT_LEFT8(TIA_player_pattern_0_delayed)
 						TIA_player_0_tick--;
-						if (!TIA_player_0_tick)
+						if (TIA_player_0_tick == 0)
 						{
 						TIA_player_0_tick = 8;
 						}
@@ -1156,7 +1156,7 @@ public class a2600
 				else
 				{
 					UINT8 tmpbit = 0;
-					if (!TIA_player_delay_0)
+					if (TIA_player_delay_0 == 0)
 					{
 						if ((TIA_player_pattern_0_tmp & 0x01))
 						{
@@ -1174,13 +1174,13 @@ public class a2600
 					}
 					//logerror("Hsync Period = %02x\n", HSYNC_Period);
 					TIA_player_0_pixel_delay_tmp--;
-					if(!TIA_player_0_pixel_delay_tmp)
+					if (TIA_player_0_pixel_delay_tmp == 0)
 					{
 						TIA_player_0_pixel_delay_tmp = TIA_player_0_pixel_delay;
 						SHIFT_RIGHT8(TIA_player_pattern_0_tmp)
 						SHIFT_RIGHT8(TIA_player_pattern_0_delayed)
 						TIA_player_0_tick--;
-						if (!TIA_player_0_tick)
+						if (TIA_player_0_tick == 0)
 						{
 							TIA_player_0_tick = 8;
 						}
@@ -1194,10 +1194,10 @@ public class a2600
 			if ((TIA_player_1_mask_tmp & 0x01) && (TIA_reset_player_1) && (((HSYNC_Period - 1) >= (TIA_reset_player_1 + TIA_motion_player_1 + TIA_player_1_offset)) && ((HSYNC_Period - 1) <= ((TIA_reset_player_1 + 7) + TIA_motion_player_1 + TIA_player_1_offset))) && (!TIA_player_1_finished))
 			{
 				//logerror("motion player 1 %d \n", TIA_motion_player_1);
-				if (!TIA_player_1_reflect)
+				if (TIA_player_1_reflect == 0)
 				{
 					UINT8 tmpbit = 0;
-					if (!TIA_player_delay_1)
+					if (TIA_player_delay_1 == 0)
 					{
 						if ((TIA_player_pattern_1_tmp & 0x80))
 						{
@@ -1215,13 +1215,13 @@ public class a2600
 					}
 					//logerror("Hsync Period = %02x\n", HSYNC_Period);
 					TIA_player_1_pixel_delay_tmp--;
-					if(!TIA_player_1_pixel_delay_tmp)
+					if (TIA_player_1_pixel_delay_tmp == 0)
 					{
 						TIA_player_1_pixel_delay_tmp = TIA_player_1_pixel_delay;
 						SHIFT_LEFT8(TIA_player_pattern_1_tmp)
 						SHIFT_LEFT8(TIA_player_pattern_1_delayed)
 						TIA_player_1_tick--;
-						if (!TIA_player_1_tick)
+						if (TIA_player_1_tick == 0)
 						{
 						TIA_player_1_tick = 8;
 						}
@@ -1230,7 +1230,7 @@ public class a2600
 				else
 				{
 					UINT8 tmpbit = 0;
-					if (!TIA_player_delay_1)
+					if (TIA_player_delay_1 == 0)
 					{
 						if ((TIA_player_pattern_1_tmp & 0x01))
 						{
@@ -1248,13 +1248,13 @@ public class a2600
 					}
 					//logerror("Hsync Period = %02x\n", HSYNC_Period);
 					TIA_player_1_pixel_delay_tmp--;
-					if(!TIA_player_1_pixel_delay_tmp)
+					if (TIA_player_1_pixel_delay_tmp == 0)
 					{
 						TIA_player_1_pixel_delay_tmp = TIA_player_1_pixel_delay;
 						SHIFT_RIGHT8(TIA_player_pattern_1_tmp)
 						SHIFT_RIGHT8(TIA_player_pattern_1_delayed)
 						TIA_player_1_tick--;
-						if (!TIA_player_1_tick)
+						if (TIA_player_1_tick == 0)
 						{
 							TIA_player_1_tick = 8;
 						}
@@ -1272,7 +1272,7 @@ public class a2600
 					SHIFT_RIGHT10(TIA_player_0_mask_tmp)
 					TIA_player_0_mask_bit--;
 					TIA_player_0_block = 0;
-					if(!TIA_player_0_mask_bit)
+					if (TIA_player_0_mask_bit == 0)
 					{
 						TIA_player_0_mask_bit = 10;
 						TIA_player_0_finished = 1;
@@ -1291,7 +1291,7 @@ public class a2600
 					SHIFT_RIGHT10(TIA_player_1_mask_tmp)
 					TIA_player_1_mask_bit--;
 					TIA_player_1_block = 0;
-					if(!TIA_player_1_mask_bit)
+					if (TIA_player_1_mask_bit == 0)
 					{
 						TIA_player_1_mask_bit = 10;
 						TIA_player_1_finished = 1;
@@ -1305,12 +1305,12 @@ public class a2600
 			}
 	
 			/* Deal with the RIOT Timer */
-			if (!HSYNC_colour_clock)
+			if (HSYNC_colour_clock == 0)
 			{
 				if (TMR_Period)
 				{
 					TMR_tmp--;
-					if (!TMR_tmp)
+					if (TMR_tmp == 0)
 					{
 						TMR_tmp = TMR_Period;
 						TMR_Intim--;

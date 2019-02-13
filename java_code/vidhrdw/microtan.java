@@ -13,7 +13,7 @@
  ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -51,7 +51,7 @@ public class microtan
 		colortable[1] = 1;
 	}
 	
-	WRITE_HANDLER( microtan_videoram_w )
+	public static WriteHandlerPtr microtan_videoram_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		if (videoram[offset] != data || microtan_chunky_buffer[offset] != microtan_chunky_graphics)
 		{
@@ -59,7 +59,7 @@ public class microtan
 			microtan_chunky_buffer[offset] = microtan_chunky_graphics;
 			dirtybuffer[offset] = 1;
 		}
-	}
+	} };
 	
 	int microtan_vh_start(void)
 	{

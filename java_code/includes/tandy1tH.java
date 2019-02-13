@@ -7,11 +7,11 @@ READ_HANDLER(tandy1000_pio_r);
 void tandy1000_nvram_handler(void* file, int write);
 
 #define T1000_HELPER(bit,text,key1,key2) \
-	PORT_BITX( bit, 0x0000, IPT_KEYBOARD, text, key1, key2 )
+	PORT_BITX( bit, 0x0000, IPT_KEYBOARD, text, key1, key2 );
 
 #define TANDY1000_KEYB \
 	PORT_START	/* IN4 */\
-	PORT_BIT ( 0x0001, 0x0000, IPT_UNUSED ) 	/* unused scancode 0 */\
+	PORT_BIT ( 0x0001, 0x0000, IPT_UNUSED );	/* unused scancode 0 */\
 	T1000_HELPER( 0x0002, "Esc",          KEYCODE_ESC,        CODE_NONE ) /* Esc                         01  81 */\
 	T1000_HELPER( 0x0004, "1 !",          KEYCODE_1,          CODE_NONE ) /* 1                           02  82 */\
 	T1000_HELPER( 0x0008, "2 @",          KEYCODE_2,          CODE_NONE ) /* 2                           03  83 */\
@@ -114,8 +114,8 @@ void tandy1000_nvram_handler(void* file, int write);
 	T1000_HELPER( 0x0400, "F12",		  KEYCODE_F12,        CODE_NONE ) /* F12                         5a  Da */\
 		\
 	PORT_START	/* IN10 */\
-	PORT_BIT ( 0xffff, 0x0000, IPT_UNUSED )\
+	PORT_BIT ( 0xffff, 0x0000, IPT_UNUSED );
 		\
 	PORT_START	/* IN11 */\
-	PORT_BIT ( 0xffff, 0x0000, IPT_UNUSED )
+	PORT_BIT ( 0xffff, 0x0000, IPT_UNUSED );
 

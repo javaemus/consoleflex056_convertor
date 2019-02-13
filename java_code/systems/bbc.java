@@ -11,7 +11,7 @@
 ******************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -718,135 +718,135 @@ public class bbc
 		memcpy(sys_colortable,bbc_colour_table,sizeof(bbc_colour_table));
 	}
 	
-	INPUT_PORTS_START(bbca)
+	static InputPortPtr input_ports_bbca = new InputPortPtr(){ public void handler() { 
 	
 		/* KEYBOARD COLUMN 0 */
 		PORT_START
-		PORT_BITX(0x01,  IP_ACTIVE_LOW, IPT_KEYBOARD, "SHIFT",      KEYCODE_RSHIFT,   IP_JOY_NONE)
-		PORT_BITX(0x01,  IP_ACTIVE_LOW, IPT_KEYBOARD, "SHIFT",      KEYCODE_LSHIFT,   IP_JOY_NONE)
-		PORT_BITX(0x02,  IP_ACTIVE_LOW, IPT_KEYBOARD, "Q",          KEYCODE_Q,        IP_JOY_NONE)
-		PORT_BITX(0x04,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F0",         KEYCODE_0_PAD,    IP_JOY_NONE)
-		PORT_BITX(0x08,  IP_ACTIVE_LOW, IPT_KEYBOARD, "1",          KEYCODE_1,        IP_JOY_NONE)
-		PORT_BITX(0x10,  IP_ACTIVE_LOW, IPT_KEYBOARD, "CAPS LOCK",  KEYCODE_CAPSLOCK, IP_JOY_NONE)
-		PORT_BITX(0x20,  IP_ACTIVE_LOW, IPT_KEYBOARD, "SHIFT LOCK", KEYCODE_LALT,     IP_JOY_NONE)
-		PORT_BITX(0x40,  IP_ACTIVE_LOW, IPT_KEYBOARD, "TAB",        KEYCODE_TAB,      IP_JOY_NONE)
-		PORT_BITX(0x80,  IP_ACTIVE_LOW, IPT_KEYBOARD, "ESCAPE",     KEYCODE_ESC,      IP_JOY_NONE)
+		PORT_BITX(0x01,  IP_ACTIVE_LOW, IPT_KEYBOARD, "SHIFT",      KEYCODE_RSHIFT,   IP_JOY_NONE);
+		PORT_BITX(0x01,  IP_ACTIVE_LOW, IPT_KEYBOARD, "SHIFT",      KEYCODE_LSHIFT,   IP_JOY_NONE);
+		PORT_BITX(0x02,  IP_ACTIVE_LOW, IPT_KEYBOARD, "Q",          KEYCODE_Q,        IP_JOY_NONE);
+		PORT_BITX(0x04,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F0",         KEYCODE_0_PAD,    IP_JOY_NONE);
+		PORT_BITX(0x08,  IP_ACTIVE_LOW, IPT_KEYBOARD, "1",          KEYCODE_1,        IP_JOY_NONE);
+		PORT_BITX(0x10,  IP_ACTIVE_LOW, IPT_KEYBOARD, "CAPS LOCK",  KEYCODE_CAPSLOCK, IP_JOY_NONE);
+		PORT_BITX(0x20,  IP_ACTIVE_LOW, IPT_KEYBOARD, "SHIFT LOCK", KEYCODE_LALT,     IP_JOY_NONE);
+		PORT_BITX(0x40,  IP_ACTIVE_LOW, IPT_KEYBOARD, "TAB",        KEYCODE_TAB,      IP_JOY_NONE);
+		PORT_BITX(0x80,  IP_ACTIVE_LOW, IPT_KEYBOARD, "ESCAPE",     KEYCODE_ESC,      IP_JOY_NONE);
 	
 		/* KEYBOARD COLUMN 1 */
 		PORT_START
-		PORT_BITX(0x01,  IP_ACTIVE_LOW, IPT_KEYBOARD, "CTRL",       KEYCODE_LCONTROL, IP_JOY_NONE)
-		PORT_BITX(0x02,  IP_ACTIVE_LOW, IPT_KEYBOARD, "3",          KEYCODE_3,        IP_JOY_NONE)
-		PORT_BITX(0x04,  IP_ACTIVE_LOW, IPT_KEYBOARD, "W",          KEYCODE_W,        IP_JOY_NONE)
-		PORT_BITX(0x08,  IP_ACTIVE_LOW, IPT_KEYBOARD, "2",          KEYCODE_2,        IP_JOY_NONE)
-		PORT_BITX(0x10,  IP_ACTIVE_LOW, IPT_KEYBOARD, "A",          KEYCODE_A,        IP_JOY_NONE)
-		PORT_BITX(0x20,  IP_ACTIVE_LOW, IPT_KEYBOARD, "S",          KEYCODE_S,        IP_JOY_NONE)
-		PORT_BITX(0x40,  IP_ACTIVE_LOW, IPT_KEYBOARD, "Z",          KEYCODE_Z,        IP_JOY_NONE)
-		PORT_BITX(0x80,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F1",         KEYCODE_1_PAD,    IP_JOY_NONE)
+		PORT_BITX(0x01,  IP_ACTIVE_LOW, IPT_KEYBOARD, "CTRL",       KEYCODE_LCONTROL, IP_JOY_NONE);
+		PORT_BITX(0x02,  IP_ACTIVE_LOW, IPT_KEYBOARD, "3",          KEYCODE_3,        IP_JOY_NONE);
+		PORT_BITX(0x04,  IP_ACTIVE_LOW, IPT_KEYBOARD, "W",          KEYCODE_W,        IP_JOY_NONE);
+		PORT_BITX(0x08,  IP_ACTIVE_LOW, IPT_KEYBOARD, "2",          KEYCODE_2,        IP_JOY_NONE);
+		PORT_BITX(0x10,  IP_ACTIVE_LOW, IPT_KEYBOARD, "A",          KEYCODE_A,        IP_JOY_NONE);
+		PORT_BITX(0x20,  IP_ACTIVE_LOW, IPT_KEYBOARD, "S",          KEYCODE_S,        IP_JOY_NONE);
+		PORT_BITX(0x40,  IP_ACTIVE_LOW, IPT_KEYBOARD, "Z",          KEYCODE_Z,        IP_JOY_NONE);
+		PORT_BITX(0x80,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F1",         KEYCODE_1_PAD,    IP_JOY_NONE);
 	
 		/* KEYBOARD COLUMN 2 */
 		PORT_START
-		PORT_BITX(0x01,0x01,IPT_DIPSWITCH_NAME | IPF_TOGGLE, "DIP 8 (Not Used)", IP_KEY_NONE, IP_JOY_NONE)
-		PORT_DIPSETTING(0x00,DEF_STR( Off ))
-		PORT_DIPSETTING(0x01,DEF_STR( On ))
-		PORT_BITX(0x02,  IP_ACTIVE_LOW, IPT_KEYBOARD, "4",          KEYCODE_4,        IP_JOY_NONE)
-		PORT_BITX(0x04,  IP_ACTIVE_LOW, IPT_KEYBOARD, "E",          KEYCODE_E,        IP_JOY_NONE)
-		PORT_BITX(0x08,  IP_ACTIVE_LOW, IPT_KEYBOARD, "D",          KEYCODE_D,        IP_JOY_NONE)
-		PORT_BITX(0x10,  IP_ACTIVE_LOW, IPT_KEYBOARD, "X",          KEYCODE_X,        IP_JOY_NONE)
-		PORT_BITX(0x20,  IP_ACTIVE_LOW, IPT_KEYBOARD, "C",          KEYCODE_C,        IP_JOY_NONE)
-		PORT_BITX(0x40,  IP_ACTIVE_LOW, IPT_KEYBOARD, "SPACE",      KEYCODE_SPACE,    IP_JOY_NONE)
-		PORT_BITX(0x80,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F2",         KEYCODE_2_PAD,    IP_JOY_NONE)
+		PORT_BITX(0x01,0x01,IPT_DIPSWITCH_NAME | IPF_TOGGLE, "DIP 8 (Not Used);, IP_KEY_NONE, IP_JOY_NONE)
+		PORT_DIPSETTING(0x00,DEF_STR( "Off") );
+		PORT_DIPSETTING(0x01,DEF_STR( "On") );
+		PORT_BITX(0x02,  IP_ACTIVE_LOW, IPT_KEYBOARD, "4",          KEYCODE_4,        IP_JOY_NONE);
+		PORT_BITX(0x04,  IP_ACTIVE_LOW, IPT_KEYBOARD, "E",          KEYCODE_E,        IP_JOY_NONE);
+		PORT_BITX(0x08,  IP_ACTIVE_LOW, IPT_KEYBOARD, "D",          KEYCODE_D,        IP_JOY_NONE);
+		PORT_BITX(0x10,  IP_ACTIVE_LOW, IPT_KEYBOARD, "X",          KEYCODE_X,        IP_JOY_NONE);
+		PORT_BITX(0x20,  IP_ACTIVE_LOW, IPT_KEYBOARD, "C",          KEYCODE_C,        IP_JOY_NONE);
+		PORT_BITX(0x40,  IP_ACTIVE_LOW, IPT_KEYBOARD, "SPACE",      KEYCODE_SPACE,    IP_JOY_NONE);
+		PORT_BITX(0x80,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F2",         KEYCODE_2_PAD,    IP_JOY_NONE);
 	
 		/* KEYBOARD COLUMN 3 */
 		PORT_START
-		PORT_BITX(0x01,0x01,IPT_DIPSWITCH_NAME | IPF_TOGGLE, "DIP 7 (Not Used)", IP_KEY_NONE, IP_JOY_NONE)
-		PORT_DIPSETTING(0x00,DEF_STR( Off ))
-		PORT_DIPSETTING(0x01,DEF_STR( On ))
-		PORT_BITX(0x02,  IP_ACTIVE_LOW, IPT_KEYBOARD, "5",          KEYCODE_5,        IP_JOY_NONE)
-		PORT_BITX(0x04,  IP_ACTIVE_LOW, IPT_KEYBOARD, "T",          KEYCODE_T,        IP_JOY_NONE)
-		PORT_BITX(0x08,  IP_ACTIVE_LOW, IPT_KEYBOARD, "R",          KEYCODE_R,        IP_JOY_NONE)
-		PORT_BITX(0x10,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F",          KEYCODE_F,        IP_JOY_NONE)
-		PORT_BITX(0x20,  IP_ACTIVE_LOW, IPT_KEYBOARD, "G",          KEYCODE_G,        IP_JOY_NONE)
-		PORT_BITX(0x40,  IP_ACTIVE_LOW, IPT_KEYBOARD, "V",          KEYCODE_V,        IP_JOY_NONE)
-		PORT_BITX(0x80,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F3",         KEYCODE_3_PAD,    IP_JOY_NONE)
+		PORT_BITX(0x01,0x01,IPT_DIPSWITCH_NAME | IPF_TOGGLE, "DIP 7 (Not Used);, IP_KEY_NONE, IP_JOY_NONE)
+		PORT_DIPSETTING(0x00,DEF_STR( "Off") );
+		PORT_DIPSETTING(0x01,DEF_STR( "On") );
+		PORT_BITX(0x02,  IP_ACTIVE_LOW, IPT_KEYBOARD, "5",          KEYCODE_5,        IP_JOY_NONE);
+		PORT_BITX(0x04,  IP_ACTIVE_LOW, IPT_KEYBOARD, "T",          KEYCODE_T,        IP_JOY_NONE);
+		PORT_BITX(0x08,  IP_ACTIVE_LOW, IPT_KEYBOARD, "R",          KEYCODE_R,        IP_JOY_NONE);
+		PORT_BITX(0x10,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F",          KEYCODE_F,        IP_JOY_NONE);
+		PORT_BITX(0x20,  IP_ACTIVE_LOW, IPT_KEYBOARD, "G",          KEYCODE_G,        IP_JOY_NONE);
+		PORT_BITX(0x40,  IP_ACTIVE_LOW, IPT_KEYBOARD, "V",          KEYCODE_V,        IP_JOY_NONE);
+		PORT_BITX(0x80,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F3",         KEYCODE_3_PAD,    IP_JOY_NONE);
 	
 		/* KEYBOARD COLUMN 4 */
 		PORT_START
-		PORT_BITX(0x01,0x01,IPT_DIPSWITCH_NAME | IPF_TOGGLE, "DIP 6 (Disc Speed 1)", IP_KEY_NONE, IP_JOY_NONE)
-		PORT_DIPSETTING(0x00,DEF_STR( Off ))
-		PORT_DIPSETTING(0x01,DEF_STR( On ))
-		PORT_BITX(0x02,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F4",         KEYCODE_4_PAD,    IP_JOY_NONE)
-		PORT_BITX(0x04,  IP_ACTIVE_LOW, IPT_KEYBOARD, "7",          KEYCODE_7,        IP_JOY_NONE)
-		PORT_BITX(0x08,  IP_ACTIVE_LOW, IPT_KEYBOARD, "6",          KEYCODE_6,        IP_JOY_NONE)
-		PORT_BITX(0x10,  IP_ACTIVE_LOW, IPT_KEYBOARD, "Y",          KEYCODE_Y,        IP_JOY_NONE)
-		PORT_BITX(0x20,  IP_ACTIVE_LOW, IPT_KEYBOARD, "H",          KEYCODE_H,        IP_JOY_NONE)
-		PORT_BITX(0x40,  IP_ACTIVE_LOW, IPT_KEYBOARD, "B",          KEYCODE_B,        IP_JOY_NONE)
-		PORT_BITX(0x80,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F5",         KEYCODE_5_PAD,    IP_JOY_NONE)
+		PORT_BITX(0x01,0x01,IPT_DIPSWITCH_NAME | IPF_TOGGLE, "DIP 6 (Disc Speed 1);, IP_KEY_NONE, IP_JOY_NONE)
+		PORT_DIPSETTING(0x00,DEF_STR( "Off") );
+		PORT_DIPSETTING(0x01,DEF_STR( "On") );
+		PORT_BITX(0x02,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F4",         KEYCODE_4_PAD,    IP_JOY_NONE);
+		PORT_BITX(0x04,  IP_ACTIVE_LOW, IPT_KEYBOARD, "7",          KEYCODE_7,        IP_JOY_NONE);
+		PORT_BITX(0x08,  IP_ACTIVE_LOW, IPT_KEYBOARD, "6",          KEYCODE_6,        IP_JOY_NONE);
+		PORT_BITX(0x10,  IP_ACTIVE_LOW, IPT_KEYBOARD, "Y",          KEYCODE_Y,        IP_JOY_NONE);
+		PORT_BITX(0x20,  IP_ACTIVE_LOW, IPT_KEYBOARD, "H",          KEYCODE_H,        IP_JOY_NONE);
+		PORT_BITX(0x40,  IP_ACTIVE_LOW, IPT_KEYBOARD, "B",          KEYCODE_B,        IP_JOY_NONE);
+		PORT_BITX(0x80,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F5",         KEYCODE_5_PAD,    IP_JOY_NONE);
 	
 		/* KEYBOARD COLUMN 5 */
 		PORT_START
-		PORT_BITX(0x01,0x01,IPT_DIPSWITCH_NAME | IPF_TOGGLE, "DIP 5 (Disc Speed 0)", IP_KEY_NONE, IP_JOY_NONE)
-		PORT_DIPSETTING(0x00,DEF_STR( Off ))
-		PORT_DIPSETTING(0x01,DEF_STR( On ))
-		PORT_BITX(0x02,  IP_ACTIVE_LOW, IPT_KEYBOARD, "8",          KEYCODE_8,        IP_JOY_NONE)
-		PORT_BITX(0x04,  IP_ACTIVE_LOW, IPT_KEYBOARD, "I",          KEYCODE_I,        IP_JOY_NONE)
-		PORT_BITX(0x08,  IP_ACTIVE_LOW, IPT_KEYBOARD, "U",          KEYCODE_U,        IP_JOY_NONE)
-		PORT_BITX(0x10,  IP_ACTIVE_LOW, IPT_KEYBOARD, "J",          KEYCODE_J,        IP_JOY_NONE)
-		PORT_BITX(0x20,  IP_ACTIVE_LOW, IPT_KEYBOARD, "N",          KEYCODE_N,        IP_JOY_NONE)
-		PORT_BITX(0x40,  IP_ACTIVE_LOW, IPT_KEYBOARD, "M",          KEYCODE_M,        IP_JOY_NONE)
-		PORT_BITX(0x80,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F6",         KEYCODE_6_PAD,    IP_JOY_NONE)
+		PORT_BITX(0x01,0x01,IPT_DIPSWITCH_NAME | IPF_TOGGLE, "DIP 5 (Disc Speed 0);, IP_KEY_NONE, IP_JOY_NONE)
+		PORT_DIPSETTING(0x00,DEF_STR( "Off") );
+		PORT_DIPSETTING(0x01,DEF_STR( "On") );
+		PORT_BITX(0x02,  IP_ACTIVE_LOW, IPT_KEYBOARD, "8",          KEYCODE_8,        IP_JOY_NONE);
+		PORT_BITX(0x04,  IP_ACTIVE_LOW, IPT_KEYBOARD, "I",          KEYCODE_I,        IP_JOY_NONE);
+		PORT_BITX(0x08,  IP_ACTIVE_LOW, IPT_KEYBOARD, "U",          KEYCODE_U,        IP_JOY_NONE);
+		PORT_BITX(0x10,  IP_ACTIVE_LOW, IPT_KEYBOARD, "J",          KEYCODE_J,        IP_JOY_NONE);
+		PORT_BITX(0x20,  IP_ACTIVE_LOW, IPT_KEYBOARD, "N",          KEYCODE_N,        IP_JOY_NONE);
+		PORT_BITX(0x40,  IP_ACTIVE_LOW, IPT_KEYBOARD, "M",          KEYCODE_M,        IP_JOY_NONE);
+		PORT_BITX(0x80,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F6",         KEYCODE_6_PAD,    IP_JOY_NONE);
 	
 	/* KEYBOARD COLUMN 6 */
 		PORT_START
-		PORT_BITX(0x01,0x01,IPT_DIPSWITCH_NAME | IPF_TOGGLE, "DIP 4 (Shift Break)", IP_KEY_NONE, IP_JOY_NONE)
-		PORT_DIPSETTING(0x00,DEF_STR( Off ))
-		PORT_DIPSETTING(0x01,DEF_STR( On ))
-		PORT_BITX(0x02,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F7",         KEYCODE_7_PAD,    IP_JOY_NONE)
-		PORT_BITX(0x04,  IP_ACTIVE_LOW, IPT_KEYBOARD, "9",          KEYCODE_9,        IP_JOY_NONE)
-		PORT_BITX(0x08,  IP_ACTIVE_LOW, IPT_KEYBOARD, "O",          KEYCODE_O,        IP_JOY_NONE)
-		PORT_BITX(0x10,  IP_ACTIVE_LOW, IPT_KEYBOARD, "K",          KEYCODE_K,        IP_JOY_NONE)
-		PORT_BITX(0x20,  IP_ACTIVE_LOW, IPT_KEYBOARD, "L",          KEYCODE_L,        IP_JOY_NONE)
-		PORT_BITX(0x40,  IP_ACTIVE_LOW, IPT_KEYBOARD, ",",          KEYCODE_COMMA,    IP_JOY_NONE)
-		PORT_BITX(0x80,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F8",         KEYCODE_3_PAD,    IP_JOY_NONE)
+		PORT_BITX(0x01,0x01,IPT_DIPSWITCH_NAME | IPF_TOGGLE, "DIP 4 (Shift Break);, IP_KEY_NONE, IP_JOY_NONE)
+		PORT_DIPSETTING(0x00,DEF_STR( "Off") );
+		PORT_DIPSETTING(0x01,DEF_STR( "On") );
+		PORT_BITX(0x02,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F7",         KEYCODE_7_PAD,    IP_JOY_NONE);
+		PORT_BITX(0x04,  IP_ACTIVE_LOW, IPT_KEYBOARD, "9",          KEYCODE_9,        IP_JOY_NONE);
+		PORT_BITX(0x08,  IP_ACTIVE_LOW, IPT_KEYBOARD, "O",          KEYCODE_O,        IP_JOY_NONE);
+		PORT_BITX(0x10,  IP_ACTIVE_LOW, IPT_KEYBOARD, "K",          KEYCODE_K,        IP_JOY_NONE);
+		PORT_BITX(0x20,  IP_ACTIVE_LOW, IPT_KEYBOARD, "L",          KEYCODE_L,        IP_JOY_NONE);
+		PORT_BITX(0x40,  IP_ACTIVE_LOW, IPT_KEYBOARD, ",",          KEYCODE_COMMA,    IP_JOY_NONE);
+		PORT_BITX(0x80,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F8",         KEYCODE_3_PAD,    IP_JOY_NONE);
 	
 	/* KEYBOARD COLUMN 7 */
 		PORT_START
-		PORT_BITX(0x01,0x01,IPT_DIPSWITCH_NAME | IPF_TOGGLE, "DIP 3 (Mode bit 2)", IP_KEY_NONE, IP_JOY_NONE)
-		PORT_DIPSETTING(0x00,DEF_STR( Off ))
-		PORT_DIPSETTING(0x01,DEF_STR( On ))
-		PORT_BITX(0x02,  IP_ACTIVE_LOW, IPT_KEYBOARD, "-",          KEYCODE_MINUS,    IP_JOY_NONE)
-		PORT_BITX(0x04,  IP_ACTIVE_LOW, IPT_KEYBOARD, "0",          KEYCODE_0,        IP_JOY_NONE)
-		PORT_BITX(0x08,  IP_ACTIVE_LOW, IPT_KEYBOARD, "P",          KEYCODE_P,        IP_JOY_NONE)
-		PORT_BITX(0x10,  IP_ACTIVE_LOW, IPT_KEYBOARD, "@",          KEYCODE_BACKSLASH,IP_JOY_NONE)
-		PORT_BITX(0x20,  IP_ACTIVE_LOW, IPT_KEYBOARD, ";",          KEYCODE_COLON,    IP_JOY_NONE)
-		PORT_BITX(0x40,  IP_ACTIVE_LOW, IPT_KEYBOARD, ".",          KEYCODE_STOP,     IP_JOY_NONE)
-		PORT_BITX(0x80,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F9",         KEYCODE_9_PAD,    IP_JOY_NONE)
+		PORT_BITX(0x01,0x01,IPT_DIPSWITCH_NAME | IPF_TOGGLE, "DIP 3 (Mode bit 2);, IP_KEY_NONE, IP_JOY_NONE)
+		PORT_DIPSETTING(0x00,DEF_STR( "Off") );
+		PORT_DIPSETTING(0x01,DEF_STR( "On") );
+		PORT_BITX(0x02,  IP_ACTIVE_LOW, IPT_KEYBOARD, "-",          KEYCODE_MINUS,    IP_JOY_NONE);
+		PORT_BITX(0x04,  IP_ACTIVE_LOW, IPT_KEYBOARD, "0",          KEYCODE_0,        IP_JOY_NONE);
+		PORT_BITX(0x08,  IP_ACTIVE_LOW, IPT_KEYBOARD, "P",          KEYCODE_P,        IP_JOY_NONE);
+		PORT_BITX(0x10,  IP_ACTIVE_LOW, IPT_KEYBOARD, "@",          KEYCODE_BACKSLASH,IP_JOY_NONE);
+		PORT_BITX(0x20,  IP_ACTIVE_LOW, IPT_KEYBOARD, ";",          KEYCODE_COLON,    IP_JOY_NONE);
+		PORT_BITX(0x40,  IP_ACTIVE_LOW, IPT_KEYBOARD, ".",          KEYCODE_STOP,     IP_JOY_NONE);
+		PORT_BITX(0x80,  IP_ACTIVE_LOW, IPT_KEYBOARD, "F9",         KEYCODE_9_PAD,    IP_JOY_NONE);
 	
 	
 		/* KEYBOARD COLUMN 8 */
 		PORT_START
-		PORT_BITX(0x01,0x01,IPT_DIPSWITCH_NAME | IPF_TOGGLE, "DIP 2 (Mode bit 1)", IP_KEY_NONE, IP_JOY_NONE)
-		PORT_DIPSETTING(0x00,DEF_STR( Off ))
-		PORT_DIPSETTING(0x01,DEF_STR( On ))
-		PORT_BITX(0x02,  IP_ACTIVE_LOW, IPT_KEYBOARD, "^",          KEYCODE_EQUALS,     IP_JOY_NONE)
-		PORT_BITX(0x04,  IP_ACTIVE_LOW, IPT_KEYBOARD, "_",          KEYCODE_TILDE,      IP_JOY_NONE)
-		PORT_BITX(0x08,  IP_ACTIVE_LOW, IPT_KEYBOARD, "[",          KEYCODE_OPENBRACE,  IP_JOY_NONE)
-		PORT_BITX(0x10,  IP_ACTIVE_LOW, IPT_KEYBOARD, ":",          KEYCODE_QUOTE,      IP_JOY_NONE)
-		PORT_BITX(0x20,  IP_ACTIVE_LOW, IPT_KEYBOARD, "]",          KEYCODE_CLOSEBRACE, IP_JOY_NONE)
-		PORT_BITX(0x40,  IP_ACTIVE_LOW, IPT_KEYBOARD, "/",          KEYCODE_SLASH,      IP_JOY_NONE)
-		PORT_BITX(0x80,  IP_ACTIVE_LOW, IPT_KEYBOARD, "\\",         KEYCODE_BACKSLASH2, IP_JOY_NONE)
+		PORT_BITX(0x01,0x01,IPT_DIPSWITCH_NAME | IPF_TOGGLE, "DIP 2 (Mode bit 1);, IP_KEY_NONE, IP_JOY_NONE)
+		PORT_DIPSETTING(0x00,DEF_STR( "Off") );
+		PORT_DIPSETTING(0x01,DEF_STR( "On") );
+		PORT_BITX(0x02,  IP_ACTIVE_LOW, IPT_KEYBOARD, "^",          KEYCODE_EQUALS,     IP_JOY_NONE);
+		PORT_BITX(0x04,  IP_ACTIVE_LOW, IPT_KEYBOARD, "_",          KEYCODE_TILDE,      IP_JOY_NONE);
+		PORT_BITX(0x08,  IP_ACTIVE_LOW, IPT_KEYBOARD, "[",          KEYCODE_OPENBRACE,  IP_JOY_NONE);
+		PORT_BITX(0x10,  IP_ACTIVE_LOW, IPT_KEYBOARD, ":",          KEYCODE_QUOTE,      IP_JOY_NONE);
+		PORT_BITX(0x20,  IP_ACTIVE_LOW, IPT_KEYBOARD, "]",          KEYCODE_CLOSEBRACE, IP_JOY_NONE);
+		PORT_BITX(0x40,  IP_ACTIVE_LOW, IPT_KEYBOARD, "/",          KEYCODE_SLASH,      IP_JOY_NONE);
+		PORT_BITX(0x80,  IP_ACTIVE_LOW, IPT_KEYBOARD, "\\",         KEYCODE_BACKSLASH2, IP_JOY_NONE);
 	
 		/* KEYBOARD COLUMN 9 */
 		PORT_START
-		PORT_BITX(0x01,0x01,IPT_DIPSWITCH_NAME | IPF_TOGGLE, "DIP 1 (Mode bit 0)", IP_KEY_NONE, IP_JOY_NONE)
-		PORT_DIPSETTING(0x00,DEF_STR( Off ))
-		PORT_DIPSETTING(0x01,DEF_STR( On ))
-		PORT_BITX(0x02,  IP_ACTIVE_LOW, IPT_KEYBOARD, "CURSOR LEFT", KEYCODE_LEFT,      IP_JOY_NONE)
-		PORT_BITX(0x04,  IP_ACTIVE_LOW, IPT_KEYBOARD, "CURSOR DOWN", KEYCODE_DOWN,      IP_JOY_NONE)
-		PORT_BITX(0x08,  IP_ACTIVE_LOW, IPT_KEYBOARD, "CURSOR UP",   KEYCODE_UP,        IP_JOY_NONE)
-		PORT_BITX(0x10,  IP_ACTIVE_LOW, IPT_KEYBOARD, "RETURN",      KEYCODE_ENTER,     IP_JOY_NONE)
-		PORT_BITX(0x20,  IP_ACTIVE_LOW, IPT_KEYBOARD, "DELETE",      KEYCODE_BACKSPACE, IP_JOY_NONE)
-		PORT_BITX(0x40,  IP_ACTIVE_LOW, IPT_KEYBOARD, "COPY",        KEYCODE_END,       IP_JOY_NONE)
-		PORT_BITX(0x80,  IP_ACTIVE_LOW, IPT_KEYBOARD, "CURSOR RIGHT",KEYCODE_RIGHT,     IP_JOY_NONE)
+		PORT_BITX(0x01,0x01,IPT_DIPSWITCH_NAME | IPF_TOGGLE, "DIP 1 (Mode bit 0);, IP_KEY_NONE, IP_JOY_NONE)
+		PORT_DIPSETTING(0x00,DEF_STR( "Off") );
+		PORT_DIPSETTING(0x01,DEF_STR( "On") );
+		PORT_BITX(0x02,  IP_ACTIVE_LOW, IPT_KEYBOARD, "CURSOR LEFT", KEYCODE_LEFT,      IP_JOY_NONE);
+		PORT_BITX(0x04,  IP_ACTIVE_LOW, IPT_KEYBOARD, "CURSOR DOWN", KEYCODE_DOWN,      IP_JOY_NONE);
+		PORT_BITX(0x08,  IP_ACTIVE_LOW, IPT_KEYBOARD, "CURSOR UP",   KEYCODE_UP,        IP_JOY_NONE);
+		PORT_BITX(0x10,  IP_ACTIVE_LOW, IPT_KEYBOARD, "RETURN",      KEYCODE_ENTER,     IP_JOY_NONE);
+		PORT_BITX(0x20,  IP_ACTIVE_LOW, IPT_KEYBOARD, "DELETE",      KEYCODE_BACKSPACE, IP_JOY_NONE);
+		PORT_BITX(0x40,  IP_ACTIVE_LOW, IPT_KEYBOARD, "COPY",        KEYCODE_END,       IP_JOY_NONE);
+		PORT_BITX(0x80,  IP_ACTIVE_LOW, IPT_KEYBOARD, "CURSOR RIGHT",KEYCODE_RIGHT,     IP_JOY_NONE);
 	
 	
 		PORT_START  // KEYBOARD COLUMN 10 RESERVED FOR BBC MASTER
@@ -858,39 +858,39 @@ public class bbc
 	
 	
 		PORT_START
-		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )
-		PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 )
+		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 );
+		PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 );
 	
 		PORT_START
-		PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER1, 100, 10, 0x0, 0xff )
+		PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER1, 100, 10, 0x0, 0xff );
 	
 		PORT_START
-		PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_Y | IPF_PLAYER1, 100, 10, 0x0, 0xff )
+		PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_Y | IPF_PLAYER1, 100, 10, 0x0, 0xff );
 	
 		PORT_START
-		PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER2, 100, 10, 0x0, 0xff )
+		PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER2, 100, 10, 0x0, 0xff );
 	
 		PORT_START
-		PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_Y | IPF_PLAYER2, 100, 10, 0x0, 0xff )
+		PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_Y | IPF_PLAYER2, 100, 10, 0x0, 0xff );
 	
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	
 	/* the BBC came with 4 rom sockets on the mother board as shown in the model A driver */
 	/* you could get a number of rom upgrade boards that took this up to 16 roms as in the */
 	/* model B driver */
 	
-	ROM_START(bbca)
-		ROM_REGION(0x04000,REGION_CPU1,0) /* RAM */
+	static RomLoadPtr rom_bbca = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x04000,REGION_CPU1,0);/* RAM */
 	
-		ROM_REGION(0x14000,REGION_USER1,0) /* ROM */
-		ROM_LOAD("os12.rom",    0x10000,  0x4000, 0x3c14fc70)
+		ROM_REGION(0x14000,REGION_USER1,0);/* ROM */
+		ROM_LOAD("os12.rom",    0x10000,  0x4000, 0x3c14fc70);
 	
 															  /* rom page 0  00000 */
 															  /* rom page 1  04000 */
 															  /* rom page 2  08000 */
-		ROM_LOAD("basic2.rom",  0x0c000, 0x4000, 0x79434781 ) /* rom page 3  0c000 */
-	ROM_END
+		ROM_LOAD("basic2.rom",  0x0c000, 0x4000, 0x79434781 );/* rom page 3  0c000 */
+	ROM_END(); }}; 
 	
 	
 	/*	0000- 7fff	ram */
@@ -899,11 +899,11 @@ public class bbc
 	/* 10000-4ffff	16 paged rom banks mapped back into 8000-bfff by the page rom select */
 	
 	
-	ROM_START(bbcb)
-		ROM_REGION(0x08000,REGION_CPU1,0) /* RAM */
+	static RomLoadPtr rom_bbcb = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x08000,REGION_CPU1,0);/* RAM */
 	
-		ROM_REGION(0x44000,REGION_USER1,0) /* ROM */
-		ROM_LOAD("os12.rom", 0x40000,0x4000, 0x3c14fc70)
+		ROM_REGION(0x44000,REGION_USER1,0);/* ROM */
+		ROM_LOAD("os12.rom", 0x40000,0x4000, 0x3c14fc70);
 	
 	
 		                                                      /* rom page 0  00000 */
@@ -925,115 +925,27 @@ public class bbc
 		/* just use one of the following DFS roms */
 	
 		/* dnfs is acorns disc and network filing system rom it replaced dfs 0.9  */
-	//	ROM_LOAD("dnfs.rom",    0x38000, 0x4000, 0x8ccd2157 ) /* rom page 14 38000 */
+	//	ROM_LOAD("dnfs.rom",    0x38000, 0x4000, 0x8ccd2157 );/* rom page 14 38000 */
 	
 		/* dfs 0.9 was the standard acorn dfs rom before it was replaced with the dnfs rom */
-	//	ROM_LOAD("dfs09.rom",   0x38000, 0x2000, 0x3ce609cf ) /* rom page 14 38000 */
-	//	ROM_RELOAD(             0x3a000, 0x2000             )
+	//	ROM_LOAD("dfs09.rom",   0x38000, 0x2000, 0x3ce609cf );/* rom page 14 38000 */
+	//	ROM_RELOAD(             0x3a000, 0x2000             );
 	
 		/* dfs 1.44 from watford electronics, this is the best of the non-acorn dfs roms */
-		ROM_LOAD("dfs144.rom",  0x38000, 0x4000, 0x9fb8d13f ) /* rom page 14 38000 */
+		ROM_LOAD("dfs144.rom",  0x38000, 0x4000, 0x9fb8d13f );/* rom page 14 38000 */
 	
-		ROM_LOAD("basic2.rom",  0x3c000, 0x4000, 0x79434781 ) /* rom page 15 3c000 */
-	
-	
-	ROM_END
+		ROM_LOAD("basic2.rom",  0x3c000, 0x4000, 0x79434781 );/* rom page 15 3c000 */
 	
 	
-	
-	ROM_START(bbcb1770)
-		ROM_REGION(0x08000,REGION_CPU1,0) /* RAM */
-	
-		ROM_REGION(0x44000,REGION_USER1,0) /* ROM */
-		ROM_LOAD("os12.rom", 0x40000,0x4000, 0x3c14fc70)
-	
-		                                                      /* rom page 0  00000 */
-		                                                      /* rom page 1  04000 */
-		                                                      /* rom page 2  08000 */
-		                                                      /* rom page 3  0c000 */
-		                                                      /* rom page 4  10000 */
-		                                                      /* rom page 5  14000 */
-				  											  /* rom page 6  18000 */
-		                                                      /* rom page 7  1c000 */
-															  /* rom page 8  20000 */
-															  /* rom page 9  24000 */
-															  /* rom page 10 28000 */
-															  /* rom page 11 2c000 */
-															  /* rom page 12 30000 */
-															  /* rom page 13 34000 */
-	
-	/* ddfs 2.23 this is acorns 1770 disc controller Double density disc filing system */
-	    ROM_LOAD("ddfs223.rom", 0x38000, 0x4000, 0x7891f9b7 ) /* rom page 14 38000 */
-	
-		ROM_LOAD("basic2.rom",  0x3c000, 0x4000, 0x79434781 ) /* rom page 15 3c000 */
-	
-	ROM_END
+	ROM_END(); }}; 
 	
 	
 	
+	static RomLoadPtr rom_bbcb1770 = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x08000,REGION_CPU1,0);/* RAM */
 	
-	ROM_START(bbcbp)
-		ROM_REGION(0x10000,REGION_CPU1,0) /* ROM MEMORY */
-	
-		ROM_REGION(0x44000,REGION_USER1,0) /* ROM */
-		ROM_LOAD("bpos2.rom",   0x3c000, 0x4000, 0x9f356396 )  /* basic rom */
-		ROM_CONTINUE(           0x40000, 0x4000)  /* OS */
-	
-		                                                      /* rom page 0  00000 */
-		                                                      /* rom page 1  04000 */
-		                                                      /* rom page 2  08000 */
-		                                                      /* rom page 3  0c000 */
-		                                                      /* rom page 4  10000 */
-		                                                      /* rom page 5  14000 */
-				  											  /* rom page 6  18000 */
-		                                                      /* rom page 7  1c000 */
-															  /* rom page 8  20000 */
-															  /* rom page 9  24000 */
-															  /* rom page 10 28000 */
-															  /* rom page 11 2c000 */
-															  /* rom page 12 30000 */
-															  /* rom page 13 34000 */
-	
-	    /* ddfs 2.23 this is acorns 1770 disc controller Double density disc filing system */
-	    ROM_LOAD("ddfs223.rom", 0x38000, 0x4000, 0x7891f9b7 ) /* rom page 14 38000 */
-	
-	ROM_END
-	
-	
-	ROM_START(bbcbp128)
-		ROM_REGION(0x10000,REGION_CPU1,0) /* ROM MEMORY */
-	
-		ROM_REGION(0x44000,REGION_USER1,0) /* ROM */
-		ROM_LOAD("bpos2.rom",   0x3c000, 0x4000, 0x9f356396 )  /* basic rom */
-		ROM_CONTINUE(           0x40000, 0x4000)  /* OS */
-	
-		                                                      /* rom page 0  00000 */
-		                                                      /* rom page 1  04000 */
-		                                                      /* rom page 2  08000 */
-		                                                      /* rom page 3  0c000 */
-		                                                      /* rom page 4  10000 */
-		                                                      /* rom page 5  14000 */
-				  											  /* rom page 6  18000 */
-		                                                      /* rom page 7  1c000 */
-															  /* rom page 8  20000 */
-															  /* rom page 9  24000 */
-															  /* rom page 10 28000 */
-															  /* rom page 11 2c000 */
-															  /* rom page 12 30000 */
-															  /* rom page 13 34000 */
-	
-	    /* ddfs 2.23 this is acorns 1770 disc controller Double density disc filing system */
-	    ROM_LOAD("ddfs223.rom", 0x38000, 0x4000, 0x7891f9b7 ) /* rom page 14 38000 */
-	
-	ROM_END
-	
-	
-	
-	ROM_START(bbcb6502)
-		ROM_REGION(0x08000,REGION_CPU1,0) /* RAM */
-	
-		ROM_REGION(0x44000,REGION_USER1,0) /* ROM */
-		ROM_LOAD("os12.rom", 0x40000,0x4000, 0x3c14fc70)
+		ROM_REGION(0x44000,REGION_USER1,0);/* ROM */
+		ROM_LOAD("os12.rom", 0x40000,0x4000, 0x3c14fc70);
 	
 		                                                      /* rom page 0  00000 */
 		                                                      /* rom page 1  04000 */
@@ -1051,14 +963,102 @@ public class bbc
 															  /* rom page 13 34000 */
 	
 	/* ddfs 2.23 this is acorns 1770 disc controller Double density disc filing system */
-	    ROM_LOAD("ddfs223.rom", 0x38000, 0x4000, 0x7891f9b7 ) /* rom page 14 38000 */
+	    ROM_LOAD("ddfs223.rom", 0x38000, 0x4000, 0x7891f9b7 );/* rom page 14 38000 */
 	
-		ROM_LOAD("basic2.rom",  0x3c000, 0x4000, 0x79434781 ) /* rom page 15 3c000 */
+		ROM_LOAD("basic2.rom",  0x3c000, 0x4000, 0x79434781 );/* rom page 15 3c000 */
 	
-		ROM_REGION(0x11000,REGION_CPU2,0)
-		ROM_LOAD("6502tube.rom" , 0x10000,0x1000,0x98b5fe42)
+	ROM_END(); }}; 
 	
-	ROM_END
+	
+	
+	
+	static RomLoadPtr rom_bbcbp = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x10000,REGION_CPU1,0);/* ROM MEMORY */
+	
+		ROM_REGION(0x44000,REGION_USER1,0);/* ROM */
+		ROM_LOAD("bpos2.rom",   0x3c000, 0x4000, 0x9f356396 ); /* basic rom */
+		ROM_CONTINUE(           0x40000, 0x4000); /* OS */
+	
+		                                                      /* rom page 0  00000 */
+		                                                      /* rom page 1  04000 */
+		                                                      /* rom page 2  08000 */
+		                                                      /* rom page 3  0c000 */
+		                                                      /* rom page 4  10000 */
+		                                                      /* rom page 5  14000 */
+				  											  /* rom page 6  18000 */
+		                                                      /* rom page 7  1c000 */
+															  /* rom page 8  20000 */
+															  /* rom page 9  24000 */
+															  /* rom page 10 28000 */
+															  /* rom page 11 2c000 */
+															  /* rom page 12 30000 */
+															  /* rom page 13 34000 */
+	
+	    /* ddfs 2.23 this is acorns 1770 disc controller Double density disc filing system */
+	    ROM_LOAD("ddfs223.rom", 0x38000, 0x4000, 0x7891f9b7 );/* rom page 14 38000 */
+	
+	ROM_END(); }}; 
+	
+	
+	static RomLoadPtr rom_bbcbp128 = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x10000,REGION_CPU1,0);/* ROM MEMORY */
+	
+		ROM_REGION(0x44000,REGION_USER1,0);/* ROM */
+		ROM_LOAD("bpos2.rom",   0x3c000, 0x4000, 0x9f356396 ); /* basic rom */
+		ROM_CONTINUE(           0x40000, 0x4000); /* OS */
+	
+		                                                      /* rom page 0  00000 */
+		                                                      /* rom page 1  04000 */
+		                                                      /* rom page 2  08000 */
+		                                                      /* rom page 3  0c000 */
+		                                                      /* rom page 4  10000 */
+		                                                      /* rom page 5  14000 */
+				  											  /* rom page 6  18000 */
+		                                                      /* rom page 7  1c000 */
+															  /* rom page 8  20000 */
+															  /* rom page 9  24000 */
+															  /* rom page 10 28000 */
+															  /* rom page 11 2c000 */
+															  /* rom page 12 30000 */
+															  /* rom page 13 34000 */
+	
+	    /* ddfs 2.23 this is acorns 1770 disc controller Double density disc filing system */
+	    ROM_LOAD("ddfs223.rom", 0x38000, 0x4000, 0x7891f9b7 );/* rom page 14 38000 */
+	
+	ROM_END(); }}; 
+	
+	
+	
+	static RomLoadPtr rom_bbcb6502 = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x08000,REGION_CPU1,0);/* RAM */
+	
+		ROM_REGION(0x44000,REGION_USER1,0);/* ROM */
+		ROM_LOAD("os12.rom", 0x40000,0x4000, 0x3c14fc70);
+	
+		                                                      /* rom page 0  00000 */
+		                                                      /* rom page 1  04000 */
+		                                                      /* rom page 2  08000 */
+		                                                      /* rom page 3  0c000 */
+		                                                      /* rom page 4  10000 */
+		                                                      /* rom page 5  14000 */
+				  											  /* rom page 6  18000 */
+		                                                      /* rom page 7  1c000 */
+															  /* rom page 8  20000 */
+															  /* rom page 9  24000 */
+															  /* rom page 10 28000 */
+															  /* rom page 11 2c000 */
+															  /* rom page 12 30000 */
+															  /* rom page 13 34000 */
+	
+	/* ddfs 2.23 this is acorns 1770 disc controller Double density disc filing system */
+	    ROM_LOAD("ddfs223.rom", 0x38000, 0x4000, 0x7891f9b7 );/* rom page 14 38000 */
+	
+		ROM_LOAD("basic2.rom",  0x3c000, 0x4000, 0x79434781 );/* rom page 15 3c000 */
+	
+		ROM_REGION(0x11000,REGION_CPU2,0);
+		ROM_LOAD("6502tube.rom" , 0x10000,0x1000,0x98b5fe42);
+	
+	ROM_END(); }}; 
 	
 	
 	
@@ -1071,12 +1071,12 @@ public class bbc
 	}
 	
 	
-	static struct SN76496interface sn76496_interface =
-	{
+	static SN76496interface sn76496_interface = new SN76496interface
+	(
 		1,		/* 1 chip */
-		{ 4000000 },	/* 4Mhz */
-		{ 100 }
-	};
+		new int[] { 4000000 },	/* 4Mhz */
+		new int[] { 100 }
+	);
 	
 	static struct MachineDriver machine_driver_bbca =
 	{

@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package mess;
@@ -94,7 +94,7 @@ public class eventlst
 	void    EventList_AddItemOffset(int ID, int Data, int Time)
 	{
 	
-	        if (!CyclesPerFrame)
+	        if (CyclesPerFrame == 0)
 	                CyclesPerFrame = (int)(Machine->drv->cpu[0].cpu_clock / Machine->drv->frames_per_second);	//totalcycles();	//_(int)(Machine->drv->cpu[0].cpu_clock / Machine->drv->frames_per_second);
 	
 	        if (NumEvents < TotalEvents)

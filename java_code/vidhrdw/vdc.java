@@ -1,6 +1,6 @@
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -280,7 +280,7 @@ public class vdc
 	    int x, c, i;
 	
 		line_buffer = malloc(vdc.physical_width);
-		if (!line_buffer)
+		if (line_buffer == 0)
 			return;
 	
 	    /* character blanking bit */
@@ -376,7 +376,7 @@ public class vdc
 	    UINT8 *line_buffer;
 		
 		line_buffer = malloc(vdc.physical_width);
-		if (!line_buffer)
+		if (line_buffer == 0)
 			return;
 	
 	    if ((vdc.vdc_data[DVSSR].w & 0x8000) == 0)

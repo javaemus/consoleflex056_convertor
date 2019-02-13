@@ -11,7 +11,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -136,7 +136,7 @@ public class a7800
 			  ind_bytes = 1;
 	
 			  /* Do direct mode */
-			  if (!ind) {
+			  if (ind == 0) {
 			     data_addr = graph_adr + x + (maria_offset  << 8);
 			     if (maria_holey == 0x02 && ((data_addr & 0x9000) == 0x9000)) continue;
 			     if (maria_holey == 0x01 && ((data_addr & 0x8800) == 0x8800)) continue;
@@ -205,7 +205,7 @@ public class a7800
 		    case 0x03:  /* MODE 320A */
 		       for (x=0; x<width; x++) {
 			  /* Do direct mode */
-			  if (!ind) {
+			  if (ind == 0) {
 			     data_addr = graph_adr + x + (maria_offset  << 8);
 			     if (maria_holey == 0x02 && ((data_addr & 0x9000) == 0x9000)) continue;
 			     if (maria_holey == 0x01 && ((data_addr & 0x8800) == 0x8800)) continue;
@@ -283,7 +283,7 @@ public class a7800
 			  ind_bytes = 1;
 	
 			  /* Do direct mode */
-			  if (!ind) {
+			  if (ind == 0) {
 			     data_addr = graph_adr + x + (maria_offset  << 8);
 			     if (maria_holey == 0x02 && ((data_addr & 0x9000) == 0x9000)) continue;
 			     if (maria_holey == 0x01 && ((data_addr & 0x8800) == 0x8800)) continue;
@@ -331,7 +331,7 @@ public class a7800
 	       case 0x06:  /* MODE 320B */
 		       for (x=0; x<width; x++) {
 			  /* Do direct mode */
-			  if (!ind) {
+			  if (ind == 0) {
 			     data_addr = graph_adr + x + (maria_offset  << 8);
 			     if (maria_holey == 0x02 && ((data_addr & 0x9000) == 0x9000)) continue;
 			     if (maria_holey == 0x01 && ((data_addr & 0x8800) == 0x8800)) continue;
@@ -387,7 +387,7 @@ public class a7800
 		    case 0x07: /* (320C mode) */
 		      for (x=0; x<width; x++) {
 			  /* Do direct mode */
-			  if (!ind) {
+			  if (ind == 0) {
 			     data_addr = graph_adr + x + (maria_offset  << 8);
 			     if (maria_holey == 0x02 && ((data_addr & 0x9000) == 0x9000)) continue;
 			     if (maria_holey == 0x01 && ((data_addr & 0x8800) == 0x8800)) continue;
@@ -516,7 +516,7 @@ public class a7800
 	
 	/****** MARIA ***************************************/
 	
-	READ_HANDLER( a7800_MARIA_r ) {
+	public static ReadHandlerPtr a7800_MARIA_r  = new ReadHandlerPtr() { public int handler(int offset) {
 		UINT8 *ROM = memory_region(REGION_CPU1);
 	    switch (offset) {
 	
@@ -526,9 +526,9 @@ public class a7800
 		    logerror("undefined MARIA read %x\n",offset);
 		    return ROM[0x20 + offset];
 	    }
-	}
+	} };
 	
-	WRITE_HANDLER( a7800_MARIA_w ) {
+	public static WriteHandlerPtr a7800_MARIA_w = new WriteHandlerPtr() {public void handler(int offset, int data) {
 		UINT8 *ROM = memory_region(REGION_CPU1);
 	    switch (offset) {
 	
@@ -630,6 +630,6 @@ public class a7800
 	
 	    }
 	    ROM[0x20 + offset] = data;
-	}
+	} };
 	
 }

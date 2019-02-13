@@ -4,7 +4,7 @@
 ******************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -13,34 +13,38 @@ public class aim65
 {
 	
 	
-	static MEMORY_READ_START( aim65_readmem )
+	public static Memory_ReadAddress aim65_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
 		//     -03ff 1k version
 		//     -0fff 4k version
-		{ 0x0000, 0x0fff, MRA_RAM },
-	//	{ 0xa000, 0xa00f, via_1_r }, // user via
-		{ 0xa400, 0xa47f, MRA_RAM }, // riot6532 ram
-		{ 0xa480, 0xa48f, riot_0_r },
-		{ 0xa800, 0xa80f, via_0_r },
-		{ 0xac00, 0xac03, pia_0_r },
-		{ 0xac04, 0xac43, MRA_RAM },
-		{ 0xb000, 0xffff, MRA_ROM },
-	MEMORY_END
+		new Memory_ReadAddress( 0x0000, 0x0fff, MRA_RAM ),
+	//	new Memory_ReadAddress( 0xa000, 0xa00f, via_1_r ), // user via
+		new Memory_ReadAddress( 0xa400, 0xa47f, MRA_RAM ), // riot6532 ram
+		new Memory_ReadAddress( 0xa480, 0xa48f, riot_0_r ),
+		new Memory_ReadAddress( 0xa800, 0xa80f, via_0_r ),
+		new Memory_ReadAddress( 0xac00, 0xac03, pia_0_r ),
+		new Memory_ReadAddress( 0xac04, 0xac43, MRA_RAM ),
+		new Memory_ReadAddress( 0xb000, 0xffff, MRA_ROM ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( aim65_writemem )
-		{ 0x0000, 0x0fff, MWA_RAM },
-	//	{ 0xa000, 0xa00f, via_1_w }, // user via
-		{ 0xa400, 0xa47f, MWA_RAM }, // riot6532 ram
-		{ 0xa480, 0xa48f, riot_0_w },
-		{ 0xa800, 0xa80f, via_0_w },
-		{ 0xac00, 0xac03, pia_0_w },
-		{ 0xac04, 0xac43, MWA_RAM },
-		{ 0xb000, 0xffff, MWA_ROM },
-	MEMORY_END
+	public static Memory_WriteAddress aim65_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x0000, 0x0fff, MWA_RAM ),
+	//	new Memory_WriteAddress( 0xa000, 0xa00f, via_1_w ), // user via
+		new Memory_WriteAddress( 0xa400, 0xa47f, MWA_RAM ), // riot6532 ram
+		new Memory_WriteAddress( 0xa480, 0xa48f, riot_0_w ),
+		new Memory_WriteAddress( 0xa800, 0xa80f, via_0_w ),
+		new Memory_WriteAddress( 0xac00, 0xac03, pia_0_w ),
+		new Memory_WriteAddress( 0xac04, 0xac43, MWA_RAM ),
+		new Memory_WriteAddress( 0xb000, 0xffff, MWA_ROM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
 	#define DIPS_HELPER(bit, name, keycode, r) \
-	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r)
+	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r);
 	
-	INPUT_PORTS_START( aim65 )
+	static InputPortPtr input_ports_aim65 = new InputPortPtr(){ public void handler() { 
 		PORT_START
 		DIPS_HELPER( 0x0001, "1     !", KEYCODE_1, CODE_NONE)
 		DIPS_HELPER( 0x0002, "2     \"", KEYCODE_2, CODE_NONE)
@@ -100,26 +104,26 @@ public class aim65
 		DIPS_HELPER( 0x0800, "Right Shift", KEYCODE_RSHIFT, CODE_NONE)
 		DIPS_HELPER( 0x1000, "Space", KEYCODE_SPACE, CODE_NONE)
 		PORT_START
-	    PORT_BITX(0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Terminal", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING( 0x00, "TTY")
-		PORT_DIPSETTING( 0x08, "Keyboard")
+	    PORT_BITX(0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Terminal", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING( 0x00, "TTY");
+		PORT_DIPSETTING( 0x08, "Keyboard");
 	#if 0
-	    PORT_BITX(0x03, 0x03, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "RAM", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING( 0x00, "1 KBYTE")
-		PORT_DIPSETTING( 0x01, "2 KBYTE")
-		PORT_DIPSETTING( 0x02, "3 KBYTE")
-		PORT_DIPSETTING( 0x03, "4 KBYTE")
+	    PORT_BITX(0x03, 0x03, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "RAM", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING( 0x00, "1 KBYTE");
+		PORT_DIPSETTING( 0x01, "2 KBYTE");
+		PORT_DIPSETTING( 0x02, "3 KBYTE");
+		PORT_DIPSETTING( 0x03, "4 KBYTE");
 	#endif
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
-	static struct GfxLayout aim65_charlayout =
-	{
+	static GfxLayout aim65_charlayout = new GfxLayout
+	(
 	        32,2,
 	        256,                                    /* 256 characters */
 	        1,                      /* 1 bits per pixel */
-	        { 0,0 },                  /* no bitplanes; 1 bit per pixel */
+	        new int[] { 0,0 },                  /* no bitplanes; 1 bit per pixel */
 	        /* x offsets */
-	        { 
+	        new int[] { 
 				7, 7, 7, 7,
 				6, 6, 6, 6, 
 				5, 5, 5, 5, 
@@ -130,13 +134,13 @@ public class aim65
 				0, 0, 0, 0 
 	        },
 	        /* y offsets */
-	        { 0, 0 },
+	        new int[] { 0, 0 },
 	        1*8
-	};
+	);
 	
-	static struct GfxDecodeInfo aim65_gfxdecodeinfo[] = {
-		{ REGION_GFX1, 0x0000, &aim65_charlayout,                     0, 2 },
-	    { -1 } /* end of array */
+	static GfxDecodeInfo aim65_gfxdecodeinfo[] ={
+		new GfxDecodeInfo( REGION_GFX1, 0x0000, aim65_charlayout,                     0, 2 ),
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
 	static unsigned short aim65_colortable[1][2] = {
@@ -181,15 +185,15 @@ public class aim65
 	    }
 	};
 	
-	ROM_START(aim65)
-		ROM_REGION(0x10000,REGION_CPU1, 0)
-	//	ROM_LOAD ("aim65bas.z26", 0xb000, 0x1000, 0x36a61f39)
-	//	ROM_LOAD ("aim65bas.z25", 0xc000, 0x1000, 0xd7b42d2a)
-	//	ROM_LOAD ("aim65ass.z24", 0xd000, 0x1000, 0x0878b399)
-		ROM_LOAD ("aim65mon.z23", 0xe000, 0x1000, 0x90e44afe)
-		ROM_LOAD ("aim65mon.z22", 0xf000, 0x1000, 0xd01914b0)
-		ROM_REGION(0x100,REGION_GFX1, 0)
-	ROM_END
+	static RomLoadPtr rom_aim65 = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x10000,REGION_CPU1, 0);
+	//	ROM_LOAD ("aim65bas.z26", 0xb000, 0x1000, 0x36a61f39);
+	//	ROM_LOAD ("aim65bas.z25", 0xc000, 0x1000, 0xd7b42d2a);
+	//	ROM_LOAD ("aim65ass.z24", 0xd000, 0x1000, 0x0878b399);
+		ROM_LOAD ("aim65mon.z23", 0xe000, 0x1000, 0x90e44afe);
+		ROM_LOAD ("aim65mon.z22", 0xf000, 0x1000, 0xd01914b0);
+		ROM_REGION(0x100,REGION_GFX1, 0);
+	ROM_END(); }}; 
 	
 	
 	static const struct IODevice io_aim65[] = {

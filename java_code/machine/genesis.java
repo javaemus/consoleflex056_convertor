@@ -4,7 +4,7 @@
   I/O ports)
 ***************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -35,7 +35,7 @@ public class genesis
 	void genesis_init_machine(void)
 	{
 	    genesis_soundram = memory_region(REGION_CPU2);
-		if( !genesis_soundram )
+		if (genesis_soundram == 0)
 		{
 			logerror("REGION_CPU2 not initialized\n");
 			return;
@@ -105,7 +105,7 @@ public class genesis
 		genesis_soundram = memory_region(REGION_CPU2);
 	
 		romfile = image_fopen(IO_CARTSLOT, id, OSD_FILETYPE_IMAGE, 0);
-		if (!romfile)
+		if (romfile == 0)
 	    {
 	        printf("Genesis Requires Cartridge!\n");
 	        return INIT_FAIL;
@@ -147,7 +147,7 @@ public class genesis
 			tmpROMnew = malloc(length);
 			secondhalf = &tmpROMnew[length >> 1];
 	
-			if (!tmpROMnew)
+			if (tmpROMnew == 0)
 			{
 				printf("Memory allocation failed reading roms!\n");
 				goto bad;

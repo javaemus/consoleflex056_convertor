@@ -11,7 +11,7 @@
 
  ******************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -323,9 +323,9 @@ public class kc
 	
 	
 	
-	INPUT_PORTS_START( kc85 )
+	static InputPortPtr input_ports_kc85 = new InputPortPtr(){ public void handler() { 
 		KC_KEYBOARD
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	
 	/********************/
@@ -529,31 +529,31 @@ public class kc
 	
 	
 	
-	ROM_START(kc85_4)
-		ROM_REGION(0x015000, REGION_CPU1,0)
+	static RomLoadPtr rom_kc85_4 = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x015000, REGION_CPU1,0);
 	
-	    ROM_LOAD("basic_c0.854", 0x10000, 0x2000, 0xdfe34b08)
-	    ROM_LOAD("caos__c0.854", 0x12000, 0x1000, 0x57d9ab02)
-	    ROM_LOAD("caos__e0.854", 0x13000, 0x2000, 0xd64cd50b)
-	ROM_END
+	    ROM_LOAD("basic_c0.854", 0x10000, 0x2000, 0xdfe34b08);
+	    ROM_LOAD("caos__c0.854", 0x12000, 0x1000, 0x57d9ab02);
+	    ROM_LOAD("caos__e0.854", 0x13000, 0x2000, 0xd64cd50b);
+	ROM_END(); }}; 
 	
 	
-	ROM_START(kc85_4d)
-		ROM_REGION(0x015000, REGION_CPU1,0)
+	static RomLoadPtr rom_kc85_4d = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x015000, REGION_CPU1,0);
 	
-	    ROM_LOAD("basic_c0.854", 0x10000, 0x2000, 0xdfe34b08)
-	    ROM_LOAD("caos__c0.854", 0x12000, 0x1000, 0x57d9ab02)
-	    ROM_LOAD("caos__e0.854", 0x13000, 0x2000, 0xd64cd50b)
+	    ROM_LOAD("basic_c0.854", 0x10000, 0x2000, 0xdfe34b08);
+	    ROM_LOAD("caos__c0.854", 0x12000, 0x1000, 0x57d9ab02);
+	    ROM_LOAD("caos__e0.854", 0x13000, 0x2000, 0xd64cd50b);
 	
-		ROM_REGION(0x010000, REGION_CPU2,0)
-	ROM_END
+		ROM_REGION(0x010000, REGION_CPU2,0);
+	ROM_END(); }}; 
 	
-	ROM_START(kc85_3)
-		ROM_REGION(0x014000, REGION_CPU1,0)
+	static RomLoadPtr rom_kc85_3 = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x014000, REGION_CPU1,0);
 	
-	    ROM_LOAD("basic_c0.854", 0x10000, 0x2000, 0xdfe34b08)
-		ROM_LOAD("caos__e0.853", 0x12000, 0x2000, 0x52bc2199)
-	ROM_END
+	    ROM_LOAD("basic_c0.854", 0x10000, 0x2000, 0xdfe34b08);
+		ROM_LOAD("caos__e0.853", 0x12000, 0x2000, 0x52bc2199);
+	ROM_END(); }}; 
 	
 	
 	

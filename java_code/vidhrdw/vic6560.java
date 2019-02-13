@@ -5,7 +5,7 @@
 
 ***************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -109,16 +109,16 @@ public class vic6560
 	/* transparent, white, black */
 	static UINT32 pointercolortable[3] =
 	{0};
-	static struct GfxLayout pointerlayout =
-	{
+	static GfxLayout pointerlayout = new GfxLayout
+	(
 		8, 8,
 		1,
 		2,
-		{0, 64},
-		{0, 1, 2, 3, 4, 5, 6, 7},
-		{0 * 8, 1 * 8, 2 * 8, 3 * 8, 4 * 8, 5 * 8, 6 * 8, 7 * 8},
+		new int[] {0, 64},
+		new int[] {0, 1, 2, 3, 4, 5, 6, 7},
+		new int[] {0 * 8, 1 * 8, 2 * 8, 3 * 8, 4 * 8, 5 * 8, 6 * 8, 7 * 8},
 		8 * 8
-	};
+	);
 	
 	static UINT8 pointermask[] =
 	{

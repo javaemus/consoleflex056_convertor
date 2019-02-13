@@ -8,7 +8,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -68,12 +68,12 @@ public class uk101
 	
 	}
 	
-	READ_HANDLER( uk101_acia0_casin )
+	public static ReadHandlerPtr uk101_acia0_casin  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		if (uk101_tape_image && (uk101_tape_index < uk101_tape_size))
 								return (uk101_tape_image[uk101_tape_index++]);
 		return (0);
-	}
+	} };
 	
 	READ_HANDLER (uk101_acia0_statin )
 	{

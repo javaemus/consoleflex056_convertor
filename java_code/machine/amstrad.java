@@ -18,7 +18,7 @@ rom/ram selection
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -75,7 +75,7 @@ public class amstrad
 		/* allocate ram - I control how it is accessed so I must
 		allocate it somewhere - here will do */
 		Amstrad_Memory = malloc(128*1024);
-		if(!Amstrad_Memory) return;
+		if (Amstrad_Memory == 0) return;
 	
 		if (snapshot_loaded)
 		{
@@ -84,7 +84,7 @@ public class amstrad
 		}
 	
 	
-		if (!snapshot_loaded)
+		if (snapshot_loaded == 0)
 		{
 			Amstrad_Reset();
 		}

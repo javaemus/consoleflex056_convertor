@@ -14,7 +14,7 @@
 /**                                                         **/
 /*************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package cpu.z80gb;
@@ -378,7 +378,7 @@ public class z80gb
 	
 		which = (which + 1) % 8;
 	    buffer[which][0] = '\0';
-		if( !context )
+		if (context == 0)
 			r = &Regs;
 	
 	    switch( regnum )

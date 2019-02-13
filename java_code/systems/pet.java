@@ -113,7 +113,7 @@ when problems start with -log and look into error.log file
  */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -123,85 +123,97 @@ public class pet
 	
 	#define VERBOSE_DBG 0
 	/*
-	static MEMORY_READ_START( pet_readmem )
-		{0x0000, 0x7fff, MRA_RAM},
-		{0x8000, 0x83ff, MRA_RAM },
-		{0xa000, 0xe7ff, MRA_ROM },
-		{0xe810, 0xe813, pia_0_r },
-		{0xe820, 0xe823, pia_1_r },
-		{0xe840, 0xe84f, via_0_r },
-	/*	{0xe900, 0xe91f, cbm_ieee_state }, // for debugging */
-		{0xf000, 0xffff, MRA_ROM },
-	MEMORY_END
+	public static Memory_ReadAddress pet_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress(0x0000, 0x7fff, MRA_RAM),
+		new Memory_ReadAddress(0x8000, 0x83ff, MRA_RAM ),
+		new Memory_ReadAddress(0xa000, 0xe7ff, MRA_ROM ),
+		new Memory_ReadAddress(0xe810, 0xe813, pia_0_r ),
+		new Memory_ReadAddress(0xe820, 0xe823, pia_1_r ),
+		new Memory_ReadAddress(0xe840, 0xe84f, via_0_r ),
+	/*	new Memory_ReadAddress(0xe900, 0xe91f, cbm_ieee_state ), // for debugging */
+		new Memory_ReadAddress(0xf000, 0xffff, MRA_ROM ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( pet_writemem )
-		{0x0000, 0x7fff, MWA_RAM, &pet_memory},
-		{0x8000, 0x83ff, videoram_w, &videoram, &videoram_size },
-		{0xa000, 0xe7ff, MWA_ROM },
-		{0xe810, 0xe813, pia_0_w },
-		{0xe820, 0xe823, pia_1_w },
-		{0xe840, 0xe84f, via_0_w },
-		{0xf000, 0xffff, MWA_ROM },
-	MEMORY_END
+	public static Memory_WriteAddress pet_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress(0x0000, 0x7fff, MWA_RAM, pet_memory),
+		new Memory_WriteAddress(0x8000, 0x83ff, videoram_w, videoram, videoram_size ),
+		new Memory_WriteAddress(0xa000, 0xe7ff, MWA_ROM ),
+		new Memory_WriteAddress(0xe810, 0xe813, pia_0_w ),
+		new Memory_WriteAddress(0xe820, 0xe823, pia_1_w ),
+		new Memory_WriteAddress(0xe840, 0xe84f, via_0_w ),
+		new Memory_WriteAddress(0xf000, 0xffff, MWA_ROM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_READ_START( pet40_readmem )
-		{0x0000, 0x7fff, MRA_RAM},
-		{0x8000, 0x83ff, MRA_RAM },
-		{0xa000, 0xe7ff, MRA_ROM },
-		{0xe810, 0xe813, pia_0_r },
-		{0xe820, 0xe823, pia_1_r },
-		{0xe840, 0xe84f, via_0_r },
-		{0xe880, 0xe881, crtc6845_0_port_r },
-		{0xf000, 0xffff, MRA_ROM },
-	MEMORY_END
+	public static Memory_ReadAddress pet40_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress(0x0000, 0x7fff, MRA_RAM),
+		new Memory_ReadAddress(0x8000, 0x83ff, MRA_RAM ),
+		new Memory_ReadAddress(0xa000, 0xe7ff, MRA_ROM ),
+		new Memory_ReadAddress(0xe810, 0xe813, pia_0_r ),
+		new Memory_ReadAddress(0xe820, 0xe823, pia_1_r ),
+		new Memory_ReadAddress(0xe840, 0xe84f, via_0_r ),
+		new Memory_ReadAddress(0xe880, 0xe881, crtc6845_0_port_r ),
+		new Memory_ReadAddress(0xf000, 0xffff, MRA_ROM ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( pet40_writemem )
-		{0x0000, 0x7fff, MWA_RAM, &pet_memory},
-		{0x8000, 0x83ff, videoram_w, &videoram, &videoram_size },
-		{0xa000, 0xe7ff, MWA_ROM },
-		{0xe810, 0xe813, pia_0_w },
-		{0xe820, 0xe823, pia_1_w },
-		{0xe840, 0xe84f, via_0_w },
-		{0xe880, 0xe881, crtc6845_0_port_w },
-		{0xf000, 0xffff, MWA_ROM },
-	MEMORY_END
+	public static Memory_WriteAddress pet40_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress(0x0000, 0x7fff, MWA_RAM, pet_memory),
+		new Memory_WriteAddress(0x8000, 0x83ff, videoram_w, videoram, videoram_size ),
+		new Memory_WriteAddress(0xa000, 0xe7ff, MWA_ROM ),
+		new Memory_WriteAddress(0xe810, 0xe813, pia_0_w ),
+		new Memory_WriteAddress(0xe820, 0xe823, pia_1_w ),
+		new Memory_WriteAddress(0xe840, 0xe84f, via_0_w ),
+		new Memory_WriteAddress(0xe880, 0xe881, crtc6845_0_port_w ),
+		new Memory_WriteAddress(0xf000, 0xffff, MWA_ROM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_READ_START( pet80_readmem )
-		{0x0000, 0x7fff, MRA_RAM },
-		{0x8000, 0x8fff, MRA_BANK1 },
-		{0x9000, 0x9fff, MRA_BANK2 },
-		{0xa000, 0xafff, MRA_BANK3 },
-		{0xb000, 0xbfff, MRA_BANK4 },
-		{0xc000, 0xe7ff, MRA_BANK6 },
+	public static Memory_ReadAddress pet80_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress(0x0000, 0x7fff, MRA_RAM ),
+		new Memory_ReadAddress(0x8000, 0x8fff, MRA_BANK1 ),
+		new Memory_ReadAddress(0x9000, 0x9fff, MRA_BANK2 ),
+		new Memory_ReadAddress(0xa000, 0xafff, MRA_BANK3 ),
+		new Memory_ReadAddress(0xb000, 0xbfff, MRA_BANK4 ),
+		new Memory_ReadAddress(0xc000, 0xe7ff, MRA_BANK6 ),
 	#if 1
-		{0xe800, 0xefff, MRA_BANK7 },
+		new Memory_ReadAddress(0xe800, 0xefff, MRA_BANK7 ),
 	#else
-		{0xe810, 0xe813, pia_0_r },
-		{0xe820, 0xe823, pia_1_r },
-		{0xe840, 0xe84f, via_0_r },
-		{0xe880, 0xe881, crtc6845_0_port_r },
+		new Memory_ReadAddress(0xe810, 0xe813, pia_0_r ),
+		new Memory_ReadAddress(0xe820, 0xe823, pia_1_r ),
+		new Memory_ReadAddress(0xe840, 0xe84f, via_0_r ),
+		new Memory_ReadAddress(0xe880, 0xe881, crtc6845_0_port_r ),
 	#endif
-		{0xf000, 0xffff, MRA_BANK8 },
-	MEMORY_END
+		new Memory_ReadAddress(0xf000, 0xffff, MRA_BANK8 ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( pet80_writemem )
-		{0x0000, 0x7fff, MWA_RAM, &pet_memory},
-		{0x8000, 0x8fff, MWA_BANK1, &videoram },
-		{0x9000, 0x9fff, MWA_BANK2 },
-		{0xa000, 0xafff, MWA_BANK3 },
-		{0xb000, 0xbfff, MWA_BANK4 },
-		{0xc000, 0xe7ff, MWA_BANK6 },
+	public static Memory_WriteAddress pet80_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress(0x0000, 0x7fff, MWA_RAM, pet_memory),
+		new Memory_WriteAddress(0x8000, 0x8fff, MWA_BANK1, videoram ),
+		new Memory_WriteAddress(0x9000, 0x9fff, MWA_BANK2 ),
+		new Memory_WriteAddress(0xa000, 0xafff, MWA_BANK3 ),
+		new Memory_WriteAddress(0xb000, 0xbfff, MWA_BANK4 ),
+		new Memory_WriteAddress(0xc000, 0xe7ff, MWA_BANK6 ),
 	#if 1
-		{0xe800, 0xefff, MWA_BANK7 },
+		new Memory_WriteAddress(0xe800, 0xefff, MWA_BANK7 ),
 	#else
-		{0xe810, 0xe813, pia_0_w },
-		{0xe820, 0xe823, pia_1_w },
-		{0xe840, 0xe84f, via_0_w },
-		{0xe880, 0xe881, crtc6845_0_port_w },
+		new Memory_WriteAddress(0xe810, 0xe813, pia_0_w ),
+		new Memory_WriteAddress(0xe820, 0xe823, pia_1_w ),
+		new Memory_WriteAddress(0xe840, 0xe84f, via_0_w ),
+		new Memory_WriteAddress(0xe880, 0xe881, crtc6845_0_port_w ),
 	#endif
-		{0xf000, 0xffef, MWA_BANK8 },
-	    {0xfff1, 0xffff, MWA_BANK9 },
-	MEMORY_END
+		new Memory_WriteAddress(0xf000, 0xffef, MWA_BANK8 ),
+	    new Memory_WriteAddress(0xfff1, 0xffff, MWA_BANK9 ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
 	
 	/* 0xe880 crtc
@@ -219,31 +231,35 @@ public class pet
 	        bit 7    1=enable system latch
 	
 	*/
-	static MEMORY_READ_START( superpet_readmem )
-		{0x0000, 0x7fff, MRA_RAM},
-		{0x8000, 0x87ff, MRA_RAM },
-		{0xa000, 0xe7ff, MRA_ROM },
-		{0xe810, 0xe813, pia_0_r },
-		{0xe820, 0xe823, pia_1_r },
-		{0xe840, 0xe84f, via_0_r },
-		{0xe880, 0xe881, crtc6845_0_port_r },
+	public static Memory_ReadAddress superpet_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress(0x0000, 0x7fff, MRA_RAM),
+		new Memory_ReadAddress(0x8000, 0x87ff, MRA_RAM ),
+		new Memory_ReadAddress(0xa000, 0xe7ff, MRA_ROM ),
+		new Memory_ReadAddress(0xe810, 0xe813, pia_0_r ),
+		new Memory_ReadAddress(0xe820, 0xe823, pia_1_r ),
+		new Memory_ReadAddress(0xe840, 0xe84f, via_0_r ),
+		new Memory_ReadAddress(0xe880, 0xe881, crtc6845_0_port_r ),
 		/* 0xefe0, 0xefe3, mos 6702 */
 		/* 0xeff0, 0xeff3, acia6551 */
-		{0xeff8, 0xefff, superpet_r },
-		{0xf000, 0xffff, MRA_ROM },
-	MEMORY_END
+		new Memory_ReadAddress(0xeff8, 0xefff, superpet_r ),
+		new Memory_ReadAddress(0xf000, 0xffff, MRA_ROM ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( superpet_writemem )
-		{0x0000, 0x7fff, MWA_RAM, &pet_memory},
-		{0x8000, 0x87ff, videoram_w, &videoram, &videoram_size },
-		{0xa000, 0xe7ff, MWA_ROM },
-		{0xe810, 0xe813, pia_0_w },
-		{0xe820, 0xe823, pia_1_w },
-		{0xe840, 0xe84f, via_0_w },
-		{0xe880, 0xe881, crtc6845_0_port_w },
-		{0xeff8, 0xefff, superpet_w },
-		{0xf000, 0xffff, MWA_ROM },
-	MEMORY_END
+	public static Memory_WriteAddress superpet_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress(0x0000, 0x7fff, MWA_RAM, pet_memory),
+		new Memory_WriteAddress(0x8000, 0x87ff, videoram_w, videoram, videoram_size ),
+		new Memory_WriteAddress(0xa000, 0xe7ff, MWA_ROM ),
+		new Memory_WriteAddress(0xe810, 0xe813, pia_0_w ),
+		new Memory_WriteAddress(0xe820, 0xe823, pia_1_w ),
+		new Memory_WriteAddress(0xe840, 0xe84f, via_0_w ),
+		new Memory_WriteAddress(0xe880, 0xe881, crtc6845_0_port_w ),
+		new Memory_WriteAddress(0xeff8, 0xefff, superpet_w ),
+		new Memory_WriteAddress(0xf000, 0xffff, MWA_ROM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
 	static MEMORY_READ_START( superpet_m6809_readmem)
 		{0x0000, 0x7fff, MRA_BANK1,},
@@ -258,21 +274,23 @@ public class pet
 		{0xf000, 0xffff, MRA_ROM },
 	MEMORY_END
 	
-	static MEMORY_WRITE_START( superpet_m6809_writemem )
-		{0x0000, 0x7fff, MWA_BANK1 }, /* same memory as m6502 */
-		{0x8000, 0x87ff, videoram_w }, /* same memory as m6502 */
-	    {0x9000, 0x9fff, MWA_BANK3 }, /* 64 kbyte ram turned in */
-		{0xa000, 0xe7ff, MWA_ROM },
-		{0xe810, 0xe813, pia_0_w },
-		{0xe820, 0xe823, pia_1_w },
-		{0xe840, 0xe84f, via_0_w },
-		{0xe880, 0xe881, crtc6845_0_port_w },
-		{0xeff8, 0xefff, superpet_w },
-		{0xf000, 0xffff, MWA_ROM },
-	MEMORY_END
+	public static Memory_WriteAddress superpet_m6809_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress(0x0000, 0x7fff, MWA_BANK1 ), /* same memory as m6502 */
+		new Memory_WriteAddress(0x8000, 0x87ff, videoram_w ), /* same memory as m6502 */
+	    new Memory_WriteAddress(0x9000, 0x9fff, MWA_BANK3 ), /* 64 kbyte ram turned in */
+		new Memory_WriteAddress(0xa000, 0xe7ff, MWA_ROM ),
+		new Memory_WriteAddress(0xe810, 0xe813, pia_0_w ),
+		new Memory_WriteAddress(0xe820, 0xe823, pia_1_w ),
+		new Memory_WriteAddress(0xe840, 0xe84f, via_0_w ),
+		new Memory_WriteAddress(0xe880, 0xe881, crtc6845_0_port_w ),
+		new Memory_WriteAddress(0xeff8, 0xefff, superpet_w ),
+		new Memory_WriteAddress(0xf000, 0xffff, MWA_ROM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
 	#define DIPS_HELPER(bit, name, keycode) \
-	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, IP_JOY_NONE)
+	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, IP_JOY_NONE);
 	
 	#define PET_KEYBOARD \
 		PORT_START \
@@ -306,7 +324,7 @@ public class pet
 	    DIPS_HELPER( 0x0020, "<", KEYCODE_CLOSEBRACE)\
 	    DIPS_HELPER( 0x0010, ">", KEYCODE_BACKSLASH)\
 		PORT_BITX( 0x0008, IP_ACTIVE_HIGH, IPF_TOGGLE,\
-			     "(left shift)SHIFT-LOCK (switch)", KEYCODE_CAPSLOCK, IP_JOY_NONE)\
+			     "(left shift);HIFT-LOCK (switch)", KEYCODE_CAPSLOCK, IP_JOY_NONE)\
 		DIPS_HELPER( 0x0004, "A", KEYCODE_A)\
 		DIPS_HELPER( 0x0002, "S", KEYCODE_S)\
 		DIPS_HELPER( 0x0001, "D", KEYCODE_D)\
@@ -395,7 +413,7 @@ public class pet
 	    DIPS_HELPER( 0x0001, "ESC",KEYCODE_ESC)\
 		PORT_START \
 		PORT_BITX( 0x8000, IP_ACTIVE_HIGH, IPF_TOGGLE,\
-			     "(left shift)SHIFT-LOCK (switch)", KEYCODE_CAPSLOCK, IP_JOY_NONE)\
+			     "(left shift);HIFT-LOCK (switch)", KEYCODE_CAPSLOCK, IP_JOY_NONE)\
 		DIPS_HELPER( 0x4000, "A", KEYCODE_A)\
 		DIPS_HELPER( 0x2000, "S", KEYCODE_S)\
 		DIPS_HELPER( 0x1000, "D", KEYCODE_D)\
@@ -446,120 +464,120 @@ public class pet
 	    PORT_START
 	    DIPS_HELPER( 0x8000, "Quickload", KEYCODE_F8)
 	#ifdef PET_TEST_CODE
-		PORT_DIPNAME   ( 0x4000, 0x4000, "Tape Drive/Device 1")
-		PORT_DIPSETTING(  0, DEF_STR( Off ) )
-		PORT_DIPSETTING(0x4000, DEF_STR( On ) )
-		PORT_DIPNAME   ( 0x2000, 0x00, " Tape Sound")
-		PORT_DIPSETTING(  0, DEF_STR( Off ) )
-		PORT_DIPSETTING(0x2000, DEF_STR( On ) )
+		PORT_DIPNAME   ( 0x4000, 0x4000, "Tape Drive/Device 1");
+		PORT_DIPSETTING(  0, DEF_STR( "Off") );
+		PORT_DIPSETTING(0x4000, DEF_STR( "On") );
+		PORT_DIPNAME   ( 0x2000, 0x00, " Tape Sound");
+		PORT_DIPSETTING(  0, DEF_STR( "Off") );
+		PORT_DIPSETTING(0x2000, DEF_STR( "On") );
 		DIPS_HELPER( 0x1000, "Tape Drive Play",       KEYCODE_F5)
 		DIPS_HELPER( 0x0800, "Tape Drive Record",     KEYCODE_F6)
 		DIPS_HELPER( 0x0400, "Tape Drive Stop",       KEYCODE_F7)
 	#endif
-		PORT_BIT (0x200, 0x000, IPT_UNUSED) /* normal keyboard/bios */
-		PORT_DIPNAME   ( 0x180, 0x180, "Memory")
-		PORT_DIPSETTING(  0, "4KByte" )
-		PORT_DIPSETTING(  0x80, "8KByte" )
-		PORT_DIPSETTING(  0x100, "16KByte" )
-		PORT_DIPSETTING(  0x180, "32KByte" )
-		PORT_BIT (8, 0, IPT_UNUSED) /* no 8096 hardware */
-		PORT_BIT (4, 0, IPT_UNUSED) /* no superpet switch */
-		PORT_DIPNAME ( 0x02, 0x02, "IEEE488 Bus/Dev 8/Floppy Sim")
-		PORT_DIPSETTING(  0, DEF_STR( No ) )
-		PORT_DIPSETTING(0x02, DEF_STR( Yes ) )
-		PORT_DIPNAME ( 0x01, 0x00, "IEEE488 Bus/Dev 9/Floppy Sim")
-		PORT_DIPSETTING(  0, DEF_STR( No ) )
-		PORT_DIPSETTING(  1, DEF_STR( Yes ) )
-	INPUT_PORTS_END
+		PORT_BIT (0x200, 0x000, IPT_UNUSED);/* normal keyboard/bios */
+		PORT_DIPNAME   ( 0x180, 0x180, "Memory");
+		PORT_DIPSETTING(  0, "4KByte" );
+		PORT_DIPSETTING(  0x80, "8KByte" );
+		PORT_DIPSETTING(  0x100, "16KByte" );
+		PORT_DIPSETTING(  0x180, "32KByte" );
+		PORT_BIT (8, 0, IPT_UNUSED);/* no 8096 hardware */
+		PORT_BIT (4, 0, IPT_UNUSED);/* no superpet switch */
+		PORT_DIPNAME ( 0x02, 0x02, "IEEE488 Bus/Dev 8/Floppy Sim");
+		PORT_DIPSETTING(  0, DEF_STR( "No") );
+		PORT_DIPSETTING(0x02, DEF_STR( "Yes") );
+		PORT_DIPNAME ( 0x01, 0x00, "IEEE488 Bus/Dev 9/Floppy Sim");
+		PORT_DIPSETTING(  0, DEF_STR( "No") );
+		PORT_DIPSETTING(  1, DEF_STR( "Yes") );
+	INPUT_PORTS_END(); }}; 
 	
 	INPUT_PORTS_START (petb)
 		PET_B_KEYBOARD
 	    PORT_START
 	    DIPS_HELPER( 0x8000, "Quickload", KEYCODE_F8)
 	#ifdef PET_TEST_CODE
-		PORT_DIPNAME   ( 0x4000, 0x4000, "Tape Drive/Device 1")
-		PORT_DIPSETTING(  0, DEF_STR( Off ) )
-		PORT_DIPSETTING(0x4000, DEF_STR( On ) )
-		PORT_DIPNAME   ( 0x2000, 0x00, " Tape Sound")
-		PORT_DIPSETTING(  0, DEF_STR( Off ) )
-		PORT_DIPSETTING(0x2000, DEF_STR( On ) )
+		PORT_DIPNAME   ( 0x4000, 0x4000, "Tape Drive/Device 1");
+		PORT_DIPSETTING(  0, DEF_STR( "Off") );
+		PORT_DIPSETTING(0x4000, DEF_STR( "On") );
+		PORT_DIPNAME   ( 0x2000, 0x00, " Tape Sound");
+		PORT_DIPSETTING(  0, DEF_STR( "Off") );
+		PORT_DIPSETTING(0x2000, DEF_STR( "On") );
 		DIPS_HELPER( 0x1000, "Tape Drive Play",       KEYCODE_F5)
 		DIPS_HELPER( 0x0800, "Tape Drive Record",     KEYCODE_F6)
 		DIPS_HELPER( 0x0400, "Tape Drive Stop",       KEYCODE_F7)
 	#endif
-		PORT_BIT (0x200, 0x200, IPT_UNUSED) /* business keyboard/bios */
-		PORT_DIPNAME   ( 0x180, 0x180, "Memory")
-		PORT_DIPSETTING(  0, "4KByte" )
-		PORT_DIPSETTING(  0x80, "8KByte" )
-		PORT_DIPSETTING(  0x100, "16KByte" )
-		PORT_DIPSETTING(  0x180, "32KByte" )
-		PORT_BIT (8, 0, IPT_UNUSED) /* no 8096 hardware */
-		PORT_BIT (4, 0, IPT_UNUSED) /* no superpet switch */
-		PORT_DIPNAME ( 0x02, 0x02, "IEEE488 Bus/Dev 8/Floppy Sim")
-		PORT_DIPSETTING(  0, DEF_STR( No ) )
-		PORT_DIPSETTING(0x02, DEF_STR( Yes ) )
-		PORT_DIPNAME ( 0x01, 0x00, "IEEE488 Bus/Dev 9/Floppy Sim")
-		PORT_DIPSETTING(  0, DEF_STR( No ) )
-		PORT_DIPSETTING(  1, DEF_STR( Yes ) )
-	INPUT_PORTS_END
+		PORT_BIT (0x200, 0x200, IPT_UNUSED);/* business keyboard/bios */
+		PORT_DIPNAME   ( 0x180, 0x180, "Memory");
+		PORT_DIPSETTING(  0, "4KByte" );
+		PORT_DIPSETTING(  0x80, "8KByte" );
+		PORT_DIPSETTING(  0x100, "16KByte" );
+		PORT_DIPSETTING(  0x180, "32KByte" );
+		PORT_BIT (8, 0, IPT_UNUSED);/* no 8096 hardware */
+		PORT_BIT (4, 0, IPT_UNUSED);/* no superpet switch */
+		PORT_DIPNAME ( 0x02, 0x02, "IEEE488 Bus/Dev 8/Floppy Sim");
+		PORT_DIPSETTING(  0, DEF_STR( "No") );
+		PORT_DIPSETTING(0x02, DEF_STR( "Yes") );
+		PORT_DIPNAME ( 0x01, 0x00, "IEEE488 Bus/Dev 9/Floppy Sim");
+		PORT_DIPSETTING(  0, DEF_STR( "No") );
+		PORT_DIPSETTING(  1, DEF_STR( "Yes") );
+	INPUT_PORTS_END(); }}; 
 	
 	INPUT_PORTS_START (cbm8096)
 		PET_B_KEYBOARD
 	    PORT_START
 	    DIPS_HELPER( 0x8000, "Quickload", KEYCODE_F8)
 	#ifdef PET_TEST_CODE
-		PORT_DIPNAME   ( 0x4000, 0x4000, "Tape Drive/Device 1")
-		PORT_DIPSETTING(  0, DEF_STR( Off ) )
-		PORT_DIPSETTING(0x4000, DEF_STR( On ) )
-		PORT_DIPNAME   ( 0x2000, 0x00, " Tape Sound")
-		PORT_DIPSETTING(  0, DEF_STR( Off ) )
-		PORT_DIPSETTING(0x2000, DEF_STR( On ) )
+		PORT_DIPNAME   ( 0x4000, 0x4000, "Tape Drive/Device 1");
+		PORT_DIPSETTING(  0, DEF_STR( "Off") );
+		PORT_DIPSETTING(0x4000, DEF_STR( "On") );
+		PORT_DIPNAME   ( 0x2000, 0x00, " Tape Sound");
+		PORT_DIPSETTING(  0, DEF_STR( "Off") );
+		PORT_DIPSETTING(0x2000, DEF_STR( "On") );
 		DIPS_HELPER( 0x1000, "Tape Drive Play",       KEYCODE_F5)
 		DIPS_HELPER( 0x0800, "Tape Drive Record",     KEYCODE_F6)
 		DIPS_HELPER( 0x0400, "Tape Drive Stop",       KEYCODE_F7)
 	#endif
-		PORT_BIT (0x200, 0x200, IPT_UNUSED) /* business keyboard/bios */
-		PORT_BIT (0x180, 0x180, IPT_UNUSED) /* 32 kb Memory */
-		PORT_DIPNAME ( 0x08, 0x08, "CBM8096, 8296 Expansion Memory")
-		PORT_DIPSETTING(  0, DEF_STR( No ) )
-		PORT_DIPSETTING(0x08, DEF_STR( Yes ) )
-		PORT_BIT (4, 0, IPT_UNUSED) /* no superpet switch */
-		PORT_DIPNAME ( 0x02, 0x02, "IEEE488 Bus/Dev 8/Floppy Sim")
-		PORT_DIPSETTING(  0, DEF_STR( No ) )
-		PORT_DIPSETTING(0x02, DEF_STR( Yes ) )
-		PORT_DIPNAME ( 0x01, 0x00, "IEEE488 Bus/Dev 9/Floppy Sim")
-		PORT_DIPSETTING(  0, DEF_STR( No ) )
-		PORT_DIPSETTING(  1, DEF_STR( Yes ) )
-	INPUT_PORTS_END
+		PORT_BIT (0x200, 0x200, IPT_UNUSED);/* business keyboard/bios */
+		PORT_BIT (0x180, 0x180, IPT_UNUSED);/* 32 kb Memory */
+		PORT_DIPNAME ( 0x08, 0x08, "CBM8096, 8296 Expansion Memory");
+		PORT_DIPSETTING(  0, DEF_STR( "No") );
+		PORT_DIPSETTING(0x08, DEF_STR( "Yes") );
+		PORT_BIT (4, 0, IPT_UNUSED);/* no superpet switch */
+		PORT_DIPNAME ( 0x02, 0x02, "IEEE488 Bus/Dev 8/Floppy Sim");
+		PORT_DIPSETTING(  0, DEF_STR( "No") );
+		PORT_DIPSETTING(0x02, DEF_STR( "Yes") );
+		PORT_DIPNAME ( 0x01, 0x00, "IEEE488 Bus/Dev 9/Floppy Sim");
+		PORT_DIPSETTING(  0, DEF_STR( "No") );
+		PORT_DIPSETTING(  1, DEF_STR( "Yes") );
+	INPUT_PORTS_END(); }}; 
 	
 	INPUT_PORTS_START (superpet)
 		PET_B_KEYBOARD
 	    PORT_START
 	    DIPS_HELPER( 0x8000, "Quickload", KEYCODE_F8)
 	#ifdef PET_TEST_CODE
-		PORT_DIPNAME   ( 0x4000, 0x4000, "Tape Drive/Device 1")
-		PORT_DIPSETTING(  0, DEF_STR( Off ) )
-		PORT_DIPSETTING(0x4000, DEF_STR( On ) )
-		PORT_DIPNAME   ( 0x2000, 0x00, " Tape Sound")
-		PORT_DIPSETTING(  0, DEF_STR( Off ) )
-		PORT_DIPSETTING(0x2000, DEF_STR( On ) )
+		PORT_DIPNAME   ( 0x4000, 0x4000, "Tape Drive/Device 1");
+		PORT_DIPSETTING(  0, DEF_STR( "Off") );
+		PORT_DIPSETTING(0x4000, DEF_STR( "On") );
+		PORT_DIPNAME   ( 0x2000, 0x00, " Tape Sound");
+		PORT_DIPSETTING(  0, DEF_STR( "Off") );
+		PORT_DIPSETTING(0x2000, DEF_STR( "On") );
 		DIPS_HELPER( 0x1000, "Tape Drive Play",       KEYCODE_F5)
 		DIPS_HELPER( 0x0800, "Tape Drive Record",     KEYCODE_F6)
 		DIPS_HELPER( 0x0400, "Tape Drive Stop",       KEYCODE_F7)
 	#endif
-		PORT_BIT (0x200, 0x200, IPT_UNUSED) /* business keyboard/bios */
-		PORT_BIT (0x180, 0x180, IPT_UNUSED) /* 32KByte */
-		PORT_BIT (8, 0, IPT_UNUSED) /* no 8096 hardware */
-		PORT_DIPNAME   ( 4, 4, "CPU Select")
-		PORT_DIPSETTING( 0, "M6502" )
-		PORT_DIPSETTING( 4, "M6809" )
-		PORT_DIPNAME ( 0x02, 0x02, "IEEE488 Bus/Dev 8/Floppy Sim")
-		PORT_DIPSETTING(  0, DEF_STR( No ) )
-		PORT_DIPSETTING(0x02, DEF_STR( Yes ) )
-		PORT_DIPNAME ( 0x01, 0x00, "IEEE488 Bus/Dev 9/Floppy Sim")
-		PORT_DIPSETTING(  0, DEF_STR( No ) )
-		PORT_DIPSETTING(  1, DEF_STR( Yes ) )
-	INPUT_PORTS_END
+		PORT_BIT (0x200, 0x200, IPT_UNUSED);/* business keyboard/bios */
+		PORT_BIT (0x180, 0x180, IPT_UNUSED);/* 32KByte */
+		PORT_BIT (8, 0, IPT_UNUSED);/* no 8096 hardware */
+		PORT_DIPNAME   ( 4, 4, "CPU Select");
+		PORT_DIPSETTING( 0, "M6502" );
+		PORT_DIPSETTING( 4, "M6809" );
+		PORT_DIPNAME ( 0x02, 0x02, "IEEE488 Bus/Dev 8/Floppy Sim");
+		PORT_DIPSETTING(  0, DEF_STR( "No") );
+		PORT_DIPSETTING(0x02, DEF_STR( "Yes") );
+		PORT_DIPNAME ( 0x01, 0x00, "IEEE488 Bus/Dev 9/Floppy Sim");
+		PORT_DIPSETTING(  0, DEF_STR( "No") );
+		PORT_DIPSETTING(  1, DEF_STR( "Yes") );
+	INPUT_PORTS_END(); }}; 
 	
 	unsigned char pet_palette[] =
 	{
@@ -573,54 +591,54 @@ public class pet
 		{ 1, 0 }
 	};
 	
-	static struct GfxLayout pet_charlayout =
-	{
+	static GfxLayout pet_charlayout = new GfxLayout
+	(
 	        8,8,
 	        256,                                    /* 256 characters */
 	        1,                      /* 1 bits per pixel */
-	        { 0 },                  /* no bitplanes; 1 bit per pixel */
+	        new int[] { 0 },                  /* no bitplanes; 1 bit per pixel */
 	        /* x offsets */
-	        { 0,1,2,3,4,5,6,7 },
+	        new int[] { 0,1,2,3,4,5,6,7 },
 	        /* y offsets */
-	        { 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8,
+	        new int[] { 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8,
 	        },
 	        8*8
-	};
+	);
 	
-	static struct GfxLayout pet80_charlayout =
-	{
+	static GfxLayout pet80_charlayout = new GfxLayout
+	(
 	        8,16,
 	        256,                                    /* 256 characters */
 	        1,                      /* 1 bits per pixel */
-	        { 0 },                  /* no bitplanes; 1 bit per pixel */
+	        new int[] { 0 },                  /* no bitplanes; 1 bit per pixel */
 	        /* x offsets */
-	        { 0,1,2,3,4,5,6,7 },
+	        new int[] { 0,1,2,3,4,5,6,7 },
 	        /* y offsets */
-	        {
+	        new int[] {
 				0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8,
 				8*8, 9*8, 10*8, 11*8, 12*8, 13*8, 14*8, 15*8
 	        },
 	        8*16
+	);
+	
+	static GfxDecodeInfo pet_gfxdecodeinfo[] ={
+		new GfxDecodeInfo( 1, 0x0000, pet_charlayout,                     0, 1 ),
+		new GfxDecodeInfo( 1, 0x0800, pet_charlayout,                     0, 1 ),
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
-	static struct GfxDecodeInfo pet_gfxdecodeinfo[] = {
-		{ 1, 0x0000, &pet_charlayout,                     0, 1 },
-		{ 1, 0x0800, &pet_charlayout,                     0, 1 },
-	    { -1 } /* end of array */
+	static GfxDecodeInfo pet80_gfxdecodeinfo[] ={
+		new GfxDecodeInfo( 1, 0x0000, pet80_charlayout,                     0, 1 ),
+		new GfxDecodeInfo( 1, 0x1000, pet80_charlayout,                     0, 1 ),
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
-	static struct GfxDecodeInfo pet80_gfxdecodeinfo[] = {
-		{ 1, 0x0000, &pet80_charlayout,                     0, 1 },
-		{ 1, 0x1000, &pet80_charlayout,                     0, 1 },
-	    { -1 } /* end of array */
-	};
-	
-	static struct GfxDecodeInfo superpet_gfxdecodeinfo[] = {
-		{ 2, 0x0000, &pet80_charlayout,                     0, 1 },
-		{ 2, 0x1000, &pet80_charlayout,                     0, 1 },
-		{ 2, 0x2000, &pet80_charlayout,                     0, 1 },
-		{ 2, 0x3000, &pet80_charlayout,                     0, 1 },
-	    { -1 } /* end of array */
+	static GfxDecodeInfo superpet_gfxdecodeinfo[] ={
+		new GfxDecodeInfo( 2, 0x0000, pet80_charlayout,                     0, 1 ),
+		new GfxDecodeInfo( 2, 0x1000, pet80_charlayout,                     0, 1 ),
+		new GfxDecodeInfo( 2, 0x2000, pet80_charlayout,                     0, 1 ),
+		new GfxDecodeInfo( 2, 0x3000, pet80_charlayout,                     0, 1 ),
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
 	static void pet_init_palette (unsigned char *sys_palette, unsigned short *sys_colortable, const unsigned char *color_prom)
@@ -631,158 +649,158 @@ public class pet
 	
 	/* basic 1 */
 	ROM_START (pet)
-		ROM_REGION (0x10000, REGION_CPU1, 0)
-	    ROM_LOAD ("901447.09", 0xc000, 0x800, 0x03cf16d0)
-	    ROM_LOAD ("901447.02", 0xc800, 0x800, 0x69fd8a8f)
-	    ROM_LOAD ("901447.03", 0xd000, 0x800, 0xd349f2d4)
-	    ROM_LOAD ("901447.04", 0xd800, 0x800, 0x850544eb)
-	    ROM_LOAD ("901447.05", 0xe000, 0x800, 0x9e1c5cea)
-	    ROM_LOAD ("901447.06", 0xf000, 0x800, 0x661a814a)
-	    ROM_LOAD ("901447.07", 0xf800, 0x800, 0xc4f47ad1)
-		ROM_REGION (0x1000, REGION_GFX1, 0)
-	    ROM_LOAD ("901447.08", 0x0000, 0x800, 0x54f32f45)
-	ROM_END
+		ROM_REGION (0x10000, REGION_CPU1, 0);
+	    ROM_LOAD ("901447.09", 0xc000, 0x800, 0x03cf16d0);
+	    ROM_LOAD ("901447.02", 0xc800, 0x800, 0x69fd8a8f);
+	    ROM_LOAD ("901447.03", 0xd000, 0x800, 0xd349f2d4);
+	    ROM_LOAD ("901447.04", 0xd800, 0x800, 0x850544eb);
+	    ROM_LOAD ("901447.05", 0xe000, 0x800, 0x9e1c5cea);
+	    ROM_LOAD ("901447.06", 0xf000, 0x800, 0x661a814a);
+	    ROM_LOAD ("901447.07", 0xf800, 0x800, 0xc4f47ad1);
+		ROM_REGION (0x1000, REGION_GFX1, 0);
+	    ROM_LOAD ("901447.08", 0x0000, 0x800, 0x54f32f45);
+	ROM_END(); }}; 
 	
 	/* basic 2 */
 	ROM_START (pet2)
-		ROM_REGION (0x10000, REGION_CPU1, 0)
-	    ROM_LOAD ("901465.01", 0xc000, 0x1000, 0x63a7fe4a)
-	    ROM_LOAD ("901465.02", 0xd000, 0x1000, 0xae4cb035)
-	    ROM_LOAD ("901447.24", 0xe000, 0x800, 0xe459ab32)
-	    ROM_LOAD ("901465.03", 0xf000, 0x1000, 0xf02238e2)
-		ROM_REGION (0x1000, REGION_GFX1, 0)
-	    ROM_LOAD ("901447.08", 0x0000, 0x800, 0x54f32f45)
-	ROM_END
+		ROM_REGION (0x10000, REGION_CPU1, 0);
+	    ROM_LOAD ("901465.01", 0xc000, 0x1000, 0x63a7fe4a);
+	    ROM_LOAD ("901465.02", 0xd000, 0x1000, 0xae4cb035);
+	    ROM_LOAD ("901447.24", 0xe000, 0x800, 0xe459ab32);
+	    ROM_LOAD ("901465.03", 0xf000, 0x1000, 0xf02238e2);
+		ROM_REGION (0x1000, REGION_GFX1, 0);
+	    ROM_LOAD ("901447.08", 0x0000, 0x800, 0x54f32f45);
+	ROM_END(); }}; 
 	
 	/* basic 2 business */
 	ROM_START (pet2b)
-		ROM_REGION (0x10000, REGION_CPU1, 0)
-	    ROM_LOAD ("901465.01", 0xc000, 0x1000, 0x63a7fe4a)
-	    ROM_LOAD ("901465.02", 0xd000, 0x1000, 0xae4cb035)
-	    ROM_LOAD ("901474.01", 0xe000, 0x800, 0x05db957e)
-	    ROM_LOAD ("901465.03", 0xf000, 0x1000, 0xf02238e2)
-		ROM_REGION (0x1000, REGION_GFX1, 0)
-	    ROM_LOAD ("901447.10", 0x0000, 0x800, 0xd8408674)
-	ROM_END
+		ROM_REGION (0x10000, REGION_CPU1, 0);
+	    ROM_LOAD ("901465.01", 0xc000, 0x1000, 0x63a7fe4a);
+	    ROM_LOAD ("901465.02", 0xd000, 0x1000, 0xae4cb035);
+	    ROM_LOAD ("901474.01", 0xe000, 0x800, 0x05db957e);
+	    ROM_LOAD ("901465.03", 0xf000, 0x1000, 0xf02238e2);
+		ROM_REGION (0x1000, REGION_GFX1, 0);
+	    ROM_LOAD ("901447.10", 0x0000, 0x800, 0xd8408674);
+	ROM_END(); }}; 
 	
 	/* basic 4 business */
 	ROM_START (pet4b)
-		ROM_REGION (0x10000, REGION_CPU1, 0)
-	    ROM_LOAD ("901465.23", 0xb000, 0x1000, 0xae3deac0)
-	    ROM_LOAD ("901465.20", 0xc000, 0x1000, 0x0fc17b9c)
-	    ROM_LOAD ("901465.21", 0xd000, 0x1000, 0x36d91855)
-	    ROM_LOAD ("901474.02", 0xe000, 0x800, 0x75ff4af7)
-	    ROM_LOAD ("901465.22", 0xf000, 0x1000, 0xcc5298a1)
-		ROM_REGION (0x1000, REGION_GFX1, 0)
-	    ROM_LOAD ("901447.10", 0x0000, 0x800, 0xd8408674)
-	ROM_END
+		ROM_REGION (0x10000, REGION_CPU1, 0);
+	    ROM_LOAD ("901465.23", 0xb000, 0x1000, 0xae3deac0);
+	    ROM_LOAD ("901465.20", 0xc000, 0x1000, 0x0fc17b9c);
+	    ROM_LOAD ("901465.21", 0xd000, 0x1000, 0x36d91855);
+	    ROM_LOAD ("901474.02", 0xe000, 0x800, 0x75ff4af7);
+	    ROM_LOAD ("901465.22", 0xf000, 0x1000, 0xcc5298a1);
+		ROM_REGION (0x1000, REGION_GFX1, 0);
+	    ROM_LOAD ("901447.10", 0x0000, 0x800, 0xd8408674);
+	ROM_END(); }}; 
 	
 	/* basic 4 crtc*/
 	ROM_START (pet4)
-		ROM_REGION (0x10000, REGION_CPU1, 0)
-	    ROM_LOAD ("901465.23", 0xb000, 0x1000, 0xae3deac0)
-	    ROM_LOAD ("901465.20", 0xc000, 0x1000, 0x0fc17b9c)
-	    ROM_LOAD ("901465.21", 0xd000, 0x1000, 0x36d91855)
-	    ROM_LOAD ("901499.01", 0xe000, 0x800, 0x5f85bdf8)
-	    ROM_LOAD ("901465.22", 0xf000, 0x1000, 0xcc5298a1)
-		ROM_REGION (0x1000, REGION_GFX1, 0)
-	    ROM_LOAD ("901447.08", 0x0000, 0x800, 0x54f32f45)
-	ROM_END
+		ROM_REGION (0x10000, REGION_CPU1, 0);
+	    ROM_LOAD ("901465.23", 0xb000, 0x1000, 0xae3deac0);
+	    ROM_LOAD ("901465.20", 0xc000, 0x1000, 0x0fc17b9c);
+	    ROM_LOAD ("901465.21", 0xd000, 0x1000, 0x36d91855);
+	    ROM_LOAD ("901499.01", 0xe000, 0x800, 0x5f85bdf8);
+	    ROM_LOAD ("901465.22", 0xf000, 0x1000, 0xcc5298a1);
+		ROM_REGION (0x1000, REGION_GFX1, 0);
+	    ROM_LOAD ("901447.08", 0x0000, 0x800, 0x54f32f45);
+	ROM_END(); }}; 
 	
 	/* basic 4 crtc 50 hz */
 	ROM_START (pet4pal)
-		ROM_REGION (0x10000, REGION_CPU1, 0)
-	    ROM_LOAD ("901465.23", 0xb000, 0x1000, 0xae3deac0)
-	    ROM_LOAD ("901465.20", 0xc000, 0x1000, 0x0fc17b9c)
-	    ROM_LOAD ("901465.21", 0xd000, 0x1000, 0x36d91855)
-	    ROM_LOAD ("901498.01", 0xe000, 0x800, 0x3370e359)
-	    ROM_LOAD ("901465.22", 0xf000, 0x1000, 0xcc5298a1)
-		ROM_REGION (0x1000, REGION_GFX1, 0)
-	    ROM_LOAD ("901447.08", 0x0000, 0x800, 0x54f32f45)
-	ROM_END
+		ROM_REGION (0x10000, REGION_CPU1, 0);
+	    ROM_LOAD ("901465.23", 0xb000, 0x1000, 0xae3deac0);
+	    ROM_LOAD ("901465.20", 0xc000, 0x1000, 0x0fc17b9c);
+	    ROM_LOAD ("901465.21", 0xd000, 0x1000, 0x36d91855);
+	    ROM_LOAD ("901498.01", 0xe000, 0x800, 0x3370e359);
+	    ROM_LOAD ("901465.22", 0xf000, 0x1000, 0xcc5298a1);
+		ROM_REGION (0x1000, REGION_GFX1, 0);
+	    ROM_LOAD ("901447.08", 0x0000, 0x800, 0x54f32f45);
+	ROM_END(); }}; 
 	
 	/* basic 4 business 80 columns */
 	ROM_START (pet80)
-		ROM_REGION (0x20000, REGION_CPU1, 0)
-	    ROM_LOAD ("901465.23", 0xb000, 0x1000, 0xae3deac0)
-	    ROM_LOAD ("901465.20", 0xc000, 0x1000, 0x0fc17b9c)
-	    ROM_LOAD ("901465.21", 0xd000, 0x1000, 0x36d91855)
-	    ROM_LOAD ("901474.03", 0xe000, 0x800, 0x5674dd5e)
-	    ROM_LOAD ("901465.22", 0xf000, 0x1000, 0xcc5298a1)
-		ROM_REGION (0x2000, REGION_GFX1, 0)
-	    ROM_LOAD ("901447.10", 0x0000, 0x800, 0xd8408674)
-	ROM_END
+		ROM_REGION (0x20000, REGION_CPU1, 0);
+	    ROM_LOAD ("901465.23", 0xb000, 0x1000, 0xae3deac0);
+	    ROM_LOAD ("901465.20", 0xc000, 0x1000, 0x0fc17b9c);
+	    ROM_LOAD ("901465.21", 0xd000, 0x1000, 0x36d91855);
+	    ROM_LOAD ("901474.03", 0xe000, 0x800, 0x5674dd5e);
+	    ROM_LOAD ("901465.22", 0xf000, 0x1000, 0xcc5298a1);
+		ROM_REGION (0x2000, REGION_GFX1, 0);
+	    ROM_LOAD ("901447.10", 0x0000, 0x800, 0xd8408674);
+	ROM_END(); }}; 
 	
 	/* basic 4 business 80 columns 50 hz */
 	ROM_START (pet80pal)
-		ROM_REGION (0x20000, REGION_CPU1, 0)
-	    ROM_LOAD ("901465.23", 0xb000, 0x1000, 0xae3deac0)
-	    ROM_LOAD ("901465.20", 0xc000, 0x1000, 0x0fc17b9c)
-	    ROM_LOAD ("901465.21", 0xd000, 0x1000, 0x36d91855)
-	    ROM_LOAD ("901474.04", 0xe000, 0x800, 0xabb000e7)
-	    ROM_LOAD ("901465.22", 0xf000, 0x1000, 0xcc5298a1)
-		ROM_REGION (0x2000, REGION_GFX1, 0)
-	    ROM_LOAD ("901447.10", 0x0000, 0x800, 0xd8408674)
-	ROM_END
+		ROM_REGION (0x20000, REGION_CPU1, 0);
+	    ROM_LOAD ("901465.23", 0xb000, 0x1000, 0xae3deac0);
+	    ROM_LOAD ("901465.20", 0xc000, 0x1000, 0x0fc17b9c);
+	    ROM_LOAD ("901465.21", 0xd000, 0x1000, 0x36d91855);
+	    ROM_LOAD ("901474.04", 0xe000, 0x800, 0xabb000e7);
+	    ROM_LOAD ("901465.22", 0xf000, 0x1000, 0xcc5298a1);
+		ROM_REGION (0x2000, REGION_GFX1, 0);
+	    ROM_LOAD ("901447.10", 0x0000, 0x800, 0xd8408674);
+	ROM_END(); }}; 
 	
 	ROM_START (cbm80ger)
-		ROM_REGION (0x20000, REGION_CPU1, 0)
-		ROM_LOAD ("901465.23", 0xb000, 0x1000, 0xae3deac0)
-		ROM_LOAD ("901465.20", 0xc000, 0x1000, 0x0fc17b9c)
-		ROM_LOAD ("901465.21", 0xd000, 0x1000, 0x36d91855)
-		ROM_LOAD ("german.bin", 0xe000, 0x800, 0x1c1e597d)
-		ROM_LOAD ("901465.22", 0xf000, 0x1000, 0xcc5298a1)
-		ROM_REGION (0x2000, REGION_GFX1, 0)
-		ROM_LOAD ("chargen.de", 0x0000, 0x800, 0x3bb8cb87)
-	ROM_END
+		ROM_REGION (0x20000, REGION_CPU1, 0);
+		ROM_LOAD ("901465.23", 0xb000, 0x1000, 0xae3deac0);
+		ROM_LOAD ("901465.20", 0xc000, 0x1000, 0x0fc17b9c);
+		ROM_LOAD ("901465.21", 0xd000, 0x1000, 0x36d91855);
+		ROM_LOAD ("german.bin", 0xe000, 0x800, 0x1c1e597d);
+		ROM_LOAD ("901465.22", 0xf000, 0x1000, 0xcc5298a1);
+		ROM_REGION (0x2000, REGION_GFX1, 0);
+		ROM_LOAD ("chargen.de", 0x0000, 0x800, 0x3bb8cb87);
+	ROM_END(); }}; 
 	
 	ROM_START (cbm80swe)
-		ROM_REGION (0x20000, REGION_CPU1, 0)
-	    ROM_LOAD ("901465.23", 0xb000, 0x1000, 0xae3deac0)
-	    ROM_LOAD ("901465.20", 0xc000, 0x1000, 0x0fc17b9c)
-	    ROM_LOAD ("901465.21", 0xd000, 0x1000, 0x36d91855)
-	    ROM_LOAD ("editswe.bin", 0xe000, 0x800, 0x75901dd7)
-	    ROM_LOAD ("901465.22", 0xf000, 0x1000, 0xcc5298a1)
-		ROM_REGION (0x2000, REGION_GFX1, 0)
-	    ROM_LOAD ("901447.14", 0x0000, 0x800, 0x48c77d29)
-	ROM_END
+		ROM_REGION (0x20000, REGION_CPU1, 0);
+	    ROM_LOAD ("901465.23", 0xb000, 0x1000, 0xae3deac0);
+	    ROM_LOAD ("901465.20", 0xc000, 0x1000, 0x0fc17b9c);
+	    ROM_LOAD ("901465.21", 0xd000, 0x1000, 0x36d91855);
+	    ROM_LOAD ("editswe.bin", 0xe000, 0x800, 0x75901dd7);
+	    ROM_LOAD ("901465.22", 0xf000, 0x1000, 0xcc5298a1);
+		ROM_REGION (0x2000, REGION_GFX1, 0);
+	    ROM_LOAD ("901447.14", 0x0000, 0x800, 0x48c77d29);
+	ROM_END(); }}; 
 	
 	ROM_START (superpet)
-		ROM_REGION (0x10000, REGION_CPU1, 0)
-	    ROM_LOAD ("901465.23", 0xb000, 0x1000, 0xae3deac0)
-	    ROM_LOAD ("901465.20", 0xc000, 0x1000, 0x0fc17b9c)
-	    ROM_LOAD ("901465.21", 0xd000, 0x1000, 0x36d91855)
-	    ROM_LOAD ("901474.04", 0xe000, 0x800, 0xabb000e7)
-	    ROM_LOAD ("901465.22", 0xf000, 0x1000, 0xcc5298a1)
-		ROM_REGION (0x20000, REGION_CPU2, 0)
-	    ROM_LOAD ("901898.01", 0xa000, 0x1000, 0x728a998b)
-	    ROM_LOAD ("901898.02", 0xb000, 0x1000, 0x6beb7c62)
-	    ROM_LOAD ("901898.03", 0xc000, 0x1000, 0x5db4983d)
-	    ROM_LOAD ("901898.04", 0xd000, 0x1000, 0xf55fc559)
-	    ROM_LOAD ("901897.01", 0xe000, 0x800, 0xb2cee903)
-	    ROM_LOAD ("901898.05", 0xf000, 0x1000, 0xf42df0cb)
-		ROM_REGION (0x4000, REGION_GFX1, 0)
-	    ROM_LOAD ("901640.01", 0x0000, 0x1000, 0xee8229c4)
-	ROM_END
+		ROM_REGION (0x10000, REGION_CPU1, 0);
+	    ROM_LOAD ("901465.23", 0xb000, 0x1000, 0xae3deac0);
+	    ROM_LOAD ("901465.20", 0xc000, 0x1000, 0x0fc17b9c);
+	    ROM_LOAD ("901465.21", 0xd000, 0x1000, 0x36d91855);
+	    ROM_LOAD ("901474.04", 0xe000, 0x800, 0xabb000e7);
+	    ROM_LOAD ("901465.22", 0xf000, 0x1000, 0xcc5298a1);
+		ROM_REGION (0x20000, REGION_CPU2, 0);
+	    ROM_LOAD ("901898.01", 0xa000, 0x1000, 0x728a998b);
+	    ROM_LOAD ("901898.02", 0xb000, 0x1000, 0x6beb7c62);
+	    ROM_LOAD ("901898.03", 0xc000, 0x1000, 0x5db4983d);
+	    ROM_LOAD ("901898.04", 0xd000, 0x1000, 0xf55fc559);
+	    ROM_LOAD ("901897.01", 0xe000, 0x800, 0xb2cee903);
+	    ROM_LOAD ("901898.05", 0xf000, 0x1000, 0xf42df0cb);
+		ROM_REGION (0x4000, REGION_GFX1, 0);
+	    ROM_LOAD ("901640.01", 0x0000, 0x1000, 0xee8229c4);
+	ROM_END(); }}; 
 	
 	/* swedish m6809 roms needed */
 	ROM_START (mmf9000)
-		ROM_REGION (0x10000, REGION_CPU1, 0)
-	    ROM_LOAD ("901465.23", 0xb000, 0x1000, 0xae3deac0)
-	    ROM_LOAD ("901465.20", 0xc000, 0x1000, 0x0fc17b9c)
-	    ROM_LOAD ("901465.21", 0xd000, 0x1000, 0x36d91855)
-	    ROM_LOAD ("editswe.bin", 0xe000, 0x800, 0x75901dd7)
-	    ROM_LOAD ("901465.22", 0xf000, 0x1000, 0xcc5298a1)
-		ROM_REGION (0x20000, REGION_CPU2, 0)
-	    ROM_LOAD ("901898.01", 0xa000, 0x1000, 0x728a998b)
-	    ROM_LOAD ("901898.02", 0xb000, 0x1000, 0x6beb7c62)
-	    ROM_LOAD ("901898.03", 0xc000, 0x1000, 0x5db4983d)
-	    ROM_LOAD ("901898.04", 0xd000, 0x1000, 0xf55fc559)
-	    ROM_LOAD ("901897.01", 0xe000, 0x800, 0xb2cee903)
-	    ROM_LOAD ("901898.05", 0xf000, 0x1000, 0xf42df0cb)
-		ROM_REGION (0x4000, REGION_GFX1, 0)
-	    ROM_LOAD ("charswe.bin", 0x0000, 0x1000, 0xda1cd630)
-	ROM_END
+		ROM_REGION (0x10000, REGION_CPU1, 0);
+	    ROM_LOAD ("901465.23", 0xb000, 0x1000, 0xae3deac0);
+	    ROM_LOAD ("901465.20", 0xc000, 0x1000, 0x0fc17b9c);
+	    ROM_LOAD ("901465.21", 0xd000, 0x1000, 0x36d91855);
+	    ROM_LOAD ("editswe.bin", 0xe000, 0x800, 0x75901dd7);
+	    ROM_LOAD ("901465.22", 0xf000, 0x1000, 0xcc5298a1);
+		ROM_REGION (0x20000, REGION_CPU2, 0);
+	    ROM_LOAD ("901898.01", 0xa000, 0x1000, 0x728a998b);
+	    ROM_LOAD ("901898.02", 0xb000, 0x1000, 0x6beb7c62);
+	    ROM_LOAD ("901898.03", 0xc000, 0x1000, 0x5db4983d);
+	    ROM_LOAD ("901898.04", 0xd000, 0x1000, 0xf55fc559);
+	    ROM_LOAD ("901897.01", 0xe000, 0x800, 0xb2cee903);
+	    ROM_LOAD ("901898.05", 0xf000, 0x1000, 0xf42df0cb);
+		ROM_REGION (0x4000, REGION_GFX1, 0);
+	    ROM_LOAD ("charswe.bin", 0x0000, 0x1000, 0xda1cd630);
+	ROM_END(); }}; 
 	
 	#if 0
 	/* in c16 and some other commodore machines:
@@ -790,96 +808,96 @@ public class pet
 	   0x80 means pal version */
 	
 	    /* 901447-09 + 901447-02 + 901447-03 + 901447-04 */
-	    ROM_LOAD ("basic1", 0xc000, 0x2000, 0xaff78300)
+	    ROM_LOAD ("basic1", 0xc000, 0x2000, 0xaff78300);
 	    /* same as 901439-01, maybe same as 6540-011 */
-	    ROM_LOAD ("rom-1-c000.901447-01.bin", 0xc000, 0x800, 0xa055e33a)
+	    ROM_LOAD ("rom-1-c000.901447-01.bin", 0xc000, 0x800, 0xa055e33a);
 	    /* same as 901439-09, 6540-019 */
-	    ROM_LOAD ("rom-1-c000.901447-09.bin", 0xc000, 0x800, 0x03cf16d0)
+	    ROM_LOAD ("rom-1-c000.901447-09.bin", 0xc000, 0x800, 0x03cf16d0);
 	    /* same as 901439-05, 6540-012 */
-	    ROM_LOAD ("rom-1-c800.901447-02.bin", 0xc800, 0x800, 0x69fd8a8f)
+	    ROM_LOAD ("rom-1-c800.901447-02.bin", 0xc800, 0x800, 0x69fd8a8f);
 	    /* same as 901439-02, 6540-013 */
-	    ROM_LOAD ("rom-1-d000.901447-03.bin", 0xd000, 0x800, 0xd349f2d4)
+	    ROM_LOAD ("rom-1-d000.901447-03.bin", 0xd000, 0x800, 0xd349f2d4);
 	    /* same as 901439-06, 6540-014 */
-	    ROM_LOAD ("rom-1-d800.901447-04.bin", 0xd800, 0x800, 0x850544eb)
+	    ROM_LOAD ("rom-1-d800.901447-04.bin", 0xd800, 0x800, 0x850544eb);
 	
 		/* 901465-01 + 901465-02 */
-	    ROM_LOAD ("basic2", 0xc000, 0x2000, 0xcf35e68b)
+	    ROM_LOAD ("basic2", 0xc000, 0x2000, 0xcf35e68b);
 	    /* 6540-020 + 6540-021 */
-	    ROM_LOAD ("basic-2-c000.901465-01.bin", 0xc000, 0x1000, 0x63a7fe4a)
+	    ROM_LOAD ("basic-2-c000.901465-01.bin", 0xc000, 0x1000, 0x63a7fe4a);
 	    /* 6540-022 + 6540-023 */
-	    ROM_LOAD ("basic-2-d000.901465-02.bin", 0xd000, 0x1000, 0xae4cb035)
+	    ROM_LOAD ("basic-2-d000.901465-02.bin", 0xd000, 0x1000, 0xae4cb035);
 	
 		/* 901465-23 901465-20 901465-21 */
-	    ROM_LOAD ("basic4", 0xb000, 0x3000, 0x2a940f0a)
-	    ROM_LOAD ("basic-4-b000.901465-19.bin", 0xb000, 0x1000, 0x3a5f5721)
-	    ROM_LOAD ("basic-4-b000.901465-23.bin", 0xb000, 0x1000, 0xae3deac0)
-	    ROM_LOAD ("basic-4-c000.901465-20.bin", 0xc000, 0x1000, 0x0fc17b9c)
-	    ROM_LOAD ("basic-4-d000.901465-21.bin", 0xd000, 0x1000, 0x36d91855)
+	    ROM_LOAD ("basic4", 0xb000, 0x3000, 0x2a940f0a);
+	    ROM_LOAD ("basic-4-b000.901465-19.bin", 0xb000, 0x1000, 0x3a5f5721);
+	    ROM_LOAD ("basic-4-b000.901465-23.bin", 0xb000, 0x1000, 0xae3deac0);
+	    ROM_LOAD ("basic-4-c000.901465-20.bin", 0xc000, 0x1000, 0x0fc17b9c);
+	    ROM_LOAD ("basic-4-d000.901465-21.bin", 0xd000, 0x1000, 0x36d91855);
 	
 	    /* same as 901439-03, 6540-015 */
-	    ROM_LOAD ("rom-1-e000.901447-05.bin", 0xe000, 0x800, 0x9e1c5cea)
+	    ROM_LOAD ("rom-1-e000.901447-05.bin", 0xe000, 0x800, 0x9e1c5cea);
 	
-	    ROM_LOAD ("edit-2-b.901474-01.bin", 0xe000, 0x800, 0x05db957e)
+	    ROM_LOAD ("edit-2-b.901474-01.bin", 0xe000, 0x800, 0x05db957e);
 	    /* same as 6540-024 */
-	    ROM_LOAD ("edit-2-n.901447-24.bin", 0xe000, 0x800, 0xe459ab32)
+	    ROM_LOAD ("edit-2-n.901447-24.bin", 0xe000, 0x800, 0xe459ab32);
 	
-	    ROM_LOAD ("edit-4-40-n-50hz.901498-01.bin", 0xe000, 0x800, 0x3370e359)
-	    ROM_LOAD ("edit-4-40-n-60hz.901499-01.bin", 0xe000, 0x800, 0x5f85bdf8)
-	    ROM_LOAD ("edit-4-b.901474-02.bin", 0xe000, 0x800, 0x75ff4af7)
+	    ROM_LOAD ("edit-4-40-n-50hz.901498-01.bin", 0xe000, 0x800, 0x3370e359);
+	    ROM_LOAD ("edit-4-40-n-60hz.901499-01.bin", 0xe000, 0x800, 0x5f85bdf8);
+	    ROM_LOAD ("edit-4-b.901474-02.bin", 0xe000, 0x800, 0x75ff4af7);
 	
-	    ROM_LOAD ("edit-4-80-b-60hz.901474-03.bin", 0xe000, 0x800, 0x5674dd5e)
+	    ROM_LOAD ("edit-4-80-b-60hz.901474-03.bin", 0xe000, 0x800, 0x5674dd5e);
 	    /* week 36 year 81 */
-	    ROM_LOAD ("edit-4-80-b-50hz.901474-04-3681.bin", 0xe000, 0x800, 0xc1ffca3a)
-	    ROM_LOAD ("edit-4-80-b-50hz.901474-04.bin", 0xe000, 0x800, 0xabb000e7)
-	    ROM_LOAD ("edit-4-80-b-50hz.901474-04?.bin", 0xe000, 0x800, 0x845a44e6)
-	    ROM_LOAD ("edit-4-80-b-50hz.german.bin", 0xe000, 0x800, 0x1c1e597d)
-	    ROM_LOAD ("edit-4-80-b-50hz.swedish.bin", 0xe000, 0x800, 0x75901dd7)
+	    ROM_LOAD ("edit-4-80-b-50hz.901474-04-3681.bin", 0xe000, 0x800, 0xc1ffca3a);
+	    ROM_LOAD ("edit-4-80-b-50hz.901474-04.bin", 0xe000, 0x800, 0xabb000e7);
+	    ROM_LOAD ("edit-4-80-b-50hz.901474-04?.bin", 0xe000, 0x800, 0x845a44e6);
+	    ROM_LOAD ("edit-4-80-b-50hz.german.bin", 0xe000, 0x800, 0x1c1e597d);
+	    ROM_LOAD ("edit-4-80-b-50hz.swedish.bin", 0xe000, 0x800, 0x75901dd7);
 	
 		/* 901447-06 + 901447-07 */
-	    ROM_LOAD ("kernal1", 0xf000, 0x1000, 0xf0186492)
+	    ROM_LOAD ("kernal1", 0xf000, 0x1000, 0xf0186492);
 	    /* same as 901439-04, 6540-016 */
-	    ROM_LOAD ("rom-1-f000.901447-06.bin", 0xf000, 0x800, 0x661a814a)
+	    ROM_LOAD ("rom-1-f000.901447-06.bin", 0xf000, 0x800, 0x661a814a);
 	    /* same as 904139-07, 6540-018 */
-	    ROM_LOAD ("rom-1-f800.901447-07.bin", 0xf800, 0x800, 0xc4f47ad1)
+	    ROM_LOAD ("rom-1-f800.901447-07.bin", 0xf800, 0x800, 0xc4f47ad1);
 	
-	    ROM_LOAD ("kernal-2.901465-03.bin", 0xf000, 0x1000, 0xf02238e2)
+	    ROM_LOAD ("kernal-2.901465-03.bin", 0xf000, 0x1000, 0xf02238e2);
 	
-	    ROM_LOAD ("kernal-4.901465-22.bin", 0xf000, 0x1000, 0xcc5298a1)
+	    ROM_LOAD ("kernal-4.901465-22.bin", 0xf000, 0x1000, 0xcc5298a1);
 	
 		/* graphics */
 	    /* 6540-010 = 901439-08 */
 	
-	    ROM_LOAD ("characters-1.901447-08.bin", 0x0000, 0x800, 0x54f32f45)
+	    ROM_LOAD ("characters-1.901447-08.bin", 0x0000, 0x800, 0x54f32f45);
 		/* business */
 		/* vice chargen */
-	    ROM_LOAD ("characters-2.901447-10.bin", 0x0000, 0x800, 0xd8408674)
-	    ROM_LOAD ("chargen.de", 0x0000, 0x800, 0x3bb8cb87)
-	    ROM_LOAD ("characters-hungarian.bin", 0x0000, 0x800, 0xa02d8122)
-	    ROM_LOAD ("characters-swedish.901447-14.bin", 0x0000, 0x800, 0x48c77d29)
+	    ROM_LOAD ("characters-2.901447-10.bin", 0x0000, 0x800, 0xd8408674);
+	    ROM_LOAD ("chargen.de", 0x0000, 0x800, 0x3bb8cb87);
+	    ROM_LOAD ("characters-hungarian.bin", 0x0000, 0x800, 0xa02d8122);
+	    ROM_LOAD ("characters-swedish.901447-14.bin", 0x0000, 0x800, 0x48c77d29);
 	
-	    ROM_LOAD ("", 0xe000, 0x800, 0x)
+	    ROM_LOAD ("", 0xe000, 0x800, 0x);
 	
 		/* editor rom */
-	    ROM_LOAD ("Execudesk.bin", 0xe000, 0x1000, 0xbef0eaa1)
+	    ROM_LOAD ("Execudesk.bin", 0xe000, 0x1000, 0xbef0eaa1);
 	
-	    ROM_LOAD ("PaperClip.bin", 0xa000, 0x1000, 0x8fb11d4b)
+	    ROM_LOAD ("PaperClip.bin", 0xa000, 0x1000, 0x8fb11d4b);
 	
 		/* superpet */
-	    ROM_LOAD ("waterloo-a000.901898-01.bin", 0xa000, 0x1000, 0x728a998b)
-	    ROM_LOAD ("waterloo-b000.901898-02.bin", 0xb000, 0x1000, 0x6beb7c62)
-	    ROM_LOAD ("waterloo-c000.901898-03.bin", 0xc000, 0x1000, 0x5db4983d)
-	    ROM_LOAD ("waterloo-d000.901898-04.bin", 0xd000, 0x1000, 0xf55fc559)
-	    ROM_LOAD ("waterloo-e000.901897-01.bin", 0xe000, 0x800, 0xb2cee903)
-	    ROM_LOAD ("waterloo-f000.901898-05.bin", 0xf000, 0x1000, 0xf42df0cb)
+	    ROM_LOAD ("waterloo-a000.901898-01.bin", 0xa000, 0x1000, 0x728a998b);
+	    ROM_LOAD ("waterloo-b000.901898-02.bin", 0xb000, 0x1000, 0x6beb7c62);
+	    ROM_LOAD ("waterloo-c000.901898-03.bin", 0xc000, 0x1000, 0x5db4983d);
+	    ROM_LOAD ("waterloo-d000.901898-04.bin", 0xd000, 0x1000, 0xf55fc559);
+	    ROM_LOAD ("waterloo-e000.901897-01.bin", 0xe000, 0x800, 0xb2cee903);
+	    ROM_LOAD ("waterloo-f000.901898-05.bin", 0xf000, 0x1000, 0xf42df0cb);
 	    /* 256 chars commodore pet, 256 chars ascii m6809 */
-	    ROM_LOAD ("characters.901640-01.bin", 0x0000, 0x1000, 0xee8229c4)
+	    ROM_LOAD ("characters.901640-01.bin", 0x0000, 0x1000, 0xee8229c4);
 	    /* 901447-14 and the 256 chars ascii from 901640-01 */
-	    ROM_LOAD ("characters.swedish.bin", 0x0000, 0x1000, 0xda1cd630)
+	    ROM_LOAD ("characters.swedish.bin", 0x0000, 0x1000, 0xda1cd630);
 	
 		/* scrap */
 		/* fixed bits */
-	    ROM_LOAD ("324878-01.bin", 0x?000, 0x2000, 0xd262bacd)
-	    ROM_LOAD ("324878-02.bin", 0x?000, 0x2000, 0x5e00476d)
+	    ROM_LOAD ("324878-01.bin", 0x?000, 0x2000, 0xd262bacd);
+	    ROM_LOAD ("324878-02.bin", 0x?000, 0x2000, 0x5e00476d);
 	#endif
 	
 	static struct MachineDriver machine_driver_pet =

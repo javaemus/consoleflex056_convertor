@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package sndhrdw;
@@ -91,7 +91,7 @@ public class sblaster
 	void soundblaster_update(void) {}
 	#endif
 	
-	READ_HANDLER( soundblaster_r )
+	public static ReadHandlerPtr soundblaster_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int data=0;
 		switch (offset) {
@@ -121,7 +121,7 @@ public class sblaster
 			break;
 		}
 		return data;
-	}
+	} };
 	
 	static int soundblaster_operation(int data)
 	{
@@ -139,7 +139,7 @@ public class sblaster
 		return 0;
 	}
 		
-	WRITE_HANDLER( soundblaster_w )
+	public static WriteHandlerPtr soundblaster_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		switch (offset) {
 		case 6: 
@@ -163,7 +163,7 @@ public class sblaster
 			}
 			break;
 		}
-	}
+	} };
 	
 	#if 0
 	struct CustomSound_interface soundblaster_interface = {

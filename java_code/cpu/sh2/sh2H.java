@@ -29,7 +29,7 @@
 #define _SH2_H
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package cpu.sh2;
@@ -83,8 +83,6 @@ public class sh2H
 	extern const char *sh2_info(void *context, int regnum);
 	extern unsigned sh2_dasm(char *buffer, unsigned pc);
 	
-	WRITE_HANDLER( sh2_internal_w );
-	READ_HANDLER( sh2_internal_r );
 	
 	#ifdef MAME_DEBUG
 	extern unsigned DasmSH2( char *dst, unsigned pc );

@@ -10,7 +10,7 @@
  *****************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -856,15 +856,15 @@ public class mz700
 	static UINT8 mz800_palette_bank;
 	
 	/* port CE */
-	READ_HANDLER( mz800_crtc_r )
+	public static ReadHandlerPtr mz800_crtc_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		data8_t data = 0x00;
 		LOG(1,"mz800_crtc_r",("%02X\n",data));
 	    return data;
-	}
+	} };
 	
 	/* port D0 - D7 / memory E000 - FFFF */
-	READ_HANDLER( mz800_mmio_r )
+	public static ReadHandlerPtr mz800_mmio_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		data8_t data = 0x7e;
 	
@@ -884,10 +884,10 @@ public class mz700
 	        break;
 	    }
 	    return data;
-	}
+	} };
 	
 	/* port E0 - E9 */
-	READ_HANDLER( mz800_bank_r )
+	public static ReadHandlerPtr mz800_bank_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		UINT8 *mem = memory_region(REGION_CPU1);
 	    data8_t data = 0xff;
@@ -946,10 +946,10 @@ public class mz700
 			break;
 	    }
 		return data;
-	}
+	} };
 	
 	/* port EA */
-	READ_HANDLER( mz800_ramdisk_r )
+	public static ReadHandlerPtr mz800_ramdisk_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		UINT8 *mem = memory_region(REGION_USER1);
 		data8_t data = mem[mz800_ramaddr];
@@ -957,19 +957,19 @@ public class mz700
 		if (mz800_ramaddr++ == 0)
 			LOG(1,"mz800_ramdisk_r",("address wrap 0000\n"));
 	    return data;
-	}
+	} };
 	
 	/* port CC */
-	WRITE_HANDLER( mz800_write_format_w )
+	public static WriteHandlerPtr mz800_write_format_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		LOG(1,"mz800_write_format_w",("%02X\n", data));
-	}
+	} };
 	
 	/* port CD */
-	WRITE_HANDLER( mz800_read_format_w )
+	public static WriteHandlerPtr mz800_read_format_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		LOG(1,"mz800_read_format_w",("%02X\n", data));
-	}
+	} };
 	
 	/* port CE
 	 * bit 3	1: MZ700 mode		0: MZ800 mode
@@ -977,7 +977,7 @@ public class mz700
 	 * bit 1	1: 4bpp/2bpp		0: 2bpp/1bpp
 	 * bit 0	???
 	 */
-	WRITE_HANDLER( mz800_display_mode_w )
+	public static WriteHandlerPtr mz800_display_mode_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		UINT8 *mem = memory_region(REGION_CPU1);
 		LOG(1,"mz800_display_mode_w",("%02X\n", data));
@@ -986,20 +986,20 @@ public class mz700
 		{
 			bank8_RAM(mem);
 		}
-	}
+	} };
 	
 	/* port CF */
-	WRITE_HANDLER( mz800_scroll_border_w )
+	public static WriteHandlerPtr mz800_scroll_border_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		LOG(1,"mz800_scroll_border_w",("%02X\n", data));
-	}
+	} };
 	
 	/* port D0-D7 */
-	WRITE_HANDLER( mz800_mmio_w )
+	public static WriteHandlerPtr mz800_mmio_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		/* just wrap to the mz700 handler */
 	    mz700_mmio_w(offset,data);
-	}
+	} };
 	
 	/* port E0-E9 */
 	WRITE_HANDLER ( mz800_bank_w )
@@ -1088,24 +1088,24 @@ public class mz700
 	}
 	
 	/* port EA */
-	WRITE_HANDLER( mz800_ramdisk_w )
+	public static WriteHandlerPtr mz800_ramdisk_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		UINT8 *mem = memory_region(REGION_USER1);
 		LOG(2,"mz800_ramdisk_w",("[%04X] <- %02X\n", mz800_ramaddr, data));
 		mem[mz800_ramaddr] = data;
 		if (mz800_ramaddr++ == 0)
 			LOG(1,"mz800_ramdisk_w",("address wrap 0000\n"));
-	}
+	} };
 	
 	/* port EB */
-	WRITE_HANDLER( mz800_ramaddr_w )
+	public static WriteHandlerPtr mz800_ramaddr_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		mz800_ramaddr = (cpu_get_reg(Z80_BC) & 0xff00) | (data & 0xff);
 		LOG(1,"mz800_ramaddr_w",("%04X\n", mz800_ramaddr));
-	}
+	} };
 	
 	/* port F0 */
-	WRITE_HANDLER( mz800_palette_w )
+	public static WriteHandlerPtr mz800_palette_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		if (data & 0x40)
 		{
@@ -1119,14 +1119,14 @@ public class mz700
 			LOG(1,"mz800_palette_w",("palette[%d] <- %d\n", idx, val));
 			mz800_palette[idx] = val;
 		}
-	}
+	} };
 	
 	/* videoram wrappers */
-	WRITE_HANDLER( videoram0_w ) { videoram_w(offset + 0x0000, data); }
-	WRITE_HANDLER( videoram1_w ) { videoram_w(offset + 0x1000, data); }
-	WRITE_HANDLER( videoram2_w ) { videoram_w(offset + 0x2000, data); }
-	WRITE_HANDLER( videoram3_w ) { videoram_w(offset + 0x3000, data); }
-	WRITE_HANDLER( pcgram_w ) { videoram_w(offset + 0x4000, data); }
+	public static WriteHandlerPtr videoram0_w = new WriteHandlerPtr() {public void handler(int offset, int data) { videoram_w(offset + 0x0000, data); } };
+	public static WriteHandlerPtr videoram1_w = new WriteHandlerPtr() {public void handler(int offset, int data) { videoram_w(offset + 0x1000, data); } };
+	public static WriteHandlerPtr videoram2_w = new WriteHandlerPtr() {public void handler(int offset, int data) { videoram_w(offset + 0x2000, data); } };
+	public static WriteHandlerPtr videoram3_w = new WriteHandlerPtr() {public void handler(int offset, int data) { videoram_w(offset + 0x3000, data); } };
+	public static WriteHandlerPtr pcgram_w = new WriteHandlerPtr() {public void handler(int offset, int data) { videoram_w(offset + 0x4000, data); } };
 	
 	void init_mz800(void)
 	{

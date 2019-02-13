@@ -38,7 +38,7 @@
 /*****************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package sound;
@@ -165,7 +165,7 @@ public class tiasound
 	/*                                                                           */
 	/*****************************************************************************/
 	
-	WRITE_HANDLER( tia_w )
+	public static WriteHandlerPtr tia_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	    UINT16 new_val = 0;
 	    UINT8 chan;
@@ -248,7 +248,7 @@ public class tiasound
 	            }
 	        }
 	    }
-	}
+	} };
 	
 	
 	/*****************************************************************************/
@@ -421,7 +421,7 @@ public class tiasound
 	            }
 	        }
 	
-			if (!oversampling)
+			if (oversampling == 0)
 			{
 				/* decrement the sample counter - value is 256 since the lower
 				 * byte contains the fractional part */

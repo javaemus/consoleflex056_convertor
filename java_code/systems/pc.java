@@ -17,7 +17,7 @@
 
 ***************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -59,112 +59,124 @@ public class pc
 	// IO Expansion, only a little bit for ibm bios self tests
 	//#define EXP_ON
 	
-	READ_HANDLER( return_0xff ) { return 0xff; }
+	public static ReadHandlerPtr return_0xff  = new ReadHandlerPtr() { public int handler(int offset) { return 0xff; } };
 	
-	static MEMORY_READ_START( pc_readmem )
-		{ 0x00000, 0x7ffff, MRA_RAM },
-		{ 0x80000, 0x9ffff, MRA_RAM },
-		{ 0xa0000, 0xbffff, MRA_NOP },
-		{ 0xc0000, 0xc7fff, MRA_NOP },
-		{ 0xc8000, 0xcffff, MRA_ROM },
-		{ 0xd0000, 0xeffff, MRA_NOP },
-		{ 0xf0000, 0xfffff, MRA_ROM },
-	MEMORY_END
+	public static Memory_ReadAddress pc_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress( 0x00000, 0x7ffff, MRA_RAM ),
+		new Memory_ReadAddress( 0x80000, 0x9ffff, MRA_RAM ),
+		new Memory_ReadAddress( 0xa0000, 0xbffff, MRA_NOP ),
+		new Memory_ReadAddress( 0xc0000, 0xc7fff, MRA_NOP ),
+		new Memory_ReadAddress( 0xc8000, 0xcffff, MRA_ROM ),
+		new Memory_ReadAddress( 0xd0000, 0xeffff, MRA_NOP ),
+		new Memory_ReadAddress( 0xf0000, 0xfffff, MRA_ROM ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( pc_writemem )
-		{ 0x00000, 0x7ffff, MWA_RAM },
-		{ 0x80000, 0x9ffff, MWA_RAM },
-		{ 0xa0000, 0xbffff, MWA_NOP },
-		{ 0xc0000, 0xc7fff, MWA_NOP },
-		{ 0xc8000, 0xcffff, MWA_ROM },
-		{ 0xd0000, 0xeffff, MWA_NOP },
-		{ 0xf0000, 0xfffff, MWA_ROM },
-	MEMORY_END
+	public static Memory_WriteAddress pc_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x00000, 0x7ffff, MWA_RAM ),
+		new Memory_WriteAddress( 0x80000, 0x9ffff, MWA_RAM ),
+		new Memory_WriteAddress( 0xa0000, 0xbffff, MWA_NOP ),
+		new Memory_WriteAddress( 0xc0000, 0xc7fff, MWA_NOP ),
+		new Memory_WriteAddress( 0xc8000, 0xcffff, MWA_ROM ),
+		new Memory_WriteAddress( 0xd0000, 0xeffff, MWA_NOP ),
+		new Memory_WriteAddress( 0xf0000, 0xfffff, MWA_ROM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static PORT_READ_START( pc_readport )
-		{ 0x0000, 0x000f, dma8237_0_r },
-		{ 0x0020, 0x0021, pic8259_0_r },
-		{ 0x0040, 0x0043, pit8253_0_r },
-		{ 0x0060, 0x0063, ppi8255_0_r },
-		{ 0x0080, 0x0087, pc_page_r },
-		{ 0x0200, 0x0207, pc_JOY_r },
-		{ 0x240, 0x257, pc_rtc_r },
-	//	{ 0x240, 0x257, return_0xff }, // anonymous bios should not recogniced realtimeclock
+	public static IO_ReadPort pc_readport[]={
+		new IO_ReadPort(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),
+		new IO_ReadPort( 0x0000, 0x000f, dma8237_0_r ),
+		new IO_ReadPort( 0x0020, 0x0021, pic8259_0_r ),
+		new IO_ReadPort( 0x0040, 0x0043, pit8253_0_r ),
+		new IO_ReadPort( 0x0060, 0x0063, ppi8255_0_r ),
+		new IO_ReadPort( 0x0080, 0x0087, pc_page_r ),
+		new IO_ReadPort( 0x0200, 0x0207, pc_JOY_r ),
+		new IO_ReadPort( 0x240, 0x257, pc_rtc_r ),
+	//	new IO_ReadPort( 0x240, 0x257, return_0xff ), // anonymous bios should not recogniced realtimeclock
 	#ifdef EXP_ON
-		{ 0x0210, 0x0217, pc_EXP_r },
+		new IO_ReadPort( 0x0210, 0x0217, pc_EXP_r ),
 	#endif
-		{ 0x0278, 0x027b, pc_parallelport2_r },
-		{ 0x02e8, 0x02ef, pc_COM4_r },
-		{ 0x02f8, 0x02ff, pc_COM2_r },
-	    { 0x0320, 0x0323, pc_HDC1_r },
-		{ 0x0324, 0x0327, pc_HDC2_r },
-	//	{ 0x340, 0x357, pc_rtc_r },
-		{ 0x340, 0x357, return_0xff }, // anonymous bios should not recogniced realtimeclock
-		{ 0x0378, 0x037b, pc_parallelport1_r },
+		new IO_ReadPort( 0x0278, 0x027b, pc_parallelport2_r ),
+		new IO_ReadPort( 0x02e8, 0x02ef, pc_COM4_r ),
+		new IO_ReadPort( 0x02f8, 0x02ff, pc_COM2_r ),
+	    new IO_ReadPort( 0x0320, 0x0323, pc_HDC1_r ),
+		new IO_ReadPort( 0x0324, 0x0327, pc_HDC2_r ),
+	//	new IO_ReadPort( 0x340, 0x357, pc_rtc_r ),
+		new IO_ReadPort( 0x340, 0x357, return_0xff ), // anonymous bios should not recogniced realtimeclock
+		new IO_ReadPort( 0x0378, 0x037b, pc_parallelport1_r ),
 	#ifdef ADLIB
-		{ 0x0388, 0x0388, YM3812_status_port_0_r },
+		new IO_ReadPort( 0x0388, 0x0388, YM3812_status_port_0_r ),
 	#endif
-		{ 0x03bc, 0x03be, pc_parallelport0_r },
-		{ 0x03e8, 0x03ef, pc_COM3_r },
-		{ 0x03f0, 0x03f7, pc_fdc_r },
-		{ 0x03f8, 0x03ff, pc_COM1_r },
-	PORT_END
+		new IO_ReadPort( 0x03bc, 0x03be, pc_parallelport0_r ),
+		new IO_ReadPort( 0x03e8, 0x03ef, pc_COM3_r ),
+		new IO_ReadPort( 0x03f0, 0x03f7, pc_fdc_r ),
+		new IO_ReadPort( 0x03f8, 0x03ff, pc_COM1_r ),
+		new IO_ReadPort(MEMPORT_MARKER, 0)
+	};
 	
-	static PORT_WRITE_START( pc_writeport )
-		{ 0x0000, 0x000f, dma8237_0_w },
-		{ 0x0020, 0x0021, pic8259_0_w },
-		{ 0x0040, 0x0043, pit8253_0_w },
-		{ 0x0060, 0x0063, ppi8255_0_w },
-		{ 0x0080, 0x0087, pc_page_w },
-		{ 0x0200, 0x0207, pc_JOY_w },
+	public static IO_WritePort pc_writeport[]={
+		new IO_WritePort(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),
+		new IO_WritePort( 0x0000, 0x000f, dma8237_0_w ),
+		new IO_WritePort( 0x0020, 0x0021, pic8259_0_w ),
+		new IO_WritePort( 0x0040, 0x0043, pit8253_0_w ),
+		new IO_WritePort( 0x0060, 0x0063, ppi8255_0_w ),
+		new IO_WritePort( 0x0080, 0x0087, pc_page_w ),
+		new IO_WritePort( 0x0200, 0x0207, pc_JOY_w ),
 	#ifdef EXP_ON
-	    { 0x0210, 0x0217, pc_EXP_w },
+	    new IO_WritePort( 0x0210, 0x0217, pc_EXP_w ),
 	#endif
 	#ifdef GAMEBLASTER
-		{ 0x220, 0x220, saa1099_write_port_0_w },
-		{ 0x221, 0x221, saa1099_control_port_0_w },
-		{ 0x222, 0x222, saa1099_write_port_1_w },
-		{ 0x223, 0x223, saa1099_control_port_1_w },
+		new IO_WritePort( 0x220, 0x220, saa1099_write_port_0_w ),
+		new IO_WritePort( 0x221, 0x221, saa1099_control_port_0_w ),
+		new IO_WritePort( 0x222, 0x222, saa1099_write_port_1_w ),
+		new IO_WritePort( 0x223, 0x223, saa1099_control_port_1_w ),
 	#endif
-		{ 0x240, 0x257, pc_rtc_w },
-		{ 0x0278, 0x027b, pc_parallelport2_w },
-		{ 0x02e8, 0x02ef, pc_COM4_w },
-		{ 0x02f8, 0x02ff, pc_COM2_w },
-		{ 0x0320, 0x0323, pc_HDC1_w },
-		{ 0x0324, 0x0327, pc_HDC2_w },
-	//	{ 0x340, 0x357, pc_rtc_w },
-		{ 0x0378, 0x037b, pc_parallelport1_w },
+		new IO_WritePort( 0x240, 0x257, pc_rtc_w ),
+		new IO_WritePort( 0x0278, 0x027b, pc_parallelport2_w ),
+		new IO_WritePort( 0x02e8, 0x02ef, pc_COM4_w ),
+		new IO_WritePort( 0x02f8, 0x02ff, pc_COM2_w ),
+		new IO_WritePort( 0x0320, 0x0323, pc_HDC1_w ),
+		new IO_WritePort( 0x0324, 0x0327, pc_HDC2_w ),
+	//	new IO_WritePort( 0x340, 0x357, pc_rtc_w ),
+		new IO_WritePort( 0x0378, 0x037b, pc_parallelport1_w ),
 	#ifdef ADLIB
-		{ 0x0388, 0x0388, YM3812_control_port_0_w },
-		{ 0x0389, 0x0389, YM3812_write_port_0_w },
+		new IO_WritePort( 0x0388, 0x0388, YM3812_control_port_0_w ),
+		new IO_WritePort( 0x0389, 0x0389, YM3812_write_port_0_w ),
 	#endif
-		{ 0x03bc, 0x03be, pc_parallelport0_w },
-		{ 0x03e8, 0x03ef, pc_COM3_w },
-		{ 0x03f0, 0x03f7, pc_fdc_w },
-		{ 0x03f8, 0x03ff, pc_COM1_w },
-	PORT_END
+		new IO_WritePort( 0x03bc, 0x03be, pc_parallelport0_w ),
+		new IO_WritePort( 0x03e8, 0x03ef, pc_COM3_w ),
+		new IO_WritePort( 0x03f0, 0x03f7, pc_fdc_w ),
+		new IO_WritePort( 0x03f8, 0x03ff, pc_COM1_w ),
+		new IO_WritePort(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_READ_START( europc_readmem )
-		{ 0x00000, 0x7ffff, MRA_RAM },
-		{ 0x80000, 0x9ffff, MRA_RAM },
-		{ 0xa0000, 0xaffff, MRA_NOP },
-		{ 0xb0000, 0xbffff, pc_aga_videoram_r },
-		{ 0xc0000, 0xc7fff, MRA_NOP },
-		{ 0xc8000, 0xcffff, MRA_ROM },
-		{ 0xd0000, 0xeffff, MRA_NOP },
-		{ 0xf0000, 0xfffff, MRA_ROM },
-	MEMORY_END
+	public static Memory_ReadAddress europc_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress( 0x00000, 0x7ffff, MRA_RAM ),
+		new Memory_ReadAddress( 0x80000, 0x9ffff, MRA_RAM ),
+		new Memory_ReadAddress( 0xa0000, 0xaffff, MRA_NOP ),
+		new Memory_ReadAddress( 0xb0000, 0xbffff, pc_aga_videoram_r ),
+		new Memory_ReadAddress( 0xc0000, 0xc7fff, MRA_NOP ),
+		new Memory_ReadAddress( 0xc8000, 0xcffff, MRA_ROM ),
+		new Memory_ReadAddress( 0xd0000, 0xeffff, MRA_NOP ),
+		new Memory_ReadAddress( 0xf0000, 0xfffff, MRA_ROM ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( europc_writemem )
-		{ 0x00000, 0x7ffff, MWA_RAM },
-		{ 0x80000, 0x9ffff, MWA_RAM },
-		{ 0xa0000, 0xaffff, MWA_NOP },
-		{ 0xb0000, 0xbffff, pc_aga_videoram_w, &videoram, &videoram_size },
-		{ 0xc0000, 0xc7fff, MWA_NOP },
-		{ 0xc8000, 0xcffff, MWA_ROM },
-		{ 0xd0000, 0xeffff, MWA_NOP },
-		{ 0xf0000, 0xfffff, MWA_ROM },
-	MEMORY_END
+	public static Memory_WriteAddress europc_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x00000, 0x7ffff, MWA_RAM ),
+		new Memory_WriteAddress( 0x80000, 0x9ffff, MWA_RAM ),
+		new Memory_WriteAddress( 0xa0000, 0xaffff, MWA_NOP ),
+		new Memory_WriteAddress( 0xb0000, 0xbffff, pc_aga_videoram_w, videoram, videoram_size ),
+		new Memory_WriteAddress( 0xc0000, 0xc7fff, MWA_NOP ),
+		new Memory_WriteAddress( 0xc8000, 0xcffff, MWA_ROM ),
+		new Memory_WriteAddress( 0xd0000, 0xeffff, MWA_NOP ),
+		new Memory_WriteAddress( 0xf0000, 0xfffff, MWA_ROM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
 	static PORT_READ_START( europc_readport)
 		{ 0x0000, 0x000f, dma8237_0_r },
@@ -194,33 +206,35 @@ public class pc
 		{ 0x03f8, 0x03ff, pc_COM1_r },
 	PORT_END
 	
-	static PORT_WRITE_START( europc_writeport )
-		{ 0x0000, 0x000f, dma8237_0_w },
-		{ 0x0020, 0x0021, pic8259_0_w },
-		{ 0x0040, 0x0043, pit8253_0_w },
-		{ 0x0060, 0x0063, europc_pio_w },
-		{ 0x0080, 0x0087, pc_page_w },
-		{ 0x0200, 0x0207, pc_JOY_w },
-		{ 0x0250, 0x025f, europc_jim_w },
-		{ 0x0278, 0x027b, pc_parallelport2_w },
-		{ 0x02e8, 0x02ef, pc_COM4_w },
-		{ 0x02f8, 0x02ff, pc_COM2_w },
-	    { 0x0320, 0x0323, pc_HDC1_w },
-		{ 0x0324, 0x0327, pc_HDC2_w },
-	//	{ 0x0350, 0x035f, europc_w },
-		{ 0x0378, 0x037b, pc_parallelport1_w },
+	public static IO_WritePort europc_writeport[]={
+		new IO_WritePort(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),
+		new IO_WritePort( 0x0000, 0x000f, dma8237_0_w ),
+		new IO_WritePort( 0x0020, 0x0021, pic8259_0_w ),
+		new IO_WritePort( 0x0040, 0x0043, pit8253_0_w ),
+		new IO_WritePort( 0x0060, 0x0063, europc_pio_w ),
+		new IO_WritePort( 0x0080, 0x0087, pc_page_w ),
+		new IO_WritePort( 0x0200, 0x0207, pc_JOY_w ),
+		new IO_WritePort( 0x0250, 0x025f, europc_jim_w ),
+		new IO_WritePort( 0x0278, 0x027b, pc_parallelport2_w ),
+		new IO_WritePort( 0x02e8, 0x02ef, pc_COM4_w ),
+		new IO_WritePort( 0x02f8, 0x02ff, pc_COM2_w ),
+	    new IO_WritePort( 0x0320, 0x0323, pc_HDC1_w ),
+		new IO_WritePort( 0x0324, 0x0327, pc_HDC2_w ),
+	//	new IO_WritePort( 0x0350, 0x035f, europc_w ),
+		new IO_WritePort( 0x0378, 0x037b, pc_parallelport1_w ),
 	#ifdef ADLIB
-		{ 0x0388, 0x0388, YM3812_control_port_0_w },
-		{ 0x0389, 0x0389, YM3812_write_port_0_w },
+		new IO_WritePort( 0x0388, 0x0388, YM3812_control_port_0_w ),
+		new IO_WritePort( 0x0389, 0x0389, YM3812_write_port_0_w ),
 	#endif
-		{ 0x3b0, 0x3bf, pc_aga_mda_w },
-	//	{ 0x03bc, 0x03be, pc_parallelport0_w },
-		{ 0x3d0, 0x3df, pc_aga_cga_w },
-		{ 0x03d0, 0x03df, pc_CGA_w },
-		{ 0x03e8, 0x03ef, pc_COM3_w },
-		{ 0x03f8, 0x03ff, pc_COM1_w },
-		{ 0x03f0, 0x03f7, pc_fdc_w },
-	PORT_END
+		new IO_WritePort( 0x3b0, 0x3bf, pc_aga_mda_w ),
+	//	new IO_WritePort( 0x03bc, 0x03be, pc_parallelport0_w ),
+		new IO_WritePort( 0x3d0, 0x3df, pc_aga_cga_w ),
+		new IO_WritePort( 0x03d0, 0x03df, pc_CGA_w ),
+		new IO_WritePort( 0x03e8, 0x03ef, pc_COM3_w ),
+		new IO_WritePort( 0x03f8, 0x03ff, pc_COM1_w ),
+		new IO_WritePort( 0x03f0, 0x03f7, pc_fdc_w ),
+		new IO_WritePort(MEMPORT_MARKER, 0)
+	};
 	
 	static MEMORY_READ_START(t1t_readmem)
 		{ 0x00000, 0x7ffff, MRA_RAM },
@@ -235,926 +249,944 @@ public class pc
 		{ 0xf0000, 0xfffff, MRA_ROM },
 	PORT_END
 	
-	static MEMORY_WRITE_START( t1t_writemem )
-		{ 0x00000, 0x7ffff, MWA_RAM },
-		{ 0x80000, 0x9ffff, MWA_RAM },
-		{ 0xa0000, 0xaffff, MWA_RAM },
-	    { 0xb0000, 0xb7fff, MWA_NOP },
-		{ 0xb8000, 0xbffff, pc_t1t_videoram_w },
-		{ 0xc0000, 0xc7fff, MWA_NOP },
-		{ 0xc8000, 0xc9fff, MWA_ROM },
-		{ 0xca000, 0xcffff, MWA_NOP },
-		{ 0xd0000, 0xeffff, MWA_NOP },
-		{ 0xf0000, 0xfffff, MWA_ROM },
-	MEMORY_END
+	public static Memory_WriteAddress t1t_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x00000, 0x7ffff, MWA_RAM ),
+		new Memory_WriteAddress( 0x80000, 0x9ffff, MWA_RAM ),
+		new Memory_WriteAddress( 0xa0000, 0xaffff, MWA_RAM ),
+	    new Memory_WriteAddress( 0xb0000, 0xb7fff, MWA_NOP ),
+		new Memory_WriteAddress( 0xb8000, 0xbffff, pc_t1t_videoram_w ),
+		new Memory_WriteAddress( 0xc0000, 0xc7fff, MWA_NOP ),
+		new Memory_WriteAddress( 0xc8000, 0xc9fff, MWA_ROM ),
+		new Memory_WriteAddress( 0xca000, 0xcffff, MWA_NOP ),
+		new Memory_WriteAddress( 0xd0000, 0xeffff, MWA_NOP ),
+		new Memory_WriteAddress( 0xf0000, 0xfffff, MWA_ROM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static PORT_READ_START( t1t_readport )
-		{ 0x0000, 0x000f, dma8237_0_r },
-		{ 0x0020, 0x0021, pic8259_0_r },
-		{ 0x0040, 0x0043, pit8253_0_r },
-		{ 0x0060, 0x0063, tandy1000_pio_r },
-		{ 0x0080, 0x0087, pc_page_r },
-		{ 0x0200, 0x0207, pc_JOY_r },
-		{ 0x02f8, 0x02ff, pc_COM2_r },
-		{ 0x0320, 0x0323, pc_HDC1_r },
-		{ 0x0324, 0x0327, pc_HDC2_r },
-		{ 0x0378, 0x037f, pc_t1t_p37x_r },
-	    { 0x03bc, 0x03be, pc_parallelport0_r },
-		{ 0x03d0, 0x03df, pc_T1T_r },
-		{ 0x03f0, 0x03f7, pc_fdc_r },
-		{ 0x03f8, 0x03ff, pc_COM1_r },
-	PORT_END
+	public static IO_ReadPort t1t_readport[]={
+		new IO_ReadPort(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),
+		new IO_ReadPort( 0x0000, 0x000f, dma8237_0_r ),
+		new IO_ReadPort( 0x0020, 0x0021, pic8259_0_r ),
+		new IO_ReadPort( 0x0040, 0x0043, pit8253_0_r ),
+		new IO_ReadPort( 0x0060, 0x0063, tandy1000_pio_r ),
+		new IO_ReadPort( 0x0080, 0x0087, pc_page_r ),
+		new IO_ReadPort( 0x0200, 0x0207, pc_JOY_r ),
+		new IO_ReadPort( 0x02f8, 0x02ff, pc_COM2_r ),
+		new IO_ReadPort( 0x0320, 0x0323, pc_HDC1_r ),
+		new IO_ReadPort( 0x0324, 0x0327, pc_HDC2_r ),
+		new IO_ReadPort( 0x0378, 0x037f, pc_t1t_p37x_r ),
+	    new IO_ReadPort( 0x03bc, 0x03be, pc_parallelport0_r ),
+		new IO_ReadPort( 0x03d0, 0x03df, pc_T1T_r ),
+		new IO_ReadPort( 0x03f0, 0x03f7, pc_fdc_r ),
+		new IO_ReadPort( 0x03f8, 0x03ff, pc_COM1_r ),
+		new IO_ReadPort(MEMPORT_MARKER, 0)
+	};
 	
-	static PORT_WRITE_START( t1t_writeport )
-		{ 0x0000, 0x000f, dma8237_0_w },
-		{ 0x0020, 0x0021, pic8259_0_w },
-		{ 0x0040, 0x0043, pit8253_0_w },
-		{ 0x0060, 0x0063, tandy1000_pio_w },
-		{ 0x0080, 0x0087, pc_page_w },
-		{ 0x00c0, 0x00c0, SN76496_0_w },
-		{ 0x0200, 0x0207, pc_JOY_w },
-		{ 0x02f8, 0x02ff, pc_COM2_w },
-	    { 0x0320, 0x0323, pc_HDC1_w },
-		{ 0x0324, 0x0327, pc_HDC2_w },
-		{ 0x0378, 0x037f, pc_t1t_p37x_w },
-	    { 0x03bc, 0x03be, pc_parallelport0_w },
-		{ 0x03d0, 0x03df, pc_T1T_w },
-		{ 0x03f0, 0x03f7, pc_fdc_w },
-		{ 0x03f8, 0x03ff, pc_COM1_w },
-	PORT_END
+	public static IO_WritePort t1t_writeport[]={
+		new IO_WritePort(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),
+		new IO_WritePort( 0x0000, 0x000f, dma8237_0_w ),
+		new IO_WritePort( 0x0020, 0x0021, pic8259_0_w ),
+		new IO_WritePort( 0x0040, 0x0043, pit8253_0_w ),
+		new IO_WritePort( 0x0060, 0x0063, tandy1000_pio_w ),
+		new IO_WritePort( 0x0080, 0x0087, pc_page_w ),
+		new IO_WritePort( 0x00c0, 0x00c0, SN76496_0_w ),
+		new IO_WritePort( 0x0200, 0x0207, pc_JOY_w ),
+		new IO_WritePort( 0x02f8, 0x02ff, pc_COM2_w ),
+	    new IO_WritePort( 0x0320, 0x0323, pc_HDC1_w ),
+		new IO_WritePort( 0x0324, 0x0327, pc_HDC2_w ),
+		new IO_WritePort( 0x0378, 0x037f, pc_t1t_p37x_w ),
+	    new IO_WritePort( 0x03bc, 0x03be, pc_parallelport0_w ),
+		new IO_WritePort( 0x03d0, 0x03df, pc_T1T_w ),
+		new IO_WritePort( 0x03f0, 0x03f7, pc_fdc_w ),
+		new IO_WritePort( 0x03f8, 0x03ff, pc_COM1_w ),
+		new IO_WritePort(MEMPORT_MARKER, 0)
+	};
 	
-	static PORT_READ_START( pc200_readport )
-		{ 0x0000, 0x000f, dma8237_0_r },
-		{ 0x0020, 0x0021, pic8259_0_r },
-		{ 0x0040, 0x0043, pit8253_0_r },
-		{ 0x0060, 0x0065, pc1640_port60_r },
-	{ 0x0078, 0x0078, pc1640_mouse_x_r }, //?
-	{ 0x007a, 0x007a, pc1640_mouse_y_r }, //?
-		{ 0x0080, 0x0087, pc_page_r },
-		{ 0x0200, 0x0207, pc_JOY_r },
-		{ 0x0278, 0x027b, pc_parallelport2_r },
-		{ 0x02e8, 0x02ef, pc_COM4_r },
-		{ 0x02f8, 0x02ff, pc_COM2_r },
-	    { 0x0320, 0x0323, pc_HDC1_r },
-		{ 0x0324, 0x0327, pc_HDC2_r },
-		{ 0x0378, 0x037b, pc1640_port378_r },
-		{ 0x03bc, 0x03be, pc_parallelport0_r },
-		{ 0x03e8, 0x03ef, pc_COM3_r },
-		{ 0x03f0, 0x03f7, pc_fdc_r },
-		{ 0x03f8, 0x03ff, pc_COM1_r },
-	PORT_END
-	
-	
-	static PORT_WRITE_START( pc200_writeport )
-		{ 0x0000, 0x000f, dma8237_0_w },
-		{ 0x0020, 0x0021, pic8259_0_w },
-		{ 0x0040, 0x0043, pit8253_0_w },
-		{ 0x0060, 0x0065, pc1640_port60_w },
-	{ 0x0078, 0x0078, pc1640_mouse_x_w }, //?
-	{ 0x007a, 0x007a, pc1640_mouse_y_w }, //?
-		{ 0x0080, 0x0087, pc_page_w },
-		{ 0x0200, 0x0207, pc_JOY_w },
-		{ 0x0278, 0x027b, pc_parallelport2_w },
-		{ 0x02e8, 0x02ef, pc_COM4_w },
-		{ 0x02f8, 0x02ff, pc_COM2_w },
-	    { 0x0320, 0x0323, pc_HDC1_w },
-		{ 0x0324, 0x0327, pc_HDC2_w },
-		{ 0x0378, 0x037b, pc_parallelport1_w },
-		{ 0x03bc, 0x03bd, pc_parallelport0_w },
-		{ 0x03e8, 0x03ef, pc_COM3_w },
-		{ 0x03f0, 0x03f7, pc_fdc_w },
-		{ 0x03f8, 0x03ff, pc_COM1_w },
-	PORT_END
-	
-	static MEMORY_READ_START( pc1640_readmem )
-		{ 0x00000, 0x7ffff, MRA_RAM },
-		{ 0x80000, 0x9ffff, MRA_RAM },
-		{ 0xa0000, 0xbffff, MRA_NOP },
-		{ 0xc0000, 0xc7fff, MRA_ROM },
-	    { 0xc8000, 0xcffff, MRA_ROM },
-	    { 0xd0000, 0xfbfff, MRA_NOP },
-		{ 0xfc000, 0xfffff, MRA_ROM },
-	MEMORY_END
-	
-	static MEMORY_WRITE_START( pc1640_writemem )
-		{ 0x00000, 0x7ffff, MWA_RAM },
-		{ 0x80000, 0x9ffff, MWA_RAM },
-		{ 0xa0000, 0xbffff, MWA_NOP },
-		{ 0xc0000, 0xc7fff, MWA_ROM },
-		{ 0xc8000, 0xcffff, MWA_ROM },
-	    { 0xd0000, 0xfbfff, MWA_NOP },
-		{ 0xfc000, 0xfffff, MWA_ROM },
-	MEMORY_END
-	
-	static PORT_READ_START( pc1640_readport )
-		{ 0x0000, 0x000f, dma8237_0_r },
-		{ 0x0020, 0x0021, pic8259_0_r },
-		{ 0x0040, 0x0043, pit8253_0_r },
-		{ 0x0060, 0x0065, pc1640_port60_r },
-		{ 0x0070, 0x0071, mc146818_port_r },
-		{ 0x0078, 0x0078, pc1640_mouse_x_r },
-		{ 0x007a, 0x007a, pc1640_mouse_y_r },
-		{ 0x0080, 0x0087, pc_page_r },
-	{ 0x0200, 0x0207, pc_JOY_r }, //?
-		{ 0x0278, 0x027b, pc_parallelport2_r },
-		{ 0x02e8, 0x02ef, pc_COM4_r },
-		{ 0x02f8, 0x02ff, pc_COM2_r },
-	    { 0x0320, 0x0323, pc_HDC1_r },
-		{ 0x0324, 0x0327, pc_HDC2_r },
-		{ 0x0378, 0x037b, pc1640_port378_r },
-		{ 0x03bc, 0x03be, pc_parallelport0_r },
-		{ 0x03e8, 0x03ef, pc_COM3_r },
-		{ 0x03f0, 0x03f7, pc_fdc_r },
-		{ 0x03f8, 0x03ff, pc_COM1_r },
-	PORT_END
+	public static IO_ReadPort pc200_readport[]={
+		new IO_ReadPort(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),
+		new IO_ReadPort( 0x0000, 0x000f, dma8237_0_r ),
+		new IO_ReadPort( 0x0020, 0x0021, pic8259_0_r ),
+		new IO_ReadPort( 0x0040, 0x0043, pit8253_0_r ),
+		new IO_ReadPort( 0x0060, 0x0065, pc1640_port60_r ),
+	new IO_ReadPort( 0x0078, 0x0078, pc1640_mouse_x_r ), //?
+	new IO_ReadPort( 0x007a, 0x007a, pc1640_mouse_y_r ), //?
+		new IO_ReadPort( 0x0080, 0x0087, pc_page_r ),
+		new IO_ReadPort( 0x0200, 0x0207, pc_JOY_r ),
+		new IO_ReadPort( 0x0278, 0x027b, pc_parallelport2_r ),
+		new IO_ReadPort( 0x02e8, 0x02ef, pc_COM4_r ),
+		new IO_ReadPort( 0x02f8, 0x02ff, pc_COM2_r ),
+	    new IO_ReadPort( 0x0320, 0x0323, pc_HDC1_r ),
+		new IO_ReadPort( 0x0324, 0x0327, pc_HDC2_r ),
+		new IO_ReadPort( 0x0378, 0x037b, pc1640_port378_r ),
+		new IO_ReadPort( 0x03bc, 0x03be, pc_parallelport0_r ),
+		new IO_ReadPort( 0x03e8, 0x03ef, pc_COM3_r ),
+		new IO_ReadPort( 0x03f0, 0x03f7, pc_fdc_r ),
+		new IO_ReadPort( 0x03f8, 0x03ff, pc_COM1_r ),
+		new IO_ReadPort(MEMPORT_MARKER, 0)
+	};
 	
 	
-	static PORT_WRITE_START( pc1640_writeport )
-		{ 0x0000, 0x000f, dma8237_0_w },
-		{ 0x0020, 0x0021, pic8259_0_w },
-		{ 0x0040, 0x0043, pit8253_0_w },
-		{ 0x0060, 0x0065, pc1640_port60_w },
-		{ 0x0070, 0x0071, mc146818_port_w },
-		{ 0x0078, 0x0078, pc1640_mouse_x_w },
-		{ 0x007a, 0x007a, pc1640_mouse_y_w },
-		{ 0x0080, 0x0087, pc_page_w },
-	{ 0x0200, 0x0207, pc_JOY_w }, //?
-		{ 0x0278, 0x027b, pc_parallelport2_w },
-		{ 0x02e8, 0x02ef, pc_COM4_w },
-		{ 0x02f8, 0x02ff, pc_COM2_w },
-	    { 0x0320, 0x0323, pc_HDC1_w },
-		{ 0x0324, 0x0327, pc_HDC2_w },
-		{ 0x0378, 0x037b, pc_parallelport1_w },
-		{ 0x03bc, 0x03bd, pc_parallelport0_w },
-		{ 0x03e8, 0x03ef, pc_COM3_w },
-		{ 0x03f0, 0x03f7, pc_fdc_w },
-		{ 0x03f8, 0x03ff, pc_COM1_w },
-	PORT_END
+	public static IO_WritePort pc200_writeport[]={
+		new IO_WritePort(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),
+		new IO_WritePort( 0x0000, 0x000f, dma8237_0_w ),
+		new IO_WritePort( 0x0020, 0x0021, pic8259_0_w ),
+		new IO_WritePort( 0x0040, 0x0043, pit8253_0_w ),
+		new IO_WritePort( 0x0060, 0x0065, pc1640_port60_w ),
+	new IO_WritePort( 0x0078, 0x0078, pc1640_mouse_x_w ), //?
+	new IO_WritePort( 0x007a, 0x007a, pc1640_mouse_y_w ), //?
+		new IO_WritePort( 0x0080, 0x0087, pc_page_w ),
+		new IO_WritePort( 0x0200, 0x0207, pc_JOY_w ),
+		new IO_WritePort( 0x0278, 0x027b, pc_parallelport2_w ),
+		new IO_WritePort( 0x02e8, 0x02ef, pc_COM4_w ),
+		new IO_WritePort( 0x02f8, 0x02ff, pc_COM2_w ),
+	    new IO_WritePort( 0x0320, 0x0323, pc_HDC1_w ),
+		new IO_WritePort( 0x0324, 0x0327, pc_HDC2_w ),
+		new IO_WritePort( 0x0378, 0x037b, pc_parallelport1_w ),
+		new IO_WritePort( 0x03bc, 0x03bd, pc_parallelport0_w ),
+		new IO_WritePort( 0x03e8, 0x03ef, pc_COM3_w ),
+		new IO_WritePort( 0x03f0, 0x03f7, pc_fdc_w ),
+		new IO_WritePort( 0x03f8, 0x03ff, pc_COM1_w ),
+		new IO_WritePort(MEMPORT_MARKER, 0)
+	};
 	
-	INPUT_PORTS_START( pcmda )
+	public static Memory_ReadAddress pc1640_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress( 0x00000, 0x7ffff, MRA_RAM ),
+		new Memory_ReadAddress( 0x80000, 0x9ffff, MRA_RAM ),
+		new Memory_ReadAddress( 0xa0000, 0xbffff, MRA_NOP ),
+		new Memory_ReadAddress( 0xc0000, 0xc7fff, MRA_ROM ),
+	    new Memory_ReadAddress( 0xc8000, 0xcffff, MRA_ROM ),
+	    new Memory_ReadAddress( 0xd0000, 0xfbfff, MRA_NOP ),
+		new Memory_ReadAddress( 0xfc000, 0xfffff, MRA_ROM ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
+	
+	public static Memory_WriteAddress pc1640_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x00000, 0x7ffff, MWA_RAM ),
+		new Memory_WriteAddress( 0x80000, 0x9ffff, MWA_RAM ),
+		new Memory_WriteAddress( 0xa0000, 0xbffff, MWA_NOP ),
+		new Memory_WriteAddress( 0xc0000, 0xc7fff, MWA_ROM ),
+		new Memory_WriteAddress( 0xc8000, 0xcffff, MWA_ROM ),
+	    new Memory_WriteAddress( 0xd0000, 0xfbfff, MWA_NOP ),
+		new Memory_WriteAddress( 0xfc000, 0xfffff, MWA_ROM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
+	
+	public static IO_ReadPort pc1640_readport[]={
+		new IO_ReadPort(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),
+		new IO_ReadPort( 0x0000, 0x000f, dma8237_0_r ),
+		new IO_ReadPort( 0x0020, 0x0021, pic8259_0_r ),
+		new IO_ReadPort( 0x0040, 0x0043, pit8253_0_r ),
+		new IO_ReadPort( 0x0060, 0x0065, pc1640_port60_r ),
+		new IO_ReadPort( 0x0070, 0x0071, mc146818_port_r ),
+		new IO_ReadPort( 0x0078, 0x0078, pc1640_mouse_x_r ),
+		new IO_ReadPort( 0x007a, 0x007a, pc1640_mouse_y_r ),
+		new IO_ReadPort( 0x0080, 0x0087, pc_page_r ),
+	new IO_ReadPort( 0x0200, 0x0207, pc_JOY_r ), //?
+		new IO_ReadPort( 0x0278, 0x027b, pc_parallelport2_r ),
+		new IO_ReadPort( 0x02e8, 0x02ef, pc_COM4_r ),
+		new IO_ReadPort( 0x02f8, 0x02ff, pc_COM2_r ),
+	    new IO_ReadPort( 0x0320, 0x0323, pc_HDC1_r ),
+		new IO_ReadPort( 0x0324, 0x0327, pc_HDC2_r ),
+		new IO_ReadPort( 0x0378, 0x037b, pc1640_port378_r ),
+		new IO_ReadPort( 0x03bc, 0x03be, pc_parallelport0_r ),
+		new IO_ReadPort( 0x03e8, 0x03ef, pc_COM3_r ),
+		new IO_ReadPort( 0x03f0, 0x03f7, pc_fdc_r ),
+		new IO_ReadPort( 0x03f8, 0x03ff, pc_COM1_r ),
+		new IO_ReadPort(MEMPORT_MARKER, 0)
+	};
+	
+	
+	public static IO_WritePort pc1640_writeport[]={
+		new IO_WritePort(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),
+		new IO_WritePort( 0x0000, 0x000f, dma8237_0_w ),
+		new IO_WritePort( 0x0020, 0x0021, pic8259_0_w ),
+		new IO_WritePort( 0x0040, 0x0043, pit8253_0_w ),
+		new IO_WritePort( 0x0060, 0x0065, pc1640_port60_w ),
+		new IO_WritePort( 0x0070, 0x0071, mc146818_port_w ),
+		new IO_WritePort( 0x0078, 0x0078, pc1640_mouse_x_w ),
+		new IO_WritePort( 0x007a, 0x007a, pc1640_mouse_y_w ),
+		new IO_WritePort( 0x0080, 0x0087, pc_page_w ),
+	new IO_WritePort( 0x0200, 0x0207, pc_JOY_w ), //?
+		new IO_WritePort( 0x0278, 0x027b, pc_parallelport2_w ),
+		new IO_WritePort( 0x02e8, 0x02ef, pc_COM4_w ),
+		new IO_WritePort( 0x02f8, 0x02ff, pc_COM2_w ),
+	    new IO_WritePort( 0x0320, 0x0323, pc_HDC1_w ),
+		new IO_WritePort( 0x0324, 0x0327, pc_HDC2_w ),
+		new IO_WritePort( 0x0378, 0x037b, pc_parallelport1_w ),
+		new IO_WritePort( 0x03bc, 0x03bd, pc_parallelport0_w ),
+		new IO_WritePort( 0x03e8, 0x03ef, pc_COM3_w ),
+		new IO_WritePort( 0x03f0, 0x03f7, pc_fdc_w ),
+		new IO_WritePort( 0x03f8, 0x03ff, pc_COM1_w ),
+		new IO_WritePort(MEMPORT_MARKER, 0)
+	};
+	
+	static InputPortPtr input_ports_pcmda = new InputPortPtr(){ public void handler() { 
 		PORT_START /* IN0 */
-		PORT_BIT ( 0x80, 0x80,	 IPT_VBLANK )
-		PORT_BIT ( 0x7f, 0x7f,	 IPT_UNUSED )
+		PORT_BIT ( 0x80, 0x80,	 IPT_VBLANK );
+		PORT_BIT ( 0x7f, 0x7f,	 IPT_UNUSED );
 	
 	    PORT_START /* IN1 */
-		PORT_BITX( 0xc0, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Number of floppy drives", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "1" )
-		PORT_DIPSETTING(	0x40, "2" )
-		PORT_DIPSETTING(	0x80, "3" )
-		PORT_DIPSETTING(	0xc0, "4" )
-		PORT_BITX( 0x30, 0x30, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Graphics adapter", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "EGA/VGA" )
-		PORT_DIPSETTING(	0x10, "Color 40x25" )
-		PORT_DIPSETTING(	0x20, "Color 80x25" )
-		PORT_DIPSETTING(	0x30, "Monochrome" )
-		PORT_BITX( 0x0c, 0x0c, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "RAM banks", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "1 - 16/ 64/256K" )
-		PORT_DIPSETTING(	0x04, "2 - 32/128/512K" )
-		PORT_DIPSETTING(	0x08, "3 - 48/192/576K" )
-		PORT_DIPSETTING(	0x0c, "4 - 64/256/640K" )
-		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "80387 installed", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR(No) )
-		PORT_DIPSETTING(	0x02, DEF_STR(Yes) )
-		PORT_BITX( 0x01, 0x01, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Any floppy drive installed", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR(No) )
-		PORT_DIPSETTING(	0x01, DEF_STR(Yes) )
+		PORT_BITX( 0xc0, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Number of floppy drives", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "1" );
+		PORT_DIPSETTING(	0x40, "2" );
+		PORT_DIPSETTING(	0x80, "3" );
+		PORT_DIPSETTING(	0xc0, "4" );
+		PORT_BITX( 0x30, 0x30, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Graphics adapter", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "EGA/VGA" );
+		PORT_DIPSETTING(	0x10, "Color 40x25" );
+		PORT_DIPSETTING(	0x20, "Color 80x25" );
+		PORT_DIPSETTING(	0x30, "Monochrome" );
+		PORT_BITX( 0x0c, 0x0c, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "RAM banks", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "1 - 16/ 64/256K" );
+		PORT_DIPSETTING(	0x04, "2 - 32/128/512K" );
+		PORT_DIPSETTING(	0x08, "3 - 48/192/576K" );
+		PORT_DIPSETTING(	0x0c, "4 - 64/256/640K" );
+		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "80387 installed", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR(No);
+		PORT_DIPSETTING(	0x02, DEF_STR(Yes);
+		PORT_BITX( 0x01, 0x01, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Any floppy drive installed", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR(No);
+		PORT_DIPSETTING(	0x01, DEF_STR(Yes);
 	
 	    PORT_START /* IN2 */
-		PORT_BITX( 0x80, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM1: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR(No) )
-		PORT_DIPSETTING(	0x80, DEF_STR(Yes) )
-		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM2: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR(No) )
-		PORT_DIPSETTING(	0x40, DEF_STR(Yes) )
-		PORT_BITX( 0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM3: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR(No) )
-		PORT_DIPSETTING(	0x20, DEF_STR(Yes) )
-		PORT_BITX( 0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM4: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x10, DEF_STR( Yes ) )
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT1: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x08, DEF_STR( Yes ) )
-		PORT_BITX( 0x04, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT2: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x04, DEF_STR( Yes ) )
-		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT3: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x02, DEF_STR( Yes ) )
-		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Game port enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x01, DEF_STR( Yes ) )
+		PORT_BITX( 0x80, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM1: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR(No);
+		PORT_DIPSETTING(	0x80, DEF_STR(Yes);
+		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM2: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR(No);
+		PORT_DIPSETTING(	0x40, DEF_STR(Yes);
+		PORT_BITX( 0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM3: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR(No);
+		PORT_DIPSETTING(	0x20, DEF_STR(Yes);
+		PORT_BITX( 0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM4: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x10, DEF_STR( "Yes") );
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT1: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Yes") );
+		PORT_BITX( 0x04, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT2: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x04, DEF_STR( "Yes") );
+		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT3: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x02, DEF_STR( "Yes") );
+		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Game port enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x01, DEF_STR( "Yes") );
 	
 		PORT_START /* IN3 */
-		PORT_BITX( 0xf0, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Serial mouse", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x80, "COM1" )
-		PORT_DIPSETTING(	0x40, "COM2" )
-		PORT_DIPSETTING(	0x20, "COM3" )
-		PORT_DIPSETTING(	0x10, "COM4" )
-	    PORT_DIPSETTING(    0x00, "none" )
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC1 (C800:0 port 320-323)", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x08, DEF_STR( Yes ) )
-		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC2 (CA00:0 port 324-327)", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x04, DEF_STR( Yes ) )
-		PORT_BIT( 0x02, 0x02,	IPT_UNUSED ) /* no turbo switch */
-		PORT_BIT( 0x01, 0x01,	IPT_UNUSED )
+		PORT_BITX( 0xf0, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Serial mouse", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x80, "COM1" );
+		PORT_DIPSETTING(	0x40, "COM2" );
+		PORT_DIPSETTING(	0x20, "COM3" );
+		PORT_DIPSETTING(	0x10, "COM4" );
+	    PORT_DIPSETTING(    0x00, "none" );
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC1 (C800:0 port 320-323);, CODE_NONE, CODE_NONE )
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Yes") );
+		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC2 (CA00:0 port 324-327);, CODE_NONE, CODE_NONE )
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x04, DEF_STR( "Yes") );
+		PORT_BIT( 0x02, 0x02,	IPT_UNUSED );/* no turbo switch */
+		PORT_BIT( 0x01, 0x01,	IPT_UNUSED );
 	
 		PC_KEYBOARD
 	
 		INPUT_MICROSOFT_MOUSE
 	
 		PC_JOYSTICK
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
-	INPUT_PORTS_START( pccga )
+	static InputPortPtr input_ports_pccga = new InputPortPtr(){ public void handler() { 
 		PORT_START /* IN0 */
-		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
-		PORT_BIT ( 0x08, 0x08,	 IPT_VBLANK )
-		PORT_BIT ( 0x07, 0x07,	 IPT_UNUSED )
+		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );
+		PORT_BIT ( 0x08, 0x08,	 IPT_VBLANK );
+		PORT_BIT ( 0x07, 0x07,	 IPT_UNUSED );
 	
 	    PORT_START /* IN1 */
-		PORT_BITX( 0xc0, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Number of floppy drives", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "1" )
-		PORT_DIPSETTING(	0x40, "2" )
-		PORT_DIPSETTING(	0x80, "3" )
-		PORT_DIPSETTING(	0xc0, "4" )
-		PORT_BITX( 0x30, 0x20, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Graphics adapter", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "EGA/VGA" )
-		PORT_DIPSETTING(	0x10, "Color 40x25" )
-		PORT_DIPSETTING(	0x20, "Color 80x25" )
-		PORT_DIPSETTING(	0x30, "Monochrome" )
-		PORT_BITX( 0x0c, 0x0c, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "RAM banks", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "1 - 16  64 256K" )
-		PORT_DIPSETTING(	0x04, "2 - 32 128 512K" )
-		PORT_DIPSETTING(	0x08, "3 - 48 192 576K" )
-		PORT_DIPSETTING(	0x0c, "4 - 64 256 640K" )
-		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "80387 installed", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x02, DEF_STR( Yes ) )
-		PORT_BITX( 0x01, 0x01, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Floppy installed", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x01, DEF_STR( Yes ) )
+		PORT_BITX( 0xc0, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Number of floppy drives", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "1" );
+		PORT_DIPSETTING(	0x40, "2" );
+		PORT_DIPSETTING(	0x80, "3" );
+		PORT_DIPSETTING(	0xc0, "4" );
+		PORT_BITX( 0x30, 0x20, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Graphics adapter", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "EGA/VGA" );
+		PORT_DIPSETTING(	0x10, "Color 40x25" );
+		PORT_DIPSETTING(	0x20, "Color 80x25" );
+		PORT_DIPSETTING(	0x30, "Monochrome" );
+		PORT_BITX( 0x0c, 0x0c, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "RAM banks", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "1 - 16  64 256K" );
+		PORT_DIPSETTING(	0x04, "2 - 32 128 512K" );
+		PORT_DIPSETTING(	0x08, "3 - 48 192 576K" );
+		PORT_DIPSETTING(	0x0c, "4 - 64 256 640K" );
+		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "80387 installed", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x02, DEF_STR( "Yes") );
+		PORT_BITX( 0x01, 0x01, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Floppy installed", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x01, DEF_STR( "Yes") );
 		PORT_START /* IN2 */
-		PORT_BITX( 0x80, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM1: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x80, DEF_STR( Yes ) )
-		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM2: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x40, DEF_STR( Yes ) )
-		PORT_BITX( 0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM3: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x20, DEF_STR( Yes ) )
-		PORT_BITX( 0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM4: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x10, DEF_STR( Yes ) )
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT1: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x08, DEF_STR( Yes ) )
-		PORT_BITX( 0x04, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT2: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x04, DEF_STR( Yes ) )
-		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT3: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x02, DEF_STR( Yes ) )
-		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Game port enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-	    PORT_DIPSETTING(    0x01, DEF_STR( Yes ) )
+		PORT_BITX( 0x80, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM1: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x80, DEF_STR( "Yes") );
+		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM2: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x40, DEF_STR( "Yes") );
+		PORT_BITX( 0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM3: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x20, DEF_STR( "Yes") );
+		PORT_BITX( 0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM4: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x10, DEF_STR( "Yes") );
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT1: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Yes") );
+		PORT_BITX( 0x04, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT2: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x04, DEF_STR( "Yes") );
+		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT3: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x02, DEF_STR( "Yes") );
+		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Game port enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+	    PORT_DIPSETTING(    0x01, DEF_STR( "Yes") );
 	
 	    PORT_START /* IN3 */
-		PORT_BITX( 0xf0, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Serial mouse", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x80, "COM1" )
-		PORT_DIPSETTING(	0x40, "COM2" )
-		PORT_DIPSETTING(	0x20, "COM3" )
-		PORT_DIPSETTING(	0x10, "COM4" )
-	    PORT_DIPSETTING(    0x00, "none" )
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC1 (C800:0 port 320-323)", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x08, DEF_STR( Yes ) )
-		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC2 (CA00:0 port 324-327)", CODE_NONE, CODE_NONE )
-	    PORT_DIPSETTING(    0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x04, DEF_STR( Yes ) )
-		PORT_BIT( 0x02, 0x02,	IPT_UNUSED ) /* no turbo switch */
-		PORT_BIT( 0x01, 0x01,	IPT_UNUSED )
+		PORT_BITX( 0xf0, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Serial mouse", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x80, "COM1" );
+		PORT_DIPSETTING(	0x40, "COM2" );
+		PORT_DIPSETTING(	0x20, "COM3" );
+		PORT_DIPSETTING(	0x10, "COM4" );
+	    PORT_DIPSETTING(    0x00, "none" );
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC1 (C800:0 port 320-323);, CODE_NONE, CODE_NONE )
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Yes") );
+		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC2 (CA00:0 port 324-327);, CODE_NONE, CODE_NONE )
+	    PORT_DIPSETTING(    0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x04, DEF_STR( "Yes") );
+		PORT_BIT( 0x02, 0x02,	IPT_UNUSED );/* no turbo switch */
+		PORT_BIT( 0x01, 0x01,	IPT_UNUSED );
 	
 		PC_KEYBOARD
 	
 		INPUT_MICROSOFT_MOUSE
 	
 		PC_JOYSTICK
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
-	INPUT_PORTS_START( europc )
+	static InputPortPtr input_ports_europc = new InputPortPtr(){ public void handler() { 
 		PORT_START /* IN0 */
-		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
-		PORT_BIT ( 0x08, 0x08,	 IPT_VBLANK )
-		PORT_BIT ( 0x07, 0x07,	 IPT_UNUSED )
+		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );
+		PORT_BIT ( 0x08, 0x08,	 IPT_VBLANK );
+		PORT_BIT ( 0x07, 0x07,	 IPT_UNUSED );
 	
 	    PORT_START /* IN1 */
 	
 		PORT_START /* IN2 */
-		PORT_BITX( 0x80, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM1: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x80, DEF_STR( Yes ) )
-		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM2: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x40, DEF_STR( Yes ) )
-		PORT_BITX( 0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM3: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x20, DEF_STR( Yes ) )
-		PORT_BITX( 0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM4: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x10, DEF_STR( Yes ) )
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT1: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x08, DEF_STR( Yes ) )
-		PORT_BITX( 0x04, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT2: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x04, DEF_STR( Yes ) )
-		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT3: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x02, DEF_STR( Yes ) )
-		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Game port enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-	    PORT_DIPSETTING(    0x01, DEF_STR( Yes ) )
+		PORT_BITX( 0x80, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM1: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x80, DEF_STR( "Yes") );
+		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM2: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x40, DEF_STR( "Yes") );
+		PORT_BITX( 0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM3: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x20, DEF_STR( "Yes") );
+		PORT_BITX( 0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM4: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x10, DEF_STR( "Yes") );
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT1: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Yes") );
+		PORT_BITX( 0x04, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT2: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x04, DEF_STR( "Yes") );
+		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT3: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x02, DEF_STR( "Yes") );
+		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Game port enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+	    PORT_DIPSETTING(    0x01, DEF_STR( "Yes") );
 	
 	    PORT_START /* IN3 */
-		PORT_BITX( 0xf0, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Serial mouse", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x80, "COM1" )
-		PORT_DIPSETTING(	0x40, "COM2" )
-		PORT_DIPSETTING(	0x20, "COM3" )
-		PORT_DIPSETTING(	0x10, "COM4" )
-	    PORT_DIPSETTING(    0x00, "none" )
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC1 (C800:0 port 320-323)", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x08, DEF_STR( Yes ) )
-		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC2 (CA00:0 port 324-327)", CODE_NONE, CODE_NONE )
-	    PORT_DIPSETTING(    0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x04, DEF_STR( Yes ) )
-		PORT_BIT( 0x02, 0x02,	IPT_UNUSED ) /* no turbo switch */
-		PORT_BIT( 0x01, 0x01,	IPT_UNUSED )
+		PORT_BITX( 0xf0, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Serial mouse", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x80, "COM1" );
+		PORT_DIPSETTING(	0x40, "COM2" );
+		PORT_DIPSETTING(	0x20, "COM3" );
+		PORT_DIPSETTING(	0x10, "COM4" );
+	    PORT_DIPSETTING(    0x00, "none" );
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC1 (C800:0 port 320-323);, CODE_NONE, CODE_NONE )
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Yes") );
+		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC2 (CA00:0 port 324-327);, CODE_NONE, CODE_NONE )
+	    PORT_DIPSETTING(    0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x04, DEF_STR( "Yes") );
+		PORT_BIT( 0x02, 0x02,	IPT_UNUSED );/* no turbo switch */
+		PORT_BIT( 0x01, 0x01,	IPT_UNUSED );
 	
 		EUROPC_KEYBOARD
 	
 		INPUT_MICROSOFT_MOUSE
 	
 		PC_JOYSTICK
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
-	INPUT_PORTS_START( bondwell )
+	static InputPortPtr input_ports_bondwell = new InputPortPtr(){ public void handler() { 
 		PORT_START /* IN0 */
-		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
-		PORT_BIT ( 0x08, 0x08,	 IPT_VBLANK )
-		PORT_BIT ( 0x07, 0x07,	 IPT_UNUSED )
+		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );
+		PORT_BIT ( 0x08, 0x08,	 IPT_VBLANK );
+		PORT_BIT ( 0x07, 0x07,	 IPT_UNUSED );
 	
 	    PORT_START /* IN1 */
-		PORT_BITX( 0xc0, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Number of floppy drives", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "1" )
-		PORT_DIPSETTING(	0x40, "2" )
-		PORT_DIPSETTING(	0x80, "3" )
-		PORT_DIPSETTING(	0xc0, "4" )
-		PORT_BITX( 0x30, 0x20, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Graphics adapter", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "EGA/VGA" )
-		PORT_DIPSETTING(	0x10, "Color 40x25" )
-		PORT_DIPSETTING(	0x20, "Color 80x25" )
-		PORT_DIPSETTING(	0x30, "Monochrome" )
-		PORT_BITX( 0x0c, 0x0c, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "RAM banks", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "1 - 16  64 256K" )
-		PORT_DIPSETTING(	0x04, "2 - 32 128 512K" )
-		PORT_DIPSETTING(	0x08, "3 - 48 192 576K" )
-		PORT_DIPSETTING(	0x0c, "4 - 64 256 640K" )
-		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "80387 installed", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x02, DEF_STR( Yes ) )
-		PORT_BITX( 0x01, 0x01, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Floppy installed", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x01, DEF_STR( Yes ) )
+		PORT_BITX( 0xc0, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Number of floppy drives", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "1" );
+		PORT_DIPSETTING(	0x40, "2" );
+		PORT_DIPSETTING(	0x80, "3" );
+		PORT_DIPSETTING(	0xc0, "4" );
+		PORT_BITX( 0x30, 0x20, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Graphics adapter", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "EGA/VGA" );
+		PORT_DIPSETTING(	0x10, "Color 40x25" );
+		PORT_DIPSETTING(	0x20, "Color 80x25" );
+		PORT_DIPSETTING(	0x30, "Monochrome" );
+		PORT_BITX( 0x0c, 0x0c, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "RAM banks", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "1 - 16  64 256K" );
+		PORT_DIPSETTING(	0x04, "2 - 32 128 512K" );
+		PORT_DIPSETTING(	0x08, "3 - 48 192 576K" );
+		PORT_DIPSETTING(	0x0c, "4 - 64 256 640K" );
+		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "80387 installed", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x02, DEF_STR( "Yes") );
+		PORT_BITX( 0x01, 0x01, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Floppy installed", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x01, DEF_STR( "Yes") );
 		PORT_START /* IN2 */
-		PORT_BITX( 0x80, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM1: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x80, DEF_STR( Yes ) )
-		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM2: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x40, DEF_STR( Yes ) )
-		PORT_BITX( 0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM3: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x20, DEF_STR( Yes ) )
-		PORT_BITX( 0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM4: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x10, DEF_STR( Yes ) )
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT1: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x08, DEF_STR( Yes ) )
-		PORT_BITX( 0x04, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT2: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x04, DEF_STR( Yes ) )
-		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT3: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x02, DEF_STR( Yes ) )
-		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Game port enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-	    PORT_DIPSETTING(    0x01, DEF_STR( Yes ) )
+		PORT_BITX( 0x80, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM1: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x80, DEF_STR( "Yes") );
+		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM2: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x40, DEF_STR( "Yes") );
+		PORT_BITX( 0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM3: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x20, DEF_STR( "Yes") );
+		PORT_BITX( 0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM4: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x10, DEF_STR( "Yes") );
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT1: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Yes") );
+		PORT_BITX( 0x04, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT2: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x04, DEF_STR( "Yes") );
+		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT3: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x02, DEF_STR( "Yes") );
+		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Game port enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+	    PORT_DIPSETTING(    0x01, DEF_STR( "Yes") );
 	
 	    PORT_START /* IN3 */
-		PORT_BITX( 0xf0, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Serial mouse", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x80, "COM1" )
-		PORT_DIPSETTING(	0x40, "COM2" )
-		PORT_DIPSETTING(	0x20, "COM3" )
-		PORT_DIPSETTING(	0x10, "COM4" )
-	    PORT_DIPSETTING(    0x00, "none" )
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC1 (C800:0 port 320-323)", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x08, DEF_STR( Yes ) )
-		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC2 (CA00:0 port 324-327)", CODE_NONE, CODE_NONE )
-	    PORT_DIPSETTING(    0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x04, DEF_STR( Yes ) )
-		PORT_BITX( 0x02, 0x02, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Turbo Switch", CODE_DEFAULT, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "Off(4.77 MHz)" )
-		PORT_DIPSETTING(	0x02, "On(12 MHz)" )
-		PORT_BIT( 0x01, 0x01,	IPT_UNUSED )
+		PORT_BITX( 0xf0, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Serial mouse", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x80, "COM1" );
+		PORT_DIPSETTING(	0x40, "COM2" );
+		PORT_DIPSETTING(	0x20, "COM3" );
+		PORT_DIPSETTING(	0x10, "COM4" );
+	    PORT_DIPSETTING(    0x00, "none" );
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC1 (C800:0 port 320-323);, CODE_NONE, CODE_NONE )
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Yes") );
+		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC2 (CA00:0 port 324-327);, CODE_NONE, CODE_NONE )
+	    PORT_DIPSETTING(    0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x04, DEF_STR( "Yes") );
+		PORT_BITX( 0x02, 0x02, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Turbo Switch", CODE_DEFAULT, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "Off(4.77 MHz); )
+		PORT_DIPSETTING(	0x02, "On(12 MHz); )
+		PORT_BIT( 0x01, 0x01,	IPT_UNUSED );
 	
 		AT_KEYBOARD
 	
 		INPUT_MICROSOFT_MOUSE
 	
 		PC_JOYSTICK
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
-	INPUT_PORTS_START( xtcga )
+	static InputPortPtr input_ports_xtcga = new InputPortPtr(){ public void handler() { 
 		PORT_START /* IN0 */
-		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
-		PORT_BIT ( 0x08, 0x08,	 IPT_VBLANK )
-		PORT_BIT ( 0x07, 0x07,	 IPT_UNUSED )
+		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );
+		PORT_BIT ( 0x08, 0x08,	 IPT_VBLANK );
+		PORT_BIT ( 0x07, 0x07,	 IPT_UNUSED );
 	
 	    PORT_START /* IN1 */
-		PORT_BITX( 0xc0, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Number of floppy drives", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "1" )
-		PORT_DIPSETTING(	0x40, "2" )
-		PORT_DIPSETTING(	0x80, "3" )
-		PORT_DIPSETTING(	0xc0, "4" )
-		PORT_BITX( 0x30, 0x20, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Graphics adapter", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "EGA/VGA" )
-		PORT_DIPSETTING(	0x10, "Color 40x25" )
-		PORT_DIPSETTING(	0x20, "Color 80x25" )
-		PORT_DIPSETTING(	0x30, "Monochrome" )
-		PORT_BITX( 0x0c, 0x0c, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "RAM banks", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "1 - 16  64 256K" )
-		PORT_DIPSETTING(	0x04, "2 - 32 128 512K" )
-		PORT_DIPSETTING(	0x08, "3 - 48 192 576K" )
-		PORT_DIPSETTING(	0x0c, "4 - 64 256 640K" )
-		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "80387 installed", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x02, DEF_STR( Yes ) )
-		PORT_BITX( 0x01, 0x01, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Floppy installed", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x01, DEF_STR( Yes ) )
+		PORT_BITX( 0xc0, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Number of floppy drives", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "1" );
+		PORT_DIPSETTING(	0x40, "2" );
+		PORT_DIPSETTING(	0x80, "3" );
+		PORT_DIPSETTING(	0xc0, "4" );
+		PORT_BITX( 0x30, 0x20, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Graphics adapter", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "EGA/VGA" );
+		PORT_DIPSETTING(	0x10, "Color 40x25" );
+		PORT_DIPSETTING(	0x20, "Color 80x25" );
+		PORT_DIPSETTING(	0x30, "Monochrome" );
+		PORT_BITX( 0x0c, 0x0c, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "RAM banks", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "1 - 16  64 256K" );
+		PORT_DIPSETTING(	0x04, "2 - 32 128 512K" );
+		PORT_DIPSETTING(	0x08, "3 - 48 192 576K" );
+		PORT_DIPSETTING(	0x0c, "4 - 64 256 640K" );
+		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "80387 installed", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x02, DEF_STR( "Yes") );
+		PORT_BITX( 0x01, 0x01, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Floppy installed", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x01, DEF_STR( "Yes") );
 		PORT_START /* IN2 */
-		PORT_BITX( 0x80, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM1: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x80, DEF_STR( Yes ) )
-		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM2: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x40, DEF_STR( Yes ) )
-		PORT_BITX( 0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM3: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x20, DEF_STR( Yes ) )
-		PORT_BITX( 0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM4: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x10, DEF_STR( Yes ) )
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT1: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x08, DEF_STR( Yes ) )
-		PORT_BITX( 0x04, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT2: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x04, DEF_STR( Yes ) )
-		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT3: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x02, DEF_STR( Yes ) )
-		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Game port enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-	    PORT_DIPSETTING(    0x01, DEF_STR( Yes ) )
+		PORT_BITX( 0x80, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM1: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x80, DEF_STR( "Yes") );
+		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM2: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x40, DEF_STR( "Yes") );
+		PORT_BITX( 0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM3: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x20, DEF_STR( "Yes") );
+		PORT_BITX( 0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM4: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x10, DEF_STR( "Yes") );
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT1: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Yes") );
+		PORT_BITX( 0x04, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT2: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x04, DEF_STR( "Yes") );
+		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT3: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x02, DEF_STR( "Yes") );
+		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Game port enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+	    PORT_DIPSETTING(    0x01, DEF_STR( "Yes") );
 	
 	    PORT_START /* IN3 */
-		PORT_BITX( 0xf0, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Serial mouse", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x80, "COM1" )
-		PORT_DIPSETTING(	0x40, "COM2" )
-		PORT_DIPSETTING(	0x20, "COM3" )
-		PORT_DIPSETTING(	0x10, "COM4" )
-	    PORT_DIPSETTING(    0x00, "none" )
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC1 (C800:0 port 320-323)", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x08, DEF_STR( Yes ) )
-		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC2 (CA00:0 port 324-327)", CODE_NONE, CODE_NONE )
-	    PORT_DIPSETTING(    0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x04, DEF_STR( Yes ) )
-		PORT_BITX( 0x02, 0x02, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Turbo Switch", CODE_DEFAULT, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "Off(4.77 MHz)" )
-		PORT_DIPSETTING(	0x02, "On(12 MHz)" )
-		PORT_BIT( 0x01, 0x01,	IPT_UNUSED )
+		PORT_BITX( 0xf0, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Serial mouse", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x80, "COM1" );
+		PORT_DIPSETTING(	0x40, "COM2" );
+		PORT_DIPSETTING(	0x20, "COM3" );
+		PORT_DIPSETTING(	0x10, "COM4" );
+	    PORT_DIPSETTING(    0x00, "none" );
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC1 (C800:0 port 320-323);, CODE_NONE, CODE_NONE )
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Yes") );
+		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC2 (CA00:0 port 324-327);, CODE_NONE, CODE_NONE )
+	    PORT_DIPSETTING(    0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x04, DEF_STR( "Yes") );
+		PORT_BITX( 0x02, 0x02, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Turbo Switch", CODE_DEFAULT, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "Off(4.77 MHz); )
+		PORT_DIPSETTING(	0x02, "On(12 MHz); )
+		PORT_BIT( 0x01, 0x01,	IPT_UNUSED );
 	
 		PC_KEYBOARD
 	
 		INPUT_MICROSOFT_MOUSE
 	
 		PC_JOYSTICK
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
-	INPUT_PORTS_START( tandy1t )
+	static InputPortPtr input_ports_tandy1t = new InputPortPtr(){ public void handler() { 
 		PORT_START /* IN0 */
-		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
-		PORT_BIT ( 0x08, 0x08,	 IPT_VBLANK )
-		PORT_BIT ( 0x07, 0x07,	 IPT_UNUSED )
+		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );
+		PORT_BIT ( 0x08, 0x08,	 IPT_VBLANK );
+		PORT_BIT ( 0x07, 0x07,	 IPT_UNUSED );
 	
 	    PORT_START /* IN1 */
-		PORT_BIT ( 0xff, 0xff,	 IPT_UNUSED )
+		PORT_BIT ( 0xff, 0xff,	 IPT_UNUSED );
 	
 	    PORT_START /* IN2 */
-		PORT_BITX( 0x80, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM1: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x80, DEF_STR( Yes ) )
-		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM2: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x40, DEF_STR( Yes ) )
-		PORT_BIT ( 0x30, 0x00,	 IPT_UNUSED )
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT1: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x08, DEF_STR( Yes ) )
-		PORT_BIT ( 0x06, 0x00,	 IPT_UNUSED )
-		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Game port enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-	    PORT_DIPSETTING(    0x01, DEF_STR( Yes ) )
+		PORT_BITX( 0x80, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM1: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x80, DEF_STR( "Yes") );
+		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM2: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x40, DEF_STR( "Yes") );
+		PORT_BIT ( 0x30, 0x00,	 IPT_UNUSED );
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT1: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Yes") );
+		PORT_BIT ( 0x06, 0x00,	 IPT_UNUSED );
+		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Game port enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+	    PORT_DIPSETTING(    0x01, DEF_STR( "Yes") );
 	
 	    PORT_START /* IN3 */
-		PORT_BITX( 0xf0, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Serial mouse", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x80, "COM1" )
-		PORT_DIPSETTING(	0x40, "COM2" )
-		PORT_DIPSETTING(	0x20, "COM3" )
-		PORT_DIPSETTING(	0x10, "COM4" )
-	    PORT_DIPSETTING(    0x00, "none" )
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC1 (C800:0 port 320-323)", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x08, DEF_STR( Yes ) )
-		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC2 (CA00:0 port 324-327)", CODE_NONE, CODE_NONE )
-	    PORT_DIPSETTING(    0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x04, DEF_STR( Yes ) )
-		PORT_BIT( 0x02, 0x02,	IPT_UNUSED ) /* no turbo switch */
-		PORT_BIT( 0x01, 0x01,	IPT_UNUSED )
+		PORT_BITX( 0xf0, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Serial mouse", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x80, "COM1" );
+		PORT_DIPSETTING(	0x40, "COM2" );
+		PORT_DIPSETTING(	0x20, "COM3" );
+		PORT_DIPSETTING(	0x10, "COM4" );
+	    PORT_DIPSETTING(    0x00, "none" );
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC1 (C800:0 port 320-323);, CODE_NONE, CODE_NONE )
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Yes") );
+		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC2 (CA00:0 port 324-327);, CODE_NONE, CODE_NONE )
+	    PORT_DIPSETTING(    0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x04, DEF_STR( "Yes") );
+		PORT_BIT( 0x02, 0x02,	IPT_UNUSED );/* no turbo switch */
+		PORT_BIT( 0x01, 0x01,	IPT_UNUSED );
 	
 		TANDY1000_KEYB
 	
 		INPUT_MICROSOFT_MOUSE
 	
 		PC_JOYSTICK
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
-	INPUT_PORTS_START( pc200 )
+	static InputPortPtr input_ports_pc200 = new InputPortPtr(){ public void handler() { 
 		PORT_START /* IN0 */
-		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
-		PORT_BIT ( 0x08, 0x08,	 IPT_VBLANK )
-		PORT_BIT ( 0x07, 0x07,	 IPT_UNUSED )
+		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );
+		PORT_BIT ( 0x08, 0x08,	 IPT_VBLANK );
+		PORT_BIT ( 0x07, 0x07,	 IPT_UNUSED );
 	
 	    PORT_START /* IN1 */
-		PORT_BITX( 0x07, 0x07, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Name/Language", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "English/less checks" )
-		PORT_DIPSETTING(	0x01, "Italian/Italiano" ) //prego attendere
-		PORT_DIPSETTING(	0x02, "V.g. vänta" ) 
-		PORT_DIPSETTING(	0x03, "Vent et cjeblik" ) // seldom c
-		PORT_DIPSETTING(	0x04, "Spanish/Español" ) //Por favor tilde n
-		PORT_DIPSETTING(	0x05, "French/Francais" ) //patientez cedilla c
-		PORT_DIPSETTING(	0x06, "German/Deutsch" ) // bitte warten
-		PORT_DIPSETTING(	0x07, "English" ) // please wait
-		PORT_BITX( 0x08, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "37a 0x40", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "0x00" )
-		PORT_DIPSETTING(	0x08, "0x08" )
-		PORT_BITX( 0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "37a 0x80", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "0x00" )
-		PORT_DIPSETTING(	0x10, "0x10" )
-		PORT_BITX( 0x30, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Integrated Graphics Adapter", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "CGA 1" )
-		PORT_DIPSETTING(	0x10, "CGA 2" )
-		PORT_DIPSETTING(	0x20, "external" )
-		PORT_DIPSETTING(	0x30, "MDA" )
-		PORT_BITX( 0xc0, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Startup Mode", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "external Color 80 Columns" )
-		PORT_DIPSETTING(	0x40, "Color 40 Columns" )
-		PORT_DIPSETTING(	0x80, "Color 80 Columns" )
-		PORT_DIPSETTING(	0xc0, "Mono" )
+		PORT_BITX( 0x07, 0x07, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Name/Language", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "English/less checks" );
+		PORT_DIPSETTING(	0x01, "Italian/Italiano" );//prego attendere
+		PORT_DIPSETTING(	0x02, "V.g. vänta" );
+		PORT_DIPSETTING(	0x03, "Vent et cjeblik" );// seldom c
+		PORT_DIPSETTING(	0x04, "Spanish/Español" );//Por favor tilde n
+		PORT_DIPSETTING(	0x05, "French/Francais" );//patientez cedilla c
+		PORT_DIPSETTING(	0x06, "German/Deutsch" );// bitte warten
+		PORT_DIPSETTING(	0x07, "English" );// please wait
+		PORT_BITX( 0x08, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "37a 0x40", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "0x00" );
+		PORT_DIPSETTING(	0x08, "0x08" );
+		PORT_BITX( 0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "37a 0x80", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "0x00" );
+		PORT_DIPSETTING(	0x10, "0x10" );
+		PORT_BITX( 0x30, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Integrated Graphics Adapter", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "CGA 1" );
+		PORT_DIPSETTING(	0x10, "CGA 2" );
+		PORT_DIPSETTING(	0x20, "external" );
+		PORT_DIPSETTING(	0x30, "MDA" );
+		PORT_BITX( 0xc0, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Startup Mode", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "external Color 80 Columns" );
+		PORT_DIPSETTING(	0x40, "Color 40 Columns" );
+		PORT_DIPSETTING(	0x80, "Color 80 Columns" );
+		PORT_DIPSETTING(	0xc0, "Mono" );
 		PORT_START /* IN2 */
-	PORT_BIT ( 0x80, 0x80,	 IPT_UNUSED ) // com 1 on motherboard
-		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM2: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x40, DEF_STR( Yes ) )
-		PORT_BITX( 0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM3: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x20, DEF_STR( Yes ) )
-		PORT_BITX( 0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM4: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x10, DEF_STR( Yes ) )
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT1: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x08, DEF_STR( Yes ) )
-	PORT_BIT ( 0x04, 0x04,	 IPT_UNUSED ) // lpt 1 on motherboard
-		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT3: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x02, DEF_STR( Yes ) )
-		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Game port enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-	    PORT_DIPSETTING(    0x01, DEF_STR( Yes ) )
+	PORT_BIT ( 0x80, 0x80,	 IPT_UNUSED );// com 1 on motherboard
+		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM2: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x40, DEF_STR( "Yes") );
+		PORT_BITX( 0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM3: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x20, DEF_STR( "Yes") );
+		PORT_BITX( 0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM4: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x10, DEF_STR( "Yes") );
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT1: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Yes") );
+	PORT_BIT ( 0x04, 0x04,	 IPT_UNUSED );// lpt 1 on motherboard
+		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT3: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x02, DEF_STR( "Yes") );
+		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Game port enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+	    PORT_DIPSETTING(    0x01, DEF_STR( "Yes") );
 	
 	    PORT_START /* IN3 */
-		PORT_BITX( 0xf0, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Serial mouse", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x80, "COM1" )
-		PORT_DIPSETTING(	0x40, "COM2" )
-		PORT_DIPSETTING(	0x20, "COM3" )
-		PORT_DIPSETTING(	0x10, "COM4" )
-	    PORT_DIPSETTING(    0x00, "none" )
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC1 (C800:0 port 320-323)", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x08, DEF_STR( Yes ) )
-		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC2 (CA00:0 port 324-327)", CODE_NONE, CODE_NONE )
-	    PORT_DIPSETTING(    0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x04, DEF_STR( Yes ) )
-		PORT_BIT( 0x02, 0x02,	IPT_UNUSED ) /* no turbo switch */
-		PORT_BIT( 0x01, 0x01,	IPT_UNUSED )
+		PORT_BITX( 0xf0, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Serial mouse", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x80, "COM1" );
+		PORT_DIPSETTING(	0x40, "COM2" );
+		PORT_DIPSETTING(	0x20, "COM3" );
+		PORT_DIPSETTING(	0x10, "COM4" );
+	    PORT_DIPSETTING(    0x00, "none" );
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC1 (C800:0 port 320-323);, CODE_NONE, CODE_NONE )
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Yes") );
+		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC2 (CA00:0 port 324-327);, CODE_NONE, CODE_NONE )
+	    PORT_DIPSETTING(    0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x04, DEF_STR( "Yes") );
+		PORT_BIT( 0x02, 0x02,	IPT_UNUSED );/* no turbo switch */
+		PORT_BIT( 0x01, 0x01,	IPT_UNUSED );
 	
 		AT_KEYBOARD
 	
 		INPUT_MICROSOFT_MOUSE
 	
 		PC_JOYSTICK
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
-	INPUT_PORTS_START( pc1512 )
+	static InputPortPtr input_ports_pc1512 = new InputPortPtr(){ public void handler() { 
 		PORT_START /* IN0 */
-		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
-		PORT_BIT ( 0x08, 0x08,	 IPT_VBLANK )
-		PORT_BIT ( 0x07, 0x07,	 IPT_UNUSED )
+		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );
+		PORT_BIT ( 0x08, 0x08,	 IPT_VBLANK );
+		PORT_BIT ( 0x07, 0x07,	 IPT_UNUSED );
 	
 	    PORT_START /* IN1 */
-		PORT_BITX( 0x07, 0x07, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Name/Language", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "English/512k only/less checks" )
-		PORT_DIPSETTING(	0x01, "Italian/Italiano" ) //prego attendere
-		PORT_DIPSETTING(	0x02, "V.g. vänta" ) 
-		PORT_DIPSETTING(	0x03, "Vent et cjeblik" ) // seldom c
-		PORT_DIPSETTING(	0x04, "Spanish/Español" ) //Por favor tilde n
-		PORT_DIPSETTING(	0x05, "French/Francais" ) //patientez cedilla c
-		PORT_DIPSETTING(	0x06, "German/Deutsch" ) // bitte warten
-		PORT_DIPSETTING(	0x07, "English" ) // please wait
-		PORT_BIT( 0x20, 0x20,	IPT_UNUSED ) // pc1512 integrated special cga
-		PORT_BIT( 0xc0, 0x00,	IPT_UNUSED ) // not used in pc1512
-		PORT_BIT( 0xe00, 0x00,	IPT_UNUSED ) // not used in pc1512
-		PORT_BIT( 0xe000, 0x00,	IPT_UNUSED ) // not used in pc1512
+		PORT_BITX( 0x07, 0x07, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Name/Language", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "English/512k only/less checks" );
+		PORT_DIPSETTING(	0x01, "Italian/Italiano" );//prego attendere
+		PORT_DIPSETTING(	0x02, "V.g. vänta" );
+		PORT_DIPSETTING(	0x03, "Vent et cjeblik" );// seldom c
+		PORT_DIPSETTING(	0x04, "Spanish/Español" );//Por favor tilde n
+		PORT_DIPSETTING(	0x05, "French/Francais" );//patientez cedilla c
+		PORT_DIPSETTING(	0x06, "German/Deutsch" );// bitte warten
+		PORT_DIPSETTING(	0x07, "English" );// please wait
+		PORT_BIT( 0x20, 0x20,	IPT_UNUSED );// pc1512 integrated special cga
+		PORT_BIT( 0xc0, 0x00,	IPT_UNUSED );// not used in pc1512
+		PORT_BIT( 0xe00, 0x00,	IPT_UNUSED );// not used in pc1512
+		PORT_BIT( 0xe000, 0x00,	IPT_UNUSED );// not used in pc1512
 		PORT_START /* IN2 */
-	PORT_BIT ( 0x80, 0x80,	 IPT_UNUSED ) // com 1 on motherboard
-		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM2: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x40, DEF_STR( Yes ) )
-		PORT_BITX( 0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM3: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x20, DEF_STR( Yes ) )
-		PORT_BITX( 0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM4: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x10, DEF_STR( Yes ) )
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT1: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x08, DEF_STR( Yes ) )
-	PORT_BIT ( 0x04, 0x04,	 IPT_UNUSED ) // lpt 1 on motherboard
-		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT3: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x02, DEF_STR( Yes ) )
-		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Game port enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-	    PORT_DIPSETTING(    0x01, DEF_STR( Yes ) )
+	PORT_BIT ( 0x80, 0x80,	 IPT_UNUSED );// com 1 on motherboard
+		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM2: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x40, DEF_STR( "Yes") );
+		PORT_BITX( 0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM3: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x20, DEF_STR( "Yes") );
+		PORT_BITX( 0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM4: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x10, DEF_STR( "Yes") );
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT1: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Yes") );
+	PORT_BIT ( 0x04, 0x04,	 IPT_UNUSED );// lpt 1 on motherboard
+		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT3: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x02, DEF_STR( "Yes") );
+		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Game port enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+	    PORT_DIPSETTING(    0x01, DEF_STR( "Yes") );
 	
 	    PORT_START /* IN3 */
-		PORT_BITX( 0xf0, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Serial mouse", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x80, "COM1" )
-		PORT_DIPSETTING(	0x40, "COM2" )
-		PORT_DIPSETTING(	0x20, "COM3" )
-		PORT_DIPSETTING(	0x10, "COM4" )
-	    PORT_DIPSETTING(    0x00, "none" )
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC1 (C800:0 port 320-323)", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x08, DEF_STR( Yes ) )
-		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC2 (CA00:0 port 324-327)", CODE_NONE, CODE_NONE )
-	    PORT_DIPSETTING(    0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x04, DEF_STR( Yes ) )
-		PORT_BIT( 0x02, 0x02,	IPT_UNUSED ) /* no turbo switch */
-		PORT_BIT( 0x01, 0x01,	IPT_UNUSED )
+		PORT_BITX( 0xf0, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Serial mouse", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x80, "COM1" );
+		PORT_DIPSETTING(	0x40, "COM2" );
+		PORT_DIPSETTING(	0x20, "COM3" );
+		PORT_DIPSETTING(	0x10, "COM4" );
+	    PORT_DIPSETTING(    0x00, "none" );
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC1 (C800:0 port 320-323);, CODE_NONE, CODE_NONE )
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Yes") );
+		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC2 (CA00:0 port 324-327);, CODE_NONE, CODE_NONE )
+	    PORT_DIPSETTING(    0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x04, DEF_STR( "Yes") );
+		PORT_BIT( 0x02, 0x02,	IPT_UNUSED );/* no turbo switch */
+		PORT_BIT( 0x01, 0x01,	IPT_UNUSED );
 	
 		AMSTRAD_KEYBOARD
 	
 	//	PC_JOYSTICK
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
-	INPUT_PORTS_START( pc1640 )
+	static InputPortPtr input_ports_pc1640 = new InputPortPtr(){ public void handler() { 
 		PORT_START	/* IN0 */
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "VGA 1", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x08, DEF_STR( Off ) )
-		PORT_DIPSETTING(	0x00, DEF_STR( On ) )
-		PORT_BITX( 0x04, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "VGA 2", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x04, DEF_STR( Off ) )
-		PORT_DIPSETTING(	0x00, DEF_STR( On ) )
-		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "VGA 3", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x02, DEF_STR( Off ) )
-		PORT_DIPSETTING(	0x00, DEF_STR( On ) )
-		PORT_BITX( 0x01, 0x01, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "VGA 4", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x01, DEF_STR( Off ) )	
-		PORT_DIPSETTING(	0x00, DEF_STR( On ) )
-		PORT_BITX( 0x10, 0x10, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Paradise EGA 5", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x10, DEF_STR( Off ) )	
-		PORT_DIPSETTING(	0x00, DEF_STR( On ) )
-		PORT_BITX( 0x20, 0x20, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Paradise EGA 6", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x20, DEF_STR( Off ) )	
-		PORT_DIPSETTING(	0x00, DEF_STR( On ) )
-		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Paradise EGA 7", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x40, DEF_STR( Off ) )	
-		PORT_DIPSETTING(	0x00, DEF_STR( On ) )
-		PORT_BITX( 0x80, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Paradise EGA 8", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x80, DEF_STR( Off ) )	
-		PORT_DIPSETTING(	0x00, DEF_STR( On ) )
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "VGA 1", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Off") );
+		PORT_DIPSETTING(	0x00, DEF_STR( "On") );
+		PORT_BITX( 0x04, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "VGA 2", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x04, DEF_STR( "Off") );
+		PORT_DIPSETTING(	0x00, DEF_STR( "On") );
+		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "VGA 3", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x02, DEF_STR( "Off") );
+		PORT_DIPSETTING(	0x00, DEF_STR( "On") );
+		PORT_BITX( 0x01, 0x01, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "VGA 4", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x01, DEF_STR( "Off") );	
+		PORT_DIPSETTING(	0x00, DEF_STR( "On") );
+		PORT_BITX( 0x10, 0x10, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Paradise EGA 5", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x10, DEF_STR( "Off") );	
+		PORT_DIPSETTING(	0x00, DEF_STR( "On") );
+		PORT_BITX( 0x20, 0x20, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Paradise EGA 6", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x20, DEF_STR( "Off") );	
+		PORT_DIPSETTING(	0x00, DEF_STR( "On") );
+		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Paradise EGA 7", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x40, DEF_STR( "Off") );	
+		PORT_DIPSETTING(	0x00, DEF_STR( "On") );
+		PORT_BITX( 0x80, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Paradise EGA 8", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x80, DEF_STR( "Off") );	
+		PORT_DIPSETTING(	0x00, DEF_STR( "On") );
 	
 	    PORT_START /* IN1 */
-		PORT_BITX( 0x07, 0x07, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Name/Language", CODE_NONE, CODE_NONE )
-	//	PORT_DIPSETTING(	0x00, "PC 512k" ) // machine crashes with ega bios at 0xc0000
-		PORT_DIPSETTING(	0x01, "Italian/Italiano" ) //prego attendere
-		PORT_DIPSETTING(	0x02, "V.g. vänta" ) 
-		PORT_DIPSETTING(	0x03, "Vent et cjeblik" ) // seldom c
-		PORT_DIPSETTING(	0x04, "Spanish/Español" ) //Por favor tilde n
-		PORT_DIPSETTING(	0x05, "French/Francais" ) //patientez cedilla c
-		PORT_DIPSETTING(	0x06, "German/Deutsch" ) // bitte warten
-		PORT_DIPSETTING(	0x07, "English" ) // please wait
-		PORT_BIT( 0x20, 0x00,	IPT_UNUSED ) // not pc1512 integrated special cga
-		PORT_BITX( 0x40, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "37a 0x40", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "0x00" )
-		PORT_DIPSETTING(	0x40, "0x40" )
-		PORT_BITX( 0x80, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "37a 0x80", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "0x00" )
-		PORT_DIPSETTING(	0x80, "0x80" )
+		PORT_BITX( 0x07, 0x07, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Name/Language", CODE_NONE, CODE_NONE );
+	//	PORT_DIPSETTING(	0x00, "PC 512k" );// machine crashes with ega bios at 0xc0000
+		PORT_DIPSETTING(	0x01, "Italian/Italiano" );//prego attendere
+		PORT_DIPSETTING(	0x02, "V.g. vänta" );
+		PORT_DIPSETTING(	0x03, "Vent et cjeblik" );// seldom c
+		PORT_DIPSETTING(	0x04, "Spanish/Español" );//Por favor tilde n
+		PORT_DIPSETTING(	0x05, "French/Francais" );//patientez cedilla c
+		PORT_DIPSETTING(	0x06, "German/Deutsch" );// bitte warten
+		PORT_DIPSETTING(	0x07, "English" );// please wait
+		PORT_BIT( 0x20, 0x00,	IPT_UNUSED );// not pc1512 integrated special cga
+		PORT_BITX( 0x40, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "37a 0x40", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "0x00" );
+		PORT_DIPSETTING(	0x40, "0x40" );
+		PORT_BITX( 0x80, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "37a 0x80", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "0x00" );
+		PORT_DIPSETTING(	0x80, "0x80" );
 	#if 0
-		PORT_BITX( 0x200, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "37a 0x20 after 27[8a] read (font?)", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "0x00" )
-		PORT_DIPSETTING(	0x200, "0x20" )
-		PORT_BITX( 0x400, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "37a 0x40 after 27[8a] read (font?)", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "0x00" )
-		PORT_DIPSETTING(	0x400, "0x40" )
-		PORT_BITX( 0x800, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "37a 0x80 after 27[8a] read (font?)", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "0x00" )
-		PORT_DIPSETTING(	0x800, "0x80" )
-		PORT_BITX( 0x2000, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "37a 0x20 after 427a read", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "0x00" )
-		PORT_DIPSETTING(	0x2000, "0x20" )
-		PORT_BITX( 0x4000, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, " 37a 0x40 after 427a read", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "0x00" )
-		PORT_DIPSETTING(	0x4000, "0x40" )
-		PORT_BITX( 0x8000, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, " 37a 0x80 after 427a read", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "0x00" )
-		PORT_DIPSETTING(	0x8000, "0x80" )
+		PORT_BITX( 0x200, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "37a 0x20 after 27[8a] read (font?);, CODE_NONE, CODE_NONE )
+		PORT_DIPSETTING(	0x00, "0x00" );
+		PORT_DIPSETTING(	0x200, "0x20" );
+		PORT_BITX( 0x400, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "37a 0x40 after 27[8a] read (font?);, CODE_NONE, CODE_NONE )
+		PORT_DIPSETTING(	0x00, "0x00" );
+		PORT_DIPSETTING(	0x400, "0x40" );
+		PORT_BITX( 0x800, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "37a 0x80 after 27[8a] read (font?);, CODE_NONE, CODE_NONE )
+		PORT_DIPSETTING(	0x00, "0x00" );
+		PORT_DIPSETTING(	0x800, "0x80" );
+		PORT_BITX( 0x2000, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "37a 0x20 after 427a read", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "0x00" );
+		PORT_DIPSETTING(	0x2000, "0x20" );
+		PORT_BITX( 0x4000, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, " 37a 0x40 after 427a read", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "0x00" );
+		PORT_DIPSETTING(	0x4000, "0x40" );
+		PORT_BITX( 0x8000, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, " 37a 0x80 after 427a read", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "0x00" );
+		PORT_DIPSETTING(	0x8000, "0x80" );
 	#else
-		PORT_BITX( 0xe00, 0x600, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "37a after 427a read", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x000, "?0standard" ) // diaresis a, seldom c, acut u, circumflex e, grave a, acute e
-		PORT_DIPSETTING(	0x200, "?scandinavian" ) //diaresis a, o slashed, acute u, circumflex e, grave a, acute e
-		PORT_DIPSETTING(	0x600, "?spain" ) // tilde a, seldom c, acute u, circumflex e, grave a, acute e
-		PORT_DIPSETTING(	0xa00, "?greeck" ) // E, circumflex ???,micro, I, Z, big kappa?
-		PORT_DIPSETTING(	0xe00, "?standard" ) // diaresis a, seldom e, acute u, circumflex e, grave a, acute e
-		PORT_BITX( 0xe000, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "37a after 427a read", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x0000, "?Integrated Graphic Adapter IGA (EGA)" )
-		PORT_DIPSETTING(	0x2000, "?External EGA/VGA" )
-		PORT_DIPSETTING(	0x6000, "CGA 40 Columns" )
-		PORT_DIPSETTING(	0xa000, "CGA 80 Columns" )
-		PORT_DIPSETTING(	0xe000, "MDA/Hercules/Multiple Graphic Adapters" )
+		PORT_BITX( 0xe00, 0x600, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "37a after 427a read", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x000, "?0standard" );// diaresis a, seldom c, acut u, circumflex e, grave a, acute e
+		PORT_DIPSETTING(	0x200, "?scandinavian" );//diaresis a, o slashed, acute u, circumflex e, grave a, acute e
+		PORT_DIPSETTING(	0x600, "?spain" );// tilde a, seldom c, acute u, circumflex e, grave a, acute e
+		PORT_DIPSETTING(	0xa00, "?greeck" );// E, circumflex ???,micro, I, Z, big kappa?
+		PORT_DIPSETTING(	0xe00, "?standard" );// diaresis a, seldom e, acute u, circumflex e, grave a, acute e
+		PORT_BITX( 0xe000, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "37a after 427a read", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x0000, "?Integrated Graphic Adapter IGA (EGA); )
+		PORT_DIPSETTING(	0x2000, "?External EGA/VGA" );
+		PORT_DIPSETTING(	0x6000, "CGA 40 Columns" );
+		PORT_DIPSETTING(	0xa000, "CGA 80 Columns" );
+		PORT_DIPSETTING(	0xe000, "MDA/Hercules/Multiple Graphic Adapters" );
 	#endif
 		PORT_START /* IN2 */
-	PORT_BIT ( 0x80, 0x80,	 IPT_UNUSED ) // com 1 on motherboard
-		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM2: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x40, DEF_STR( Yes ) )
-		PORT_BITX( 0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM3: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x20, DEF_STR( Yes ) )
-		PORT_BITX( 0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM4: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x10, DEF_STR( Yes ) )
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT1: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x08, DEF_STR( Yes ) )
-	PORT_BIT ( 0x04, 0x04,	 IPT_UNUSED ) // lpt 1 on motherboard
-		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT3: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x02, DEF_STR( Yes ) )
-		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Game port enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-	    PORT_DIPSETTING(    0x01, DEF_STR( Yes ) )
+	PORT_BIT ( 0x80, 0x80,	 IPT_UNUSED );// com 1 on motherboard
+		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM2: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x40, DEF_STR( "Yes") );
+		PORT_BITX( 0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM3: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x20, DEF_STR( "Yes") );
+		PORT_BITX( 0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM4: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x10, DEF_STR( "Yes") );
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT1: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Yes") );
+	PORT_BIT ( 0x04, 0x04,	 IPT_UNUSED );// lpt 1 on motherboard
+		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT3: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x02, DEF_STR( "Yes") );
+		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Game port enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+	    PORT_DIPSETTING(    0x01, DEF_STR( "Yes") );
 	
 	    PORT_START /* IN3 */
-		PORT_BITX( 0xf0, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Serial mouse", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x80, "COM1" )
-		PORT_DIPSETTING(	0x40, "COM2" )
-		PORT_DIPSETTING(	0x20, "COM3" )
-		PORT_DIPSETTING(	0x10, "COM4" )
-	    PORT_DIPSETTING(    0x00, "none" )
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC1 (C800:0 port 320-323)", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x08, DEF_STR( Yes ) )
-		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC2 (CA00:0 port 324-327)", CODE_NONE, CODE_NONE )
-	    PORT_DIPSETTING(    0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x04, DEF_STR( Yes ) )
-		PORT_BIT( 0x02, 0x02,	IPT_UNUSED ) /* no turbo switch */
-		PORT_BIT( 0x01, 0x01,	IPT_UNUSED )
+		PORT_BITX( 0xf0, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Serial mouse", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x80, "COM1" );
+		PORT_DIPSETTING(	0x40, "COM2" );
+		PORT_DIPSETTING(	0x20, "COM3" );
+		PORT_DIPSETTING(	0x10, "COM4" );
+	    PORT_DIPSETTING(    0x00, "none" );
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC1 (C800:0 port 320-323);, CODE_NONE, CODE_NONE )
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Yes") );
+		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC2 (CA00:0 port 324-327);, CODE_NONE, CODE_NONE )
+	    PORT_DIPSETTING(    0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x04, DEF_STR( "Yes") );
+		PORT_BIT( 0x02, 0x02,	IPT_UNUSED );/* no turbo switch */
+		PORT_BIT( 0x01, 0x01,	IPT_UNUSED );
 	
 		AMSTRAD_KEYBOARD
 	
 	//	INPUT_MICROSOFT_MOUSE
 	
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
-	INPUT_PORTS_START( xtvga )
+	static InputPortPtr input_ports_xtvga = new InputPortPtr(){ public void handler() { 
 		PORT_START /* IN0 */
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "VGA 1", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x08, DEF_STR( Off ) )
-		PORT_DIPSETTING(	0x00, DEF_STR( On ) )
-		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "VGA 2", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x04, DEF_STR( Off ) )
-		PORT_DIPSETTING(	0x00, DEF_STR( On ) )
-		PORT_BITX( 0x02, 0x02, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "VGA 3", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x02, DEF_STR( Off ) )
-		PORT_DIPSETTING(	0x00, DEF_STR( On ) )
-		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "VGA 4", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x01, DEF_STR( Off ) )	
-		PORT_DIPSETTING(	0x00, DEF_STR( On ) )
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "VGA 1", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Off") );
+		PORT_DIPSETTING(	0x00, DEF_STR( "On") );
+		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "VGA 2", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x04, DEF_STR( "Off") );
+		PORT_DIPSETTING(	0x00, DEF_STR( "On") );
+		PORT_BITX( 0x02, 0x02, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "VGA 3", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x02, DEF_STR( "Off") );
+		PORT_DIPSETTING(	0x00, DEF_STR( "On") );
+		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "VGA 4", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x01, DEF_STR( "Off") );	
+		PORT_DIPSETTING(	0x00, DEF_STR( "On") );
 	
 	    PORT_START /* IN1 */
-		PORT_BITX( 0xc0, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Number of floppy drives", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "1" )
-		PORT_DIPSETTING(	0x40, "2" )
-		PORT_DIPSETTING(	0x80, "3" )
-		PORT_DIPSETTING(	0xc0, "4" )
-		PORT_BITX( 0x30, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Graphics adapter", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "EGA/VGA" )
-		PORT_DIPSETTING(	0x10, "Color 40x25" )
-		PORT_DIPSETTING(	0x20, "Color 80x25" )
-		PORT_DIPSETTING(	0x30, "Monochrome" )
-		PORT_BITX( 0x0c, 0x0c, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "RAM banks", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "1 - 16  64 256K" )
-		PORT_DIPSETTING(	0x04, "2 - 32 128 512K" )
-		PORT_DIPSETTING(	0x08, "3 - 48 192 576K" )
-		PORT_DIPSETTING(	0x0c, "4 - 64 256 640K" )
-		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "80387 installed", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x02, DEF_STR( Yes ) )
-		PORT_BITX( 0x01, 0x01, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Floppy installed", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x01, DEF_STR( Yes ) )
+		PORT_BITX( 0xc0, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Number of floppy drives", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "1" );
+		PORT_DIPSETTING(	0x40, "2" );
+		PORT_DIPSETTING(	0x80, "3" );
+		PORT_DIPSETTING(	0xc0, "4" );
+		PORT_BITX( 0x30, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Graphics adapter", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "EGA/VGA" );
+		PORT_DIPSETTING(	0x10, "Color 40x25" );
+		PORT_DIPSETTING(	0x20, "Color 80x25" );
+		PORT_DIPSETTING(	0x30, "Monochrome" );
+		PORT_BITX( 0x0c, 0x0c, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "RAM banks", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "1 - 16  64 256K" );
+		PORT_DIPSETTING(	0x04, "2 - 32 128 512K" );
+		PORT_DIPSETTING(	0x08, "3 - 48 192 576K" );
+		PORT_DIPSETTING(	0x0c, "4 - 64 256 640K" );
+		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "80387 installed", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x02, DEF_STR( "Yes") );
+		PORT_BITX( 0x01, 0x01, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Floppy installed", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x01, DEF_STR( "Yes") );
 		PORT_START /* IN2 */
-		PORT_BITX( 0x80, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM1: enable", CODE_NONE, CODE_NONE )		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x80, DEF_STR( Yes ) )
-		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM2: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x40, DEF_STR( Yes ) )
-		PORT_BITX( 0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM3: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x20, DEF_STR( Yes ) )
-		PORT_BITX( 0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM4: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x10, DEF_STR( Yes ) )
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT1: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x08, DEF_STR( Yes ) )
-		PORT_BITX( 0x04, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT2: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x04, DEF_STR( Yes ) )
-		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT3: enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x02, DEF_STR( Yes ) )
-		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Game port enable", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-	    PORT_DIPSETTING(    0x01, DEF_STR( Yes ) )
+		PORT_BITX( 0x80, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM1: enable", CODE_NONE, CODE_NONE );	PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x80, DEF_STR( "Yes") );
+		PORT_BITX( 0x40, 0x40, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM2: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x40, DEF_STR( "Yes") );
+		PORT_BITX( 0x20, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM3: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x20, DEF_STR( "Yes") );
+		PORT_BITX( 0x10, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "COM4: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x10, DEF_STR( "Yes") );
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT1: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Yes") );
+		PORT_BITX( 0x04, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT2: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x04, DEF_STR( "Yes") );
+		PORT_BITX( 0x02, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "LPT3: enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x02, DEF_STR( "Yes") );
+		PORT_BITX( 0x01, 0x00, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Game port enable", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+	    PORT_DIPSETTING(    0x01, DEF_STR( "Yes") );
 	
 	    PORT_START /* IN3 */
-		PORT_BITX( 0xf0, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Serial mouse", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x80, "COM1" )
-		PORT_DIPSETTING(	0x40, "COM2" )
-		PORT_DIPSETTING(	0x20, "COM3" )
-		PORT_DIPSETTING(	0x10, "COM4" )
-	    PORT_DIPSETTING(    0x00, "none" )
-		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC1 (C800:0 port 320-323)", CODE_NONE, CODE_NONE )
-		PORT_DIPSETTING(	0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x08, DEF_STR( Yes ) )
-		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC2 (CA00:0 port 324-327)", CODE_NONE, CODE_NONE )
-	    PORT_DIPSETTING(    0x00, DEF_STR( No ) )
-		PORT_DIPSETTING(	0x04, DEF_STR( Yes ) )
-		PORT_BITX( 0x02, 0x02, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Turbo Switch", CODE_DEFAULT, CODE_NONE )
-		PORT_DIPSETTING(	0x00, "Off(4.77 MHz)" )
-		PORT_DIPSETTING(	0x02, "On(12 MHz)" )
-		PORT_BIT( 0x01, 0x01,	IPT_UNUSED )
+		PORT_BITX( 0xf0, 0x80, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Serial mouse", CODE_NONE, CODE_NONE );
+		PORT_DIPSETTING(	0x80, "COM1" );
+		PORT_DIPSETTING(	0x40, "COM2" );
+		PORT_DIPSETTING(	0x20, "COM3" );
+		PORT_DIPSETTING(	0x10, "COM4" );
+	    PORT_DIPSETTING(    0x00, "none" );
+		PORT_BITX( 0x08, 0x08, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC1 (C800:0 port 320-323);, CODE_NONE, CODE_NONE )
+		PORT_DIPSETTING(	0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x08, DEF_STR( "Yes") );
+		PORT_BITX( 0x04, 0x04, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "HDC2 (CA00:0 port 324-327);, CODE_NONE, CODE_NONE )
+	    PORT_DIPSETTING(    0x00, DEF_STR( "No") );
+		PORT_DIPSETTING(	0x04, DEF_STR( "Yes") );
+		PORT_BITX( 0x02, 0x02, IPT_DIPSWITCH_NAME | IPF_TOGGLE, "Turbo Switch", CODE_DEFAULT, CODE_NONE );
+		PORT_DIPSETTING(	0x00, "Off(4.77 MHz); )
+		PORT_DIPSETTING(	0x02, "On(12 MHz); )
+		PORT_BIT( 0x01, 0x01,	IPT_UNUSED );
 	
 		AT_KEYBOARD
 	
 		INPUT_MICROSOFT_MOUSE
 	
 		PC_JOYSTICK
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	static unsigned i86_address_mask = 0x000fffff;
 	
@@ -1180,11 +1212,11 @@ public class pc
 	};
 	#endif
 	
-	static struct SN76496interface t1t_sound_interface = {
+	static SN76496interface t1t_sound_interface = new SN76496interface(
 		1,
-		{2386360},
-		{255,}
-	};
+		new int[] {2386360},
+		new int[] {255,}
+	);
 	
 	static struct MachineDriver machine_driver_pcmda =
 	{
@@ -1616,46 +1648,46 @@ public class pc
 	#if 0
 		//pcjr roms? (incomplete dump, most likely 64 kbyte)
 		// basic c1.20 
-	    ROM_LOAD("basic.rom", 0xf6000, 0x8000, 0x0c19c1a8)
+	    ROM_LOAD("basic.rom", 0xf6000, 0x8000, 0x0c19c1a8);
 		// ???
-	    ROM_LOAD("bios.rom", 0x??000, 0x2000, 0x98463f95)
+	    ROM_LOAD("bios.rom", 0x??000, 0x2000, 0x98463f95);
 	
 		/* turbo xt */
 		/* basic c1.10 */
-	    ROM_LOAD("rom05.bin", 0xf6000, 0x2000, 0x80d3cf5d)
-	    ROM_LOAD("rom04.bin", 0xf8000, 0x2000, 0x673a4acc)
-	    ROM_LOAD("rom03.bin", 0xfa000, 0x2000, 0xaac3fc37)
-	    ROM_LOAD("rom02.bin", 0xfc000, 0x2000, 0x3062b3fc)
+	    ROM_LOAD("rom05.bin", 0xf6000, 0x2000, 0x80d3cf5d);
+	    ROM_LOAD("rom04.bin", 0xf8000, 0x2000, 0x673a4acc);
+	    ROM_LOAD("rom03.bin", 0xfa000, 0x2000, 0xaac3fc37);
+	    ROM_LOAD("rom02.bin", 0xfc000, 0x2000, 0x3062b3fc);
 		/* sw1 0x60 readback fails write 301 to screen fe3b7 */
 		/* disk problems no disk gives 601 */
 		/* 5000-026 08/16/82 */
-	    ROM_LOAD("rom01.bin", 0xfe000, 0x2000, 0x5c3f0256)
+	    ROM_LOAD("rom01.bin", 0xfe000, 0x2000, 0x5c3f0256);
 	
 		/* anonymous works nice */
-	    ROM_LOAD("pcxt.rom",    0xfe000, 0x02000, 0x031aafad)
+	    ROM_LOAD("pcxt.rom",    0xfe000, 0x02000, 0x031aafad);
 	
-		ROM_LOAD("bondwell.bin", 0xfe000, 0x2000, 0xd435a405)
+		ROM_LOAD("bondwell.bin", 0xfe000, 0x2000, 0xd435a405);
 	
 		/* europc */
-	    ROM_LOAD("50145", 0xf8000, 0x8000, 0x1775a11d) // V2.07
-	//    ROM_LOAD("eurobios.bin", 0xf8000, 0x8000, 0x52185223) scrap
+	    ROM_LOAD("50145", 0xf8000, 0x8000, 0x1775a11d);// V2.07
+	//    ROM_LOAD("eurobios.bin", 0xf8000, 0x8000, 0x52185223);scrap
 		/* cga, hercules character set */
-	    ROM_LOAD("50146", 0x00000, 0x02000, 0x1305dcf5) //D1.0
+	    ROM_LOAD("50146", 0x00000, 0x02000, 0x1305dcf5);//D1.0
 	
 		// ibm pc
 		// most likely 8 kbyte chips
-	    ROM_LOAD("basicpc.bin", 0xf6000, 0x8000, 0xebacb791) // IBM C1.1
+	    ROM_LOAD("basicpc.bin", 0xf6000, 0x8000, 0xebacb791);// IBM C1.1
 		// split into 8 kbyte parts
 		// the same as in the basic c1.10 as in the turboxt
 		// 1501-476 10/27/82
-	    ROM_LOAD("biospc.bin", 0xfe000, 0x2000, 0xe88792b3)
+	    ROM_LOAD("biospc.bin", 0xfe000, 0x2000, 0xe88792b3);
 	
 		/* tandy 1000 hx */
-	    ROM_LOAD("tandy1t.rom", 0xf0000, 0x10000, 0xd37a1d5f)
+	    ROM_LOAD("tandy1t.rom", 0xf0000, 0x10000, 0xd37a1d5f);
 	
 		// ibm xt
-	    ROM_LOAD("xthdd.c8", 0xc8000, 0x2000, 0xa96317da)
-	    ROM_LOAD("biosxt.bin", 0xf0000, 0x10000, 0x36c32fde) // BASIC C1.1
+	    ROM_LOAD("xthdd.c8", 0xc8000, 0x2000, 0xa96317da);
+	    ROM_LOAD("biosxt.bin", 0xf0000, 0x10000, 0x36c32fde);// BASIC C1.1
 		// split into 2 chips for 16 bit access
 	    ROM_LOAD_EVEN("ibmxt.0", 0xf0000, 0x8000, 0x83727c42)
 	    ROM_LOAD_ODD("ibmxt.1", 0xf0000, 0x8000, 0x2a629953)
@@ -1665,156 +1697,156 @@ public class pc
 		   serves 2 controllers? 0x320-3, 0x324-7, dma 3, irq5
 		   movable, works at 0xee000 */
 		/* western digital 06/28/89 */
-	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4)
+	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4);
 	
 		/* lcs 6210d asic i2.1 09/01/1988 */
 		/* problematic, currently showing menu and calls int21 (hangs)! */
-	    ROM_LOAD("xthdd.rom",  0xc8000, 0x02000, 0xa96317da)
+	    ROM_LOAD("xthdd.rom",  0xc8000, 0x02000, 0xa96317da);
 	#endif
 	
-	ROM_START( ibmpc )
-		ROM_REGION(0x100000,REGION_CPU1, 0)
-	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4)
-	    ROM_LOAD("basicc11.f6", 0xf6000, 0x2000, 0x80d3cf5d)
-	    ROM_LOAD("basicc11.f8", 0xf8000, 0x2000, 0x673a4acc)
-	    ROM_LOAD("basicc11.fa", 0xfa000, 0x2000, 0xaac3fc37)
-	    ROM_LOAD("basicc11.fc", 0xfc000, 0x2000, 0x3062b3fc)
-	    ROM_LOAD("pc102782.bin", 0xfe000, 0x2000, 0xe88792b3)
-		ROM_REGION(0x01100,REGION_GFX1, 0)
-	    ROM_LOAD("cga.chr",     0x00000, 0x01000, 0x42009069)
-	ROM_END
+	static RomLoadPtr rom_ibmpc = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x100000,REGION_CPU1, 0);
+	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4);
+	    ROM_LOAD("basicc11.f6", 0xf6000, 0x2000, 0x80d3cf5d);
+	    ROM_LOAD("basicc11.f8", 0xf8000, 0x2000, 0x673a4acc);
+	    ROM_LOAD("basicc11.fa", 0xfa000, 0x2000, 0xaac3fc37);
+	    ROM_LOAD("basicc11.fc", 0xfc000, 0x2000, 0x3062b3fc);
+	    ROM_LOAD("pc102782.bin", 0xfe000, 0x2000, 0xe88792b3);
+		ROM_REGION(0x01100,REGION_GFX1, 0);
+	    ROM_LOAD("cga.chr",     0x00000, 0x01000, 0x42009069);
+	ROM_END(); }}; 
 	
-	ROM_START( ibmpca )
-		ROM_REGION(0x100000,REGION_CPU1,0)
-	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4)
-	    ROM_LOAD("basicc11.f6", 0xf6000, 0x2000, 0x80d3cf5d)
-	    ROM_LOAD("basicc11.f8", 0xf8000, 0x2000, 0x673a4acc)
-	    ROM_LOAD("basicc11.fa", 0xfa000, 0x2000, 0xaac3fc37)
-	    ROM_LOAD("basicc11.fc", 0xfc000, 0x2000, 0x3062b3fc)
-	    ROM_LOAD("pc081682.bin", 0xfe000, 0x2000, 0x5c3f0256)
-		ROM_REGION(0x01100,REGION_GFX1, 0)
-	    ROM_LOAD("cga.chr",     0x00000, 0x01000, 0x42009069)
-	ROM_END
+	static RomLoadPtr rom_ibmpca = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x100000,REGION_CPU1,0);
+	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4);
+	    ROM_LOAD("basicc11.f6", 0xf6000, 0x2000, 0x80d3cf5d);
+	    ROM_LOAD("basicc11.f8", 0xf8000, 0x2000, 0x673a4acc);
+	    ROM_LOAD("basicc11.fa", 0xfa000, 0x2000, 0xaac3fc37);
+	    ROM_LOAD("basicc11.fc", 0xfc000, 0x2000, 0x3062b3fc);
+	    ROM_LOAD("pc081682.bin", 0xfe000, 0x2000, 0x5c3f0256);
+		ROM_REGION(0x01100,REGION_GFX1, 0);
+	    ROM_LOAD("cga.chr",     0x00000, 0x01000, 0x42009069);
+	ROM_END(); }}; 
 	
-	ROM_START( bondwell )
-		ROM_REGION(0x100000,REGION_CPU1, 0)
-	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4) // taken from other machine
-		ROM_LOAD("bondwell.bin", 0xfe000, 0x2000, 0xd435a405)
-		ROM_REGION(0x01100,REGION_GFX1, 0)
-	    ROM_LOAD("cga.chr",     0x00000, 0x01000, 0x42009069) // taken from cga
-	ROM_END
+	static RomLoadPtr rom_bondwell = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x100000,REGION_CPU1, 0);
+	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4);// taken from other machine
+		ROM_LOAD("bondwell.bin", 0xfe000, 0x2000, 0xd435a405);
+		ROM_REGION(0x01100,REGION_GFX1, 0);
+	    ROM_LOAD("cga.chr",     0x00000, 0x01000, 0x42009069);// taken from cga
+	ROM_END(); }}; 
 	
-	ROM_START( pcmda )
-	    ROM_REGION(0x100000,REGION_CPU1, 0)
-	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4)
-	    ROM_LOAD("pcxt.rom",    0xfe000, 0x02000, 0x031aafad)
-		ROM_REGION(0x01100,REGION_GFX1, 0)
-	    ROM_LOAD("mda.chr",     0x00000, 0x01000, 0xac1686f3)
-	ROM_END
+	static RomLoadPtr rom_pcmda = new RomLoadPtr(){ public void handler(){ 
+	    ROM_REGION(0x100000,REGION_CPU1, 0);
+	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4);
+	    ROM_LOAD("pcxt.rom",    0xfe000, 0x02000, 0x031aafad);
+		ROM_REGION(0x01100,REGION_GFX1, 0);
+	    ROM_LOAD("mda.chr",     0x00000, 0x01000, 0xac1686f3);
+	ROM_END(); }}; 
 	
-	ROM_START( pc )
-	    ROM_REGION(0x100000,REGION_CPU1, 0)
-	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4)
-	//    ROM_LOAD("xthdd.rom",  0xc8000, 0x02000, 0xa96317da)
-	    ROM_LOAD("pcxt.rom",    0xfe000, 0x02000, 0x031aafad)
-		ROM_REGION(0x01100,REGION_GFX1, 0)
-	    ROM_LOAD("cga.chr",     0x00000, 0x01000, 0x42009069)
-	ROM_END
+	static RomLoadPtr rom_pc = new RomLoadPtr(){ public void handler(){ 
+	    ROM_REGION(0x100000,REGION_CPU1, 0);
+	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4);
+	//    ROM_LOAD("xthdd.rom",  0xc8000, 0x02000, 0xa96317da);
+	    ROM_LOAD("pcxt.rom",    0xfe000, 0x02000, 0x031aafad);
+		ROM_REGION(0x01100,REGION_GFX1, 0);
+	    ROM_LOAD("cga.chr",     0x00000, 0x01000, 0x42009069);
+	ROM_END(); }}; 
 	
-	ROM_START( europc )
-	    ROM_REGION(0x100000,REGION_CPU1, 0)
+	static RomLoadPtr rom_europc = new RomLoadPtr(){ public void handler(){ 
+	    ROM_REGION(0x100000,REGION_CPU1, 0);
 		// hdd bios integrated!
-	    ROM_LOAD("50145", 0xf8000, 0x8000, 0x1775a11d) // V2.07
-		ROM_REGION(0x02100,REGION_GFX1, 0)
-	    ROM_LOAD("50146", 0x00000, 0x02000, 0x1305dcf5) //D1.0
-	ROM_END
+	    ROM_LOAD("50145", 0xf8000, 0x8000, 0x1775a11d);// V2.07
+		ROM_REGION(0x02100,REGION_GFX1, 0);
+	    ROM_LOAD("50146", 0x00000, 0x02000, 0x1305dcf5);//D1.0
+	ROM_END(); }}; 
 	
 	
-	ROM_START( ibmpcjr )
-	    ROM_REGION(0x100000,REGION_CPU1, 0)
+	static RomLoadPtr rom_ibmpcjr = new RomLoadPtr(){ public void handler(){ 
+	    ROM_REGION(0x100000,REGION_CPU1, 0);
 	#ifndef MESS_DEBUG
-		ROM_LOAD("bios.rom", 0xf0000, 0x10000, 0)
+		ROM_LOAD("bios.rom", 0xf0000, 0x10000, 0);
 	#else
-	    ROM_LOAD("basic.rom", 0xf6000, 0x8000, 0x0c19c1a8)
-	    ROM_LOAD("bios.rom", 0xfe000, 0x2000, 0x98463f95)
+	    ROM_LOAD("basic.rom", 0xf6000, 0x8000, 0x0c19c1a8);
+	    ROM_LOAD("bios.rom", 0xfe000, 0x2000, 0x98463f95);
 	#endif
-		ROM_REGION(0x01100,REGION_GFX1, 0)
-	    ROM_LOAD("cga.chr",     0x00000, 0x01000, 0x42009069)
-	ROM_END
+		ROM_REGION(0x01100,REGION_GFX1, 0);
+	    ROM_LOAD("cga.chr",     0x00000, 0x01000, 0x42009069);
+	ROM_END(); }}; 
 	
-	ROM_START( t1000hx )
-	    ROM_REGION(0x100000,REGION_CPU1, 0)
-	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4)
+	static RomLoadPtr rom_t1000hx = new RomLoadPtr(){ public void handler(){ 
+	    ROM_REGION(0x100000,REGION_CPU1, 0);
+	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4);
 	    // partlist says it has 1 128kbyte rom
-	    ROM_LOAD("t1000hx.e0", 0xe0000, 0x10000, 0x61dbf242)
-	    ROM_LOAD("tandy1t.rom", 0xf0000, 0x10000, 0xd37a1d5f)
-	//	ROM_REGION(0x01100,REGION_GFX1, 0)
-		ROM_REGION(0x02000,REGION_GFX1, 0)
+	    ROM_LOAD("t1000hx.e0", 0xe0000, 0x10000, 0x61dbf242);
+	    ROM_LOAD("tandy1t.rom", 0xf0000, 0x10000, 0xd37a1d5f);
+	//	ROM_REGION(0x01100,REGION_GFX1, 0);
+		ROM_REGION(0x02000,REGION_GFX1, 0);
 	    // expects 8x9 charset!
-	//    ROM_LOAD("", 0x00000, 0x01000, 0x0 )
-	    ROM_LOAD("50146", 0x00000, 0x02000, BADCRC(0x1305dcf5)) //taken from europc, 9th blank
-	ROM_END
+	//    ROM_LOAD("", 0x00000, 0x01000, 0x0 );
+	    ROM_LOAD("50146", 0x00000, 0x02000, BADCRC(0x1305dcf5); //taken from europc, 9th blank
+	ROM_END(); }}; 
 	
-	ROM_START( ibmxt )
-	//    ROM_REGION(0x100000,REGION_CPU1, 0)
-	    ROM_REGION16_LE(0x100000,REGION_CPU1, 0)
-	//    ROM_LOAD("xthdd.rom",  0xc8000, 0x02000, 0xa96317da) //this was inside
-	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4)
-	    ROM_LOAD16_BYTE("xt050986.0", 0xf0000, 0x8000, 0x83727c42) 
-	    ROM_LOAD16_BYTE("xt050986.1", 0xf0001, 0x8000, 0x2a629953)
-		ROM_REGION(0x01100,REGION_GFX1, 0)
-	    ROM_LOAD("cga.chr",     0x00000, 0x01000, 0x42009069)
-	ROM_END
+	static RomLoadPtr rom_ibmxt = new RomLoadPtr(){ public void handler(){ 
+	//    ROM_REGION(0x100000,REGION_CPU1, 0);
+	    ROM_REGION16_LE(0x100000,REGION_CPU1, 0);
+	//    ROM_LOAD("xthdd.rom",  0xc8000, 0x02000, 0xa96317da);//this was inside
+	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4);
+	    ROM_LOAD16_BYTE("xt050986.0", 0xf0000, 0x8000, 0x83727c42);
+	    ROM_LOAD16_BYTE("xt050986.1", 0xf0001, 0x8000, 0x2a629953);
+		ROM_REGION(0x01100,REGION_GFX1, 0);
+	    ROM_LOAD("cga.chr",     0x00000, 0x01000, 0x42009069);
+	ROM_END(); }}; 
 	
-	ROM_START( xtvga )
-	    ROM_REGION(0x100000,REGION_CPU1, 0)
-	    ROM_LOAD("et4000.bin", 0xc0000, 0x8000, 0xf01e4be0)
-	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4)
-	    ROM_LOAD("pcxt.rom",    0xfe000, 0x02000, 0x031aafad)
-	ROM_END
+	static RomLoadPtr rom_xtvga = new RomLoadPtr(){ public void handler(){ 
+	    ROM_REGION(0x100000,REGION_CPU1, 0);
+	    ROM_LOAD("et4000.bin", 0xc0000, 0x8000, 0xf01e4be0);
+	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4);
+	    ROM_LOAD("pcxt.rom",    0xfe000, 0x02000, 0x031aafad);
+	ROM_END(); }}; 
 	
-	ROM_START( pc200 )
-	//    ROM_REGION(0x100000,REGION_CPU1, 0)
-	    ROM_REGION16_LE(0x100000,REGION_CPU1, 0)
-	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4)
+	static RomLoadPtr rom_pc200 = new RomLoadPtr(){ public void handler(){ 
+	//    ROM_REGION(0x100000,REGION_CPU1, 0);
+	    ROM_REGION16_LE(0x100000,REGION_CPU1, 0);
+	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4);
 		// special bios at 0xe0000 !?
-	    ROM_LOAD16_BYTE("pc20v2.0", 0xfc001, 0x2000, 0x41302eb8) // v2
-	    ROM_LOAD16_BYTE("pc20v2.1", 0xfc000, 0x2000, 0x71b84616) // v2
+	    ROM_LOAD16_BYTE("pc20v2.0", 0xfc001, 0x2000, 0x41302eb8);// v2
+	    ROM_LOAD16_BYTE("pc20v2.1", 0xfc000, 0x2000, 0x71b84616);// v2
 		// also mapped to f0000, f4000, f8000
-		ROM_REGION(0x02100,REGION_GFX1, 0)
-	    ROM_LOAD("aga.chr",     0x00000, 0x02000, 0xaca81498) //taken from aga
-	ROM_END
+		ROM_REGION(0x02100,REGION_GFX1, 0);
+	    ROM_LOAD("aga.chr",     0x00000, 0x02000, 0xaca81498);//taken from aga
+	ROM_END(); }}; 
 	
-	ROM_START( pc20 )
-	//    ROM_REGION(0x100000,REGION_CPU1, 0)
-	    ROM_REGION16_LE(0x100000,REGION_CPU1, 0)
-	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4)
+	static RomLoadPtr rom_pc20 = new RomLoadPtr(){ public void handler(){ 
+	//    ROM_REGION(0x100000,REGION_CPU1, 0);
+	    ROM_REGION16_LE(0x100000,REGION_CPU1, 0);
+	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4);
 		// special bios at 0xe0000 !?
-	    ROM_LOAD16_BYTE("pc20v2.0", 0xfc001, 0x2000, 0x41302eb8) // v2
-	    ROM_LOAD16_BYTE("pc20v2.1", 0xfc000, 0x2000, 0x71b84616) // v2
+	    ROM_LOAD16_BYTE("pc20v2.0", 0xfc001, 0x2000, 0x41302eb8);// v2
+	    ROM_LOAD16_BYTE("pc20v2.1", 0xfc000, 0x2000, 0x71b84616);// v2
 		// also mapped to f0000, f4000, f8000
-		ROM_REGION(0x02100,REGION_GFX1, 0)
-	    ROM_LOAD("aga.chr",     0x00000, 0x02000, 0xaca81498) //taken from aga
-	ROM_END
+		ROM_REGION(0x02100,REGION_GFX1, 0);
+	    ROM_LOAD("aga.chr",     0x00000, 0x02000, 0xaca81498);//taken from aga
+	ROM_END(); }}; 
 	
-	ROM_START( pc1512 )
-	//    ROM_REGION(0x100000,REGION_CPU1, 0)
-	    ROM_REGION16_LE(0x100000,REGION_CPU1, 0)
-	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4)
-	    ROM_LOAD16_BYTE("40044.v1", 0xfc001, 0x2000, 0x668fcc94) // v1
-	    ROM_LOAD16_BYTE("40043.v1", 0xfc000, 0x2000, 0xf72f1582) // v1
-		ROM_REGION(0x01100,REGION_GFX1, 0)
-	    ROM_LOAD("cga.chr",     0x00000, 0x01000, 0x42009069) // taken from cga
-	ROM_END
+	static RomLoadPtr rom_pc1512 = new RomLoadPtr(){ public void handler(){ 
+	//    ROM_REGION(0x100000,REGION_CPU1, 0);
+	    ROM_REGION16_LE(0x100000,REGION_CPU1, 0);
+	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4);
+	    ROM_LOAD16_BYTE("40044.v1", 0xfc001, 0x2000, 0x668fcc94);// v1
+	    ROM_LOAD16_BYTE("40043.v1", 0xfc000, 0x2000, 0xf72f1582);// v1
+		ROM_REGION(0x01100,REGION_GFX1, 0);
+	    ROM_LOAD("cga.chr",     0x00000, 0x01000, 0x42009069);// taken from cga
+	ROM_END(); }}; 
 	
-	ROM_START( pc1640 )
-	//    ROM_REGION(0x100000,REGION_CPU1, 0)
-	    ROM_REGION16_LE(0x100000,REGION_CPU1, 0)
-	    ROM_LOAD("40100", 0xc0000, 0x8000, 0xd2d1f1ae) // this bios seams to be made for the amstrad pc
-	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4)
-	    ROM_LOAD16_BYTE("40043.v3", 0xfc001, 0x2000, 0xe40a1513) // v3
-	    ROM_LOAD16_BYTE("40044.v3", 0xfc000, 0x2000, 0xf1c074f3)
-	ROM_END
+	static RomLoadPtr rom_pc1640 = new RomLoadPtr(){ public void handler(){ 
+	//    ROM_REGION(0x100000,REGION_CPU1, 0);
+	    ROM_REGION16_LE(0x100000,REGION_CPU1, 0);
+	    ROM_LOAD("40100", 0xc0000, 0x8000, 0xd2d1f1ae);// this bios seams to be made for the amstrad pc
+	    ROM_LOAD("wdbios.rom",  0xc8000, 0x02000, 0x8e9e2bd4);
+	    ROM_LOAD16_BYTE("40043.v3", 0xfc001, 0x2000, 0xe40a1513);// v3
+	    ROM_LOAD16_BYTE("40044.v3", 0xfc000, 0x2000, 0xf1c074f3);
+	ROM_END(); }}; 
 	
 	static const struct IODevice io_ibmpc[] = {
 		{

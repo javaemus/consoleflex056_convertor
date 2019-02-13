@@ -77,7 +77,7 @@ TODO general:
 /* ======================================================================== */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package cpu.g65816;
@@ -340,7 +340,7 @@ public class g65816
 			REG_S = (REG_S & 0xff) | 0x100;
 			REG_X &= 0xff;
 			REG_Y &= 0xff;
-			if(!FLAG_M)
+			if (FLAG_M == 0)
 			{
 				REG_B = REG_A & 0xff00;
 				REG_A &= 0xff;
@@ -476,7 +476,7 @@ public class g65816
 	
 		which = (which + 1) % 16;
 		buffer[which][0] = '\0';
-		if(!context)
+		if (context == 0)
 			r = &g65816i_cpu;
 	
 		switch(regnum)

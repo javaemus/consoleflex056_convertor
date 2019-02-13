@@ -7,7 +7,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -30,7 +30,7 @@ public class jupiter
 		generic_vh_stop();
 	}
 	
-	WRITE_HANDLER( jupiter_vh_charram_w )
+	public static WriteHandlerPtr jupiter_vh_charram_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		int chr = offset / 8, offs;
 	
@@ -48,7 +48,7 @@ public class jupiter
 			if( videoram[offs] == chr )
 				dirtybuffer[offs] = 1;
 		}
-	}
+	} };
 	
 	void jupiter_vh_screenrefresh (struct mame_bitmap *bitmap, int full_refresh)
 	{

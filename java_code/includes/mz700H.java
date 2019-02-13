@@ -10,7 +10,7 @@
  ******************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package includes;
@@ -46,26 +46,9 @@ public class mz700H
 	 *	Sharp MZ800
 	 *
 	 ******************************************************************************/
-	extern READ_HANDLER( mz800_crtc_r );
-	extern READ_HANDLER( mz800_mmio_r );
-	extern READ_HANDLER( mz800_bank_r );
-	extern READ_HANDLER( mz800_ramdisk_r );
-	
-	extern WRITE_HANDLER( mz800_write_format_w );
-	extern WRITE_HANDLER( mz800_read_format_w );
-	extern WRITE_HANDLER( mz800_display_mode_w );
-	extern WRITE_HANDLER( mz800_scroll_border_w );
-	extern WRITE_HANDLER( mz800_mmio_w );
-	extern WRITE_HANDLER ( mz800_bank_w );
-	extern WRITE_HANDLER( mz800_ramdisk_w );
-	extern WRITE_HANDLER( mz800_ramaddr_w );
-	extern WRITE_HANDLER( mz800_palette_w );
-	
-	extern WRITE_HANDLER( videoram0_w );
-	extern WRITE_HANDLER( videoram1_w );
-	extern WRITE_HANDLER( videoram2_w );
-	extern WRITE_HANDLER( videoram3_w );
-	extern WRITE_HANDLER( pcgram_w );
-	
+	extern extern extern extern 
+	extern extern extern extern extern extern WRITE_HANDLER ( mz800_bank_w );
+	extern extern extern 
+	extern extern extern extern extern 
 	extern void init_mz800(void);
 }

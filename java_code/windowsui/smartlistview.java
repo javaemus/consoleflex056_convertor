@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package windowsui;
@@ -113,7 +113,7 @@ public class smartlistview
 	
 		/* Allocate it */
 		pListView = malloc(nObjectSize);
-		if (!pListView)
+		if (pListView == 0)
 			return NULL;
 		memset(pListView, 0, nObjectSize);
 	
@@ -648,7 +648,7 @@ public class smartlistview
 	        SelectObject(hDC, hOldBrush);
 	        DeleteObject(hBrush);
 	    }
-	    else if (!hBackground)
+	    else if (hBackground == 0)
 	    {
 	        HBRUSH hBrush;
 	
@@ -692,7 +692,7 @@ public class smartlistview
 	    {
 	        UINT nOvlImageMask = lvi.state & LVIS_OVERLAYMASK;
 	        if(rcItem.left < rcItem.right-1) {
-				if (!hBackground) {
+				if (hBackground == 0) {
 					HBRUSH hBrush;
 					hBrush = CreateSolidBrush( GetSysColor(COLOR_WINDOW));
 					FillRect(hDC, &rcIcon, hBrush);
@@ -868,7 +868,7 @@ public class smartlistview
 	
 		SmartListView_GetColumnInfo(pListView, shown, order, widths);
 	
-		if (!bFirstTime) {
+		if (bFirstTime == 0) {
 			nColumn = GetNumColumns(pListView);
 	
 			/* The first time thru this won't happen, on purpose */
@@ -947,7 +947,7 @@ public class smartlistview
 		struct RowMapping *newRowMapping;
 	
 		newRowMapping = realloc(pListView->rowMapping, sizeof(struct RowMapping) * (pListView->nNumRows + 1));
-		if (!newRowMapping)
+		if (newRowMapping == 0)
 			return FALSE;
 		pListView->rowMapping = newRowMapping;
 	
@@ -971,7 +971,7 @@ public class smartlistview
 		/* Create a new map */
 		if (nItemCount > 0) {
 			newRowMapping = (struct RowMapping *) malloc(nItemCount * sizeof(struct RowMapping));
-			if (!newRowMapping)
+			if (newRowMapping == 0)
 				return FALSE;
 			for (i = 0; i < nItemCount; i++) {
 				newRowMapping[i].nVisualToLogical = i;

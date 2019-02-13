@@ -9,7 +9,7 @@
  ******************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -51,7 +51,7 @@ public class channelf
 	    if (device_filename(IO_CARTSLOT,id) == NULL)
 			return INIT_PASS;
 		file = image_fopen(IO_CARTSLOT, id, OSD_FILETYPE_IMAGE, 0);
-		if (!file)
+		if (file == 0)
 			return INIT_FAIL;
 		size = osd_fread(file, &mem[0x0800], 0x0800);
 		osd_fclose(file);
@@ -62,39 +62,39 @@ public class channelf
 	    return INIT_FAIL;
 	}
 	
-	READ_HANDLER( channelf_port_0_r )
+	public static ReadHandlerPtr channelf_port_0_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int data = readinputport(0);
 		data = (data ^ 0xff) | latch[0];
 	    LOG(("port_0_r: $%02x\n",data));
 		return data;
-	}
+	} };
 	
-	READ_HANDLER( channelf_port_1_r )
+	public static ReadHandlerPtr channelf_port_1_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int data = readinputport(1);
 		data = (data ^ 0xff) | latch[1];
 	    LOG(("port_1_r: $%02x\n",data));
 		return data;
-	}
+	} };
 	
-	READ_HANDLER( channelf_port_4_r )
+	public static ReadHandlerPtr channelf_port_4_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int data = readinputport(2);
 		data = (data ^ 0xff) | latch[2];
 	    LOG(("port_4_r: $%02x\n",data));
 		return data;
-	}
+	} };
 	
-	READ_HANDLER( channelf_port_5_r )
+	public static ReadHandlerPtr channelf_port_5_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int data = 0xff;
 		data = (data ^ 0xff) | latch[3];
 	    LOG(("port_5_r: $%02x\n",data));
 		return data;
-	}
+	} };
 	
-	WRITE_HANDLER( channelf_port_0_w )
+	public static WriteHandlerPtr channelf_port_0_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		int offs;
 	
@@ -128,27 +128,27 @@ public class channelf
 			}
 		}
 		latch[0] = data;
-	}
+	} };
 	
-	WRITE_HANDLER( channelf_port_1_w )
+	public static WriteHandlerPtr channelf_port_1_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		LOG(("port_1_w: $%02x\n",data));
 	
 	    channelf_val_reg = ((data ^ 0xff) >> 6) & 0x03;
 	
 		latch[1] = data;
-	}
+	} };
 	
-	WRITE_HANDLER( channelf_port_4_w )
+	public static WriteHandlerPtr channelf_port_4_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		LOG(("port_4_w: $%02x\n",data));
 	
 	    channelf_col_reg = (data | 0x80) ^ 0xff;
 	
 	    latch[2] = data;
-	}
+	} };
 	
-	WRITE_HANDLER( channelf_port_5_w )
+	public static WriteHandlerPtr channelf_port_5_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		LOG(("port_5_w: $%02x\n",data));
 	
@@ -157,7 +157,7 @@ public class channelf
 	    channelf_row_reg = (data | 0xc0) ^ 0xff;
 	
 	    latch[3] = data;
-	}
+	} };
 	
 	static MEMORY_READ_START (readmem)
 		{ 0x0000, 0x07ff, MRA_ROM },
@@ -183,35 +183,35 @@ public class channelf
 		{ 0x05, 0x05,	channelf_port_5_w }, /* Video Vert & Sound */
 	PORT_END
 	
-	INPUT_PORTS_START( channelf )
+	static InputPortPtr input_ports_channelf = new InputPortPtr(){ public void handler() { 
 		PORT_START /* Front panel buttons */
-		PORT_BIT ( 0x01, IP_ACTIVE_HIGH, IPT_SELECT1 )	/* START (1) */
-		PORT_BIT ( 0x02, IP_ACTIVE_HIGH, IPT_SELECT2 )	/* HOLD  (2) */
-		PORT_BIT ( 0x04, IP_ACTIVE_HIGH, IPT_SELECT3 )	/* MODE  (3) */
-		PORT_BIT ( 0x08, IP_ACTIVE_HIGH, IPT_SELECT4 )	/* TIME  (4) */
-		PORT_BIT ( 0xf0, IP_ACTIVE_HIGH, IPT_UNUSED )
+		PORT_BIT ( 0x01, IP_ACTIVE_HIGH, IPT_SELECT1 );/* START (1) */
+		PORT_BIT ( 0x02, IP_ACTIVE_HIGH, IPT_SELECT2 );/* HOLD  (2) */
+		PORT_BIT ( 0x04, IP_ACTIVE_HIGH, IPT_SELECT3 );/* MODE  (3) */
+		PORT_BIT ( 0x08, IP_ACTIVE_HIGH, IPT_SELECT4 );/* TIME  (4) */
+		PORT_BIT ( 0xf0, IP_ACTIVE_HIGH, IPT_UNUSED );
 	
 		PORT_START /* Right controller */
-		PORT_BIT ( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 )
-		PORT_BIT ( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 )
-		PORT_BIT ( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 )
-		PORT_BIT ( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_PLAYER1 )
-		PORT_BIT ( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON4 	   | IPF_PLAYER1 ) /* C-CLOCKWISE */
-		PORT_BIT ( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON3 	   | IPF_PLAYER1 ) /* CLOCKWISE   */
-		PORT_BIT ( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON2 	   | IPF_PLAYER1 ) /* PULL UP     */
-		PORT_BIT ( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON1 	   | IPF_PLAYER1 ) /* PUSH DOWN   */
+		PORT_BIT ( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 );
+		PORT_BIT ( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 );
+		PORT_BIT ( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 );
+		PORT_BIT ( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_PLAYER1 );
+		PORT_BIT ( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON4 	   | IPF_PLAYER1 );/* C-CLOCKWISE */
+		PORT_BIT ( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON3 	   | IPF_PLAYER1 );/* CLOCKWISE   */
+		PORT_BIT ( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON2 	   | IPF_PLAYER1 );/* PULL UP     */
+		PORT_BIT ( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON1 	   | IPF_PLAYER1 );/* PUSH DOWN   */
 	
 		PORT_START /* Left controller */
-		PORT_BIT ( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
-		PORT_BIT ( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 )
-		PORT_BIT ( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 )
-		PORT_BIT ( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_PLAYER2 )
-		PORT_BIT ( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON4 	   | IPF_PLAYER2 ) /* C-CLOCKWISE */
-		PORT_BIT ( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON3 	   | IPF_PLAYER2 ) /* CLOCKWISE   */
-		PORT_BIT ( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON2 	   | IPF_PLAYER2 ) /* PULL UP     */
-		PORT_BIT ( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON1 	   | IPF_PLAYER2 ) /* PUSH DOWN   */
+		PORT_BIT ( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 );
+		PORT_BIT ( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 );
+		PORT_BIT ( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 );
+		PORT_BIT ( 0x08, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP    | IPF_PLAYER2 );
+		PORT_BIT ( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON4 	   | IPF_PLAYER2 );/* C-CLOCKWISE */
+		PORT_BIT ( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON3 	   | IPF_PLAYER2 );/* CLOCKWISE   */
+		PORT_BIT ( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON2 	   | IPF_PLAYER2 );/* PULL UP     */
+		PORT_BIT ( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON1 	   | IPF_PLAYER2 );/* PUSH DOWN   */
 	
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	static struct CustomSound_interface channelf_sound_interface = {
 		channelf_sh_custom_start,
@@ -255,13 +255,13 @@ public class channelf
 		}
 	};
 	
-	ROM_START(channelf)
-		ROM_REGION(0x10000,REGION_CPU1,0)
-			ROM_LOAD("sl31253.rom",  0x0000, 0x0400, 0x04694ed9)
-			ROM_LOAD("sl31254.rom",  0x0400, 0x0400, 0x9c047ba3)
-		ROM_REGION(0x00100,REGION_GFX1,0)
+	static RomLoadPtr rom_channelf = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x10000,REGION_CPU1,0);
+			ROM_LOAD("sl31253.rom",  0x0000, 0x0400, 0x04694ed9);
+			ROM_LOAD("sl31254.rom",  0x0400, 0x0400, 0x9c047ba3);
+		ROM_REGION(0x00100,REGION_GFX1,0);
 			/* bit pattern is stored here */
-	ROM_END
+	ROM_END(); }}; 
 	
 	static const struct IODevice io_channelf[] = {
 		{

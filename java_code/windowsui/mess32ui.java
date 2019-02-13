@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package windowsui;
@@ -159,9 +159,9 @@ public class mess32ui
 	{
 	    int i;
 	
-	    if (!mess_icon_index) {
+	    if (mess_icon_index == 0) {
 	        mess_icon_index = malloc(sizeof(int) * game_count * IO_COUNT);
-	        if (!mess_icon_index)
+	        if (mess_icon_index == 0)
 	            return FALSE;
 	    }
 	
@@ -187,7 +187,7 @@ public class mess32ui
 	        the_index = (nGame * IO_COUNT) + nSoftwareType;
 	
 	        nIconPos = mess_icon_index[the_index];
-	        if (!nIconPos) {
+	        if (nIconPos == 0) {
 	            for (drv = drivers[nGame]; drv; drv = drv->clone_of) {
 	                sprintf(buffer, "%s/%s", drv->name, iconname);
 	                hIcon = LoadIconFromFile(buffer);
@@ -436,7 +436,7 @@ public class mess32ui
 	    nType = GetImageType(nItem);
 	
 	    nIcon = GetMessIcon(GetSelectedPickItem(), nType);
-	    if (!nIcon) {
+	    if (nIcon == 0) {
 			switch(nType) {
 			case IO_UNKNOWN:
 				/* Unknowns */
@@ -602,7 +602,7 @@ public class mess32ui
 			opts.nInsetPixels = 10;
 	
 			s_pFileMgrListView = SmartListView_Init(&opts);
-			if (!s_pFileMgrListView) {
+			if (s_pFileMgrListView == 0) {
 				/* PANIC */
 				EndFileManager(hDlg, -1);
 				return FALSE;
@@ -747,7 +747,7 @@ public class mess32ui
 		nOriginalPick = GetSelectedPick();
 	
 		/* If we are running already, keep our old defaults */
-		if (!s_bRunningTests) {
+		if (s_bRunningTests == 0) {
 			s_bRunningTests = TRUE;
 			s_nOriginalPick = nOriginalPick;
 		}

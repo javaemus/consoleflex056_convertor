@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -206,7 +206,7 @@ public class hp48
 				^ ((hp48_hardware.crc& 0xf) * 0x1081);
 	}
 	
-	WRITE_HANDLER( hp48_write )
+	public static WriteHandlerPtr hp48_write = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		switch (offset) {
 			//lcd
@@ -292,9 +292,9 @@ public class hp48
 		default: //temporary for better debugging, write of ro registers
 			hp48_hardware.data[offset]=data;
 		}
-	}
+	} };
 	
-	READ_HANDLER( hp48_read )
+	public static ReadHandlerPtr hp48_read  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int data=0;
 		switch (offset) {
@@ -330,7 +330,7 @@ public class hp48
 			data=hp48_hardware.data[offset];
 		}
 		return data;
-	}
+	} };
 	
 	void hp48_timer(int param)
 	{

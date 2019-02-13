@@ -7,7 +7,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -132,7 +132,7 @@ public class ti85
 			{
 				cpu_set_irq_line(0,0, HOLD_LINE);
 				ti85_ON_interrupt_status = 1;
-				if (!ti85_timer_interrupt_mask) ti85_timer_interrupt_mask = 1;
+				if (ti85_timer_interrupt_mask == 0) ti85_timer_interrupt_mask = 1;
 			}
 			ti85_ON_pressed = 1;
 			return;
@@ -372,7 +372,7 @@ public class ti85
 			data |= 0x01;
 		if (ti85_timer_interrupt_status)
 			data |= 0x04;
-		if (!ti85_ON_pressed)
+		if (ti85_ON_pressed == 0)
 			data |= 0x08;
 		ti85_ON_interrupt_status = 0;
 		ti85_timer_interrupt_status = 0;
@@ -840,17 +840,17 @@ public class ti85
 	
 	static int ti85_alloc_serial_data_memory (UINT32 size)
 	{
-		if (!ti85_receive_buffer)
+		if (ti85_receive_buffer == 0)
 		{
 			ti85_receive_buffer = (UINT8*) malloc (8*size*sizeof(UINT8));
-			if (!ti85_receive_buffer)
+			if (ti85_receive_buffer == 0)
 				return 0;
 		}
 	
-		if (!ti85_receive_data)
+		if (ti85_receive_data == 0)
 		{
 			ti85_receive_data = (UINT8*) malloc (size * sizeof(UINT8));
-			if (!ti85_receive_data)
+			if (ti85_receive_data == 0)
 			{
 				free (ti85_receive_buffer);
 				ti85_receive_buffer = NULL;
@@ -1222,7 +1222,7 @@ public class ti85
 				break;
 			case TI85_PREPARE_VARIABLE_DATA:
 				var_data = (UINT8*) malloc (ti85_receive_data[2]+2+ti85_receive_data[4]+ti85_receive_data[5]*256+2);
-				if(!var_data)
+				if (var_data == 0)
 					ti85_serial_status = TI85_SEND_STOP;
 				memcpy (var_data, ti85_receive_data+2, 5);
 				ti85_free_serial_data_memory();
@@ -1322,7 +1322,7 @@ public class ti85
 					if (variable_number == 0)
 					{
 						var_file_data = (UINT8*) malloc (0x39);
-						if (!var_file_data)
+						if (var_file_data == 0)
 						{
 							free (var_data); var_data = NULL;
 							free (var_file_data); var_file_data = NULL;
@@ -1425,7 +1425,7 @@ public class ti85
 					backup_data_size[1] = ti85_receive_data[7] + ti85_receive_data[8]*256;
 					backup_data_size[2] = ti85_receive_data[9] + ti85_receive_data[10]*256;
 					backup_file_data = malloc (0x42+0x06+backup_data_size[0]+backup_data_size[1]+backup_data_size[2]+0x02);
-					if(!backup_file_data)
+					if (backup_file_data == 0)
 					{
 						backup_variable_number = 0;
 						ti85_serial_status = TI85_SEND_STOP;
@@ -1607,7 +1607,7 @@ public class ti85
 					if( image_file )
 					{
 						image_file_data = malloc (0x49+1008);
-						if(!image_file_data)
+						if (image_file_data == 0)
 						{
 							ti85_free_serial_data_memory();
 							ti85_serial_status = TI85_SEND_OK;

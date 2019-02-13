@@ -4,7 +4,7 @@
 /* - or uses size of file */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -36,7 +36,7 @@ public class pc_flopp
 			void *file;
 	
 			file = image_fopen(IO_FLOPPY, id, OSD_FILETYPE_IMAGE, OSD_FOPEN_READ);
-			if (!file) return INIT_PASS;
+			if (file == 0) return INIT_PASS;
 	
 			/* find the sectors/track and bytes/sector values in the boot sector */
 			if( file )

@@ -17,7 +17,7 @@
 */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -235,7 +235,7 @@ public class cia6526
 				This->cra &= ~0x10;
 				This->t1c = This->t1l;
 			}
-			if (!TIMER1_STOP)
+			if (TIMER1_STOP == 0)
 			{
 				if (TIMER1_COUNT_CNT)
 				{
@@ -254,7 +254,7 @@ public class cia6526
 			{
 				This->cra &= ~0x10;
 				This->t1c = This->t1l;
-				if (!TIMER1_STOP)
+				if (TIMER1_STOP == 0)
 					timer_reset (This->timer1, TIME_IN_CYCLES (This->t1c, 0));
 			}
 			if (TIMER1_STOP)
@@ -280,7 +280,7 @@ public class cia6526
 			{
 				This->timer1_state = 0;
 			}
-			else if (!TIMER1_COUNT_CNT)
+			else if (TIMER1_COUNT_CNT == 0)
 			{
 				This->timer1 = timer_set (TIME_IN_CYCLES (This->t1c, 0),
 										  This->number, cia_timer1_timeout);
@@ -301,7 +301,7 @@ public class cia6526
 				This->crb &= ~0x10;
 				This->t2c = This->t2l;
 			}
-			if (!TIMER2_STOP)
+			if (TIMER2_STOP == 0)
 			{
 				if (TIMER2_COUNT_CLOCK)
 				{
@@ -328,7 +328,7 @@ public class cia6526
 				timer_remove (This->timer2);
 				This->timer2 = 0;
 			}
-			else if (!TIMER2_COUNT_CLOCK)
+			else if (TIMER2_COUNT_CLOCK == 0)
 			{
 				This->timer2_state = 2;
 				timer_remove (This->timer2);
@@ -717,7 +717,7 @@ public class cia6526
 	{
 		if (!This->cnt && data)
 		{
-			if (!SERIAL_MODE_OUT)
+			if (SERIAL_MODE_OUT == 0)
 			{
 				This->serial >>= 1;
 				if (This->sp)

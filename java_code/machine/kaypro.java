@@ -10,7 +10,7 @@
  ******************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -183,16 +183,16 @@ public class kaypro
 		new = input_port_10_r(0);
 		chg = keyrows[row] ^ new;
 	
-		if (!chg) { new = input_port_9_r(0); chg = keyrows[--row] ^ new; }
-		if (!chg) { new = input_port_8_r(0); chg = keyrows[--row] ^ new; }
-		if (!chg) { new = input_port_7_r(0); chg = keyrows[--row] ^ new; }
-		if (!chg) { new = input_port_6_r(0); chg = keyrows[--row] ^ new; }
-		if (!chg) { new = input_port_5_r(0); chg = keyrows[--row] ^ new; }
-		if (!chg) { new = input_port_4_r(0); chg = keyrows[--row] ^ new; }
-		if (!chg) { new = input_port_3_r(0); chg = keyrows[--row] ^ new; }
-		if (!chg) { new = input_port_2_r(0); chg = keyrows[--row] ^ new; }
-		if (!chg) { new = input_port_1_r(0); chg = keyrows[--row] ^ new; }
-		if (!chg) --row;
+		if (chg == 0) { new = input_port_9_r(0); chg = keyrows[--row] ^ new; }
+		if (chg == 0) { new = input_port_8_r(0); chg = keyrows[--row] ^ new; }
+		if (chg == 0) { new = input_port_7_r(0); chg = keyrows[--row] ^ new; }
+		if (chg == 0) { new = input_port_6_r(0); chg = keyrows[--row] ^ new; }
+		if (chg == 0) { new = input_port_5_r(0); chg = keyrows[--row] ^ new; }
+		if (chg == 0) { new = input_port_4_r(0); chg = keyrows[--row] ^ new; }
+		if (chg == 0) { new = input_port_3_r(0); chg = keyrows[--row] ^ new; }
+		if (chg == 0) { new = input_port_2_r(0); chg = keyrows[--row] ^ new; }
+		if (chg == 0) { new = input_port_1_r(0); chg = keyrows[--row] ^ new; }
+		if (chg == 0) --row;
 	
 		if (row >= 0)
 		{

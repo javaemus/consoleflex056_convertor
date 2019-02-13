@@ -6,7 +6,7 @@
 */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -99,28 +99,28 @@ public class vga
 	{ 0xfc, 0xfc, 0xfc }
 	};
 	
-	struct GfxLayout vga_charlayout =
-	{
+	static GfxLayout vga_charlayout = new GfxLayout
+	(
 		9,32,					/* 9 x 32 characters (9 x 15 is the default, but..) */
 		256,					/* 256 characters */
 		1,                      /* 1 bits per pixel */
-		{ 0 },                  /* no bitplanes; 1 bit per pixel */
+		new int[] { 0 },                  /* no bitplanes; 1 bit per pixel */
 		/* x offsets */
-		{ 0,1,2,3,4,5,6,7,7 },	/* pixel 7 repeated only for char code 176 to 223 */
+		new int[] { 0,1,2,3,4,5,6,7,7 },	/* pixel 7 repeated only for char code 176 to 223 */
 		/* y offsets */
-		{
+		new int[] {
 			2*8, 6*8, 10*8, 14*8, 18*8, 22*8, 26*8, 30*8,
 			34*8, 38*8, 42*8, 46*8, 50*8, 54*8, 58*8, 62*8,
 			66*8, 70*8, 74*8, 78*8, 82*8, 86*8, 90*8, 94*8,
 			98*8, 102*8, 106*8, 110*8, 114*8, 118*8, 122*8, 126*8
 		},
 		128*8
-	};
+	);
 	
-	struct GfxDecodeInfo vga_gfxdecodeinfo[] =
+	static GfxDecodeInfo vga_gfxdecodeinfo[] =
 	{
-		{ 0, 0x0000, &vga_charlayout,			  0, 256 },   /* single width */
-	    { -1 } /* end of array */
+		new GfxDecodeInfo( 0, 0x0000, vga_charlayout,			  0, 256 ),   /* single width */
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
 	unsigned short vga_colortable[] = {
@@ -280,7 +280,7 @@ public class vga
 	static int ega_get_crtc_columns(void) /* in clocks! */
 	{
 		int columns=vga.crtc.data[0]+2;
-		if (!GRAPHIC_MODE) {
+		if (GRAPHIC_MODE == 0) {
 			columns*=CHAR_WIDTH;
 		} else {
 			columns*=8;
@@ -299,7 +299,7 @@ public class vga
 	{
 		int columns=vga.crtc.data[0]+5;
 	
-		if (!GRAPHIC_MODE) {
+		if (GRAPHIC_MODE == 0) {
 			columns*=CHAR_WIDTH;
 		} else if (vga.gc.data[5]&0x40) {
 			columns*=4;
@@ -628,16 +628,16 @@ public class vga
 		}
 	}
 	
-	READ_HANDLER( vga_port_03b0_r )
+	public static ReadHandlerPtr vga_port_03b0_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int data=0xff;
 		if (CRTC_PORT_ADDR==0x3b0)
 			data=vga_crtc_r(offset);
 		/*DBG_LOG(1,"vga 0x3b0 read",("%.2x %.2x\n", offset, data)); */
 		return data;
-	}
+	} };
 	
-	READ_HANDLER( ega_port_03c0_r)
+	public static ReadHandlerPtr ega_port_03c0_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int data=0xff;
 		switch (offset) {
@@ -645,9 +645,9 @@ public class vga
 		}
 		DBG_LOG(1,"ega 0x3c0 read",("%.2x %.2x\n", offset, data));
 		return data;
-	}
+	} };
 	
-	READ_HANDLER( vga_port_03c0_r )
+	public static ReadHandlerPtr vga_port_03c0_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int data=0xff;
 		switch (offset) {
@@ -747,7 +747,7 @@ public class vga
 			DBG_LOG(1,"03c0 read",("%.2x %.2x\n",offset,data));
 		}
 		return data;
-	}
+	} };
 	
 	READ_HANDLER(vga_port_03d0_r)
 	{
@@ -758,12 +758,12 @@ public class vga
 		return data;
 	}
 	
-	WRITE_HANDLER( vga_port_03b0_w )
+	public static WriteHandlerPtr vga_port_03b0_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		/*DBG_LOG(1,"vga 0x3b0 write",("%.2x %.2x\n", offset, data)); */
 		if (CRTC_PORT_ADDR!=0x3b0) return;
 		vga_crtc_w(offset, data);
-	}
+	} };
 	
 	WRITE_HANDLER(vga_port_03c0_w)
 	{
@@ -872,7 +872,7 @@ public class vga
 			vga_crtc_w(offset,data);
 	}
 	
-	READ_HANDLER( paradise_ega_03c0_r )
+	public static ReadHandlerPtr paradise_ega_03c0_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int data=vga_port_03c0_r(offset);
 		if (offset==2) {
@@ -883,7 +883,7 @@ public class vga
 			}
 		}
 		return data;
-	}
+	} };
 	
 	void vga_reset(void)
 	{
@@ -1187,7 +1187,7 @@ public class vga
 			for (i=0; i<16;i++) {
 				vga.pens[i]=Machine->pens[i/*vga.attribute.data[i]&0x3f*/];
 			}
-			if (!GRAPHIC_MODE) {
+			if (GRAPHIC_MODE == 0) {
 				vga_vh_text(bitmap, full_refresh);
 				new_raws=TEXT_LINES;
 				new_columns=TEXT_COLUMNS*CHAR_WIDTH;
@@ -1245,7 +1245,7 @@ public class vga
 				}
 			}
 	#endif
-			if (!GRAPHIC_MODE) {
+			if (GRAPHIC_MODE == 0) {
 	#ifdef VGA_GFX
 				for (i=0; i<0x100; i++) {
 					if (vga.fontdirty[i]) {

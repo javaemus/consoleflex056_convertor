@@ -32,7 +32,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -49,7 +49,7 @@ public class snes
 	int snes_vh_start(void)
 	{
 		zBuffer=malloc((256+32)*(256+32));
-		if (!zBuffer)
+		if (zBuffer == 0)
 			return 1;
 		if( generic_bitmapped_vh_start() )
 			return 1;
@@ -1080,7 +1080,7 @@ public class snes
 				{
 					if (!(port43xx[dmaBase + 0x00] & 0x40))					// Absolute mode
 					{
-						if (!contMode)										// If not in continue mode then we update the A2 table address
+						if (contMode == 0)										// If not in continue mode then we update the A2 table address
 						{
 							port43xx[dmaBase+0x08]=SRC&0xFF;
 							port43xx[dmaBase+0x09]=(SRC>>8)&0xFF;

@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -19,7 +19,7 @@ public class mac
 		videoram_size = (512 * 384 / 8);
 	
 		old_display = (UINT16 *) malloc(videoram_size);
-		if (! old_display)
+		if (old_display == 0)
 		{
 			return 1;
 		}

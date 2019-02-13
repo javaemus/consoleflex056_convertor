@@ -5,7 +5,7 @@
    used in complete pc series */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -338,12 +338,12 @@ public class dma8237
 	    }
 	}
 	
-	READ_HANDLER( pc_page_r )
+	public static ReadHandlerPtr pc_page_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return 0xff; // in pc not readable !
-	}
+	} };
 	
-	READ_HANDLER( at_page_r )
+	public static ReadHandlerPtr at_page_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int data = 0xff;
 		offset&=0xf;
@@ -385,7 +385,7 @@ public class dma8237
 	    }
 		logerror("at page read %g %06x\t%02x %02x\n", timer_get_time(), cpu_get_pc(), offset, data);
 		return data;
-	}
+	} };
 	
 	WRITE_HANDLER ( dma8237_0_w ) { dma8237_w(dma8237, offset, data); }
 	WRITE_HANDLER ( dma8237_1_w ) { dma8237_w(dma8237+1, offset, data); }

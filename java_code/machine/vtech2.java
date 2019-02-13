@@ -14,7 +14,7 @@
 ****************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -165,7 +165,7 @@ public class vtech2
 		return 0xff;
 	}
 	
-	WRITE_HANDLER( laser_bank_select_w )
+	public static WriteHandlerPtr laser_bank_select_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	    static const char *bank_name[16] = {
 	        "ROM lo","ROM hi","MM I/O","Video RAM lo",
@@ -211,7 +211,7 @@ public class vtech2
 				}
 			}
 	    }
-	}
+	} };
 	
 	/*************************************************
 	 * memory mapped I/O read
@@ -638,7 +638,7 @@ public class vtech2
 	#define PHI2(n) (((n)>>2)&1)
 	#define PHI3(n) (((n)>>3)&1)
 	
-	READ_HANDLER( laser_fdc_r )
+	public static ReadHandlerPtr laser_fdc_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 	    int data = 0xff;
 	    switch( offset )
@@ -680,9 +680,9 @@ public class vtech2
 	        break;
 	    }
 	    return data;
-	}
+	} };
 	
-	WRITE_HANDLER( laser_fdc_w )
+	public static WriteHandlerPtr laser_fdc_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	    int drive;
 	
@@ -772,7 +772,7 @@ public class vtech2
 	        laser_fdc_latch = data;
 	        break;
 	    }
-	}
+	} };
 	
 	
 }

@@ -11,7 +11,7 @@
  * rockwell aim65 ?
  **********************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -276,25 +276,25 @@ public class riot6532
 	READ_HANDLER ( riot_3_r ) { return riot_r(3,offset); }
 	WRITE_HANDLER ( riot_3_w ) { riot_w(3,offset,data); }
 	
-	READ_HANDLER( riot_0_a_r ) { return riot_a_r(0); }
-	READ_HANDLER( riot_1_a_r ) { return riot_a_r(1); }
-	READ_HANDLER( riot_2_a_r ) { return riot_a_r(2); }
-	READ_HANDLER( riot_3_a_r ) { return riot_a_r(3); }
+	public static ReadHandlerPtr riot_0_a_r  = new ReadHandlerPtr() { public int handler(int offset) { return riot_a_r(0); } };
+	public static ReadHandlerPtr riot_1_a_r  = new ReadHandlerPtr() { public int handler(int offset) { return riot_a_r(1); } };
+	public static ReadHandlerPtr riot_2_a_r  = new ReadHandlerPtr() { public int handler(int offset) { return riot_a_r(2); } };
+	public static ReadHandlerPtr riot_3_a_r  = new ReadHandlerPtr() { public int handler(int offset) { return riot_a_r(3); } };
 	
-	READ_HANDLER( riot_0_b_r ) { return riot_b_r(0); }
-	READ_HANDLER( riot_1_b_r ) { return riot_b_r(1); }
-	READ_HANDLER( riot_2_b_r ) { return riot_b_r(2); }
-	READ_HANDLER( riot_3_b_r ) { return riot_b_r(3); }
+	public static ReadHandlerPtr riot_0_b_r  = new ReadHandlerPtr() { public int handler(int offset) { return riot_b_r(0); } };
+	public static ReadHandlerPtr riot_1_b_r  = new ReadHandlerPtr() { public int handler(int offset) { return riot_b_r(1); } };
+	public static ReadHandlerPtr riot_2_b_r  = new ReadHandlerPtr() { public int handler(int offset) { return riot_b_r(2); } };
+	public static ReadHandlerPtr riot_3_b_r  = new ReadHandlerPtr() { public int handler(int offset) { return riot_b_r(3); } };
 	
-	WRITE_HANDLER( riot_0_a_w ) { riot_a_w(0,data); }
-	WRITE_HANDLER( riot_1_a_w ) { riot_a_w(1,data); }
-	WRITE_HANDLER( riot_2_a_w ) { riot_a_w(2,data); }
-	WRITE_HANDLER( riot_3_a_w ) { riot_a_w(3,data); }
+	public static WriteHandlerPtr riot_0_a_w = new WriteHandlerPtr() {public void handler(int offset, int data) { riot_a_w(0,data); } };
+	public static WriteHandlerPtr riot_1_a_w = new WriteHandlerPtr() {public void handler(int offset, int data) { riot_a_w(1,data); } };
+	public static WriteHandlerPtr riot_2_a_w = new WriteHandlerPtr() {public void handler(int offset, int data) { riot_a_w(2,data); } };
+	public static WriteHandlerPtr riot_3_a_w = new WriteHandlerPtr() {public void handler(int offset, int data) { riot_a_w(3,data); } };
 	
-	WRITE_HANDLER( riot_0_b_w ) { riot_b_w(0,data); }
-	WRITE_HANDLER( riot_1_b_w ) { riot_b_w(1,data); }
-	WRITE_HANDLER( riot_2_b_w ) { riot_b_w(2,data); }
-	WRITE_HANDLER( riot_3_b_w ) { riot_b_w(3,data); }
+	public static WriteHandlerPtr riot_0_b_w = new WriteHandlerPtr() {public void handler(int offset, int data) { riot_b_w(0,data); } };
+	public static WriteHandlerPtr riot_1_b_w = new WriteHandlerPtr() {public void handler(int offset, int data) { riot_b_w(1,data); } };
+	public static WriteHandlerPtr riot_2_b_w = new WriteHandlerPtr() {public void handler(int offset, int data) { riot_b_w(2,data); } };
+	public static WriteHandlerPtr riot_3_b_w = new WriteHandlerPtr() {public void handler(int offset, int data) { riot_b_w(3,data); } };
 	
 	
 }

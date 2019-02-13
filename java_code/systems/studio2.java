@@ -5,7 +5,7 @@
 ******************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -14,32 +14,40 @@ public class studio2
 {
 	
 	
-	static MEMORY_READ_START( studio2_readmem )
-		{ 0x0000, 0x07ff, MRA_ROM },
-		{ 0x0800, 0x09ff, MRA_RAM },
-	MEMORY_END
+	public static Memory_ReadAddress studio2_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress( 0x0000, 0x07ff, MRA_ROM ),
+		new Memory_ReadAddress( 0x0800, 0x09ff, MRA_RAM ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( studio2_writemem )
-		{ 0x0000, 0x07ff, MWA_ROM },
-		{ 0x0800, 0x09ff, MWA_RAM },
-	MEMORY_END
+	public static Memory_WriteAddress studio2_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x0000, 0x07ff, MWA_ROM ),
+		new Memory_WriteAddress( 0x0800, 0x09ff, MWA_RAM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_READ_START( vip_readmem )
-	    { 0x0000, 0x03ff, MRA_BANK1 }, // rom mapped in at reset, switched to ram with out 4
-		{ 0x0400, 0x0fff, MRA_RAM },
-		{ 0x8000, 0x83ff, MRA_ROM },
-	MEMORY_END
+	public static Memory_ReadAddress vip_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+	    new Memory_ReadAddress( 0x0000, 0x03ff, MRA_BANK1 ), // rom mapped in at reset, switched to ram with out 4
+		new Memory_ReadAddress( 0x0400, 0x0fff, MRA_RAM ),
+		new Memory_ReadAddress( 0x8000, 0x83ff, MRA_ROM ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( vip_writemem )
-		{ 0x0000, 0x03ff, MWA_RAM },
-		{ 0x0400, 0x0fff, MWA_RAM },
-		{ 0x8000, 0x83ff, MWA_ROM },
-	MEMORY_END
+	public static Memory_WriteAddress vip_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x0000, 0x03ff, MWA_RAM ),
+		new Memory_WriteAddress( 0x0400, 0x0fff, MWA_RAM ),
+		new Memory_WriteAddress( 0x8000, 0x83ff, MWA_ROM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
 	#define DIPS_HELPER(bit, name, keycode, r) \
-	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r)
+	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r);
 	
-	INPUT_PORTS_START( studio2 )
+	static InputPortPtr input_ports_studio2 = new InputPortPtr(){ public void handler() { 
 		PORT_START
 		DIPS_HELPER( 0x002, "Player 1/Left 1", KEYCODE_1, CODE_NONE)
 		DIPS_HELPER( 0x004, "Player 1/Left 2", KEYCODE_2, CODE_NONE)
@@ -62,9 +70,9 @@ public class studio2
 		DIPS_HELPER( 0x100, "Player 2/Right 8", KEYCODE_8_PAD, KEYCODE_DOWN)
 		DIPS_HELPER( 0x200, "Player 2/Right 9", KEYCODE_9_PAD, CODE_NONE)
 		DIPS_HELPER( 0x001, "Player 2/Right 0", KEYCODE_0_PAD, CODE_NONE)
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
-	INPUT_PORTS_START( vip )
+	static InputPortPtr input_ports_vip = new InputPortPtr(){ public void handler() { 
 		PORT_START
 		DIPS_HELPER( 0x0002, "1", KEYCODE_1, KEYCODE_1_PAD)
 		DIPS_HELPER( 0x0004, "2", KEYCODE_2, KEYCODE_2_PAD)
@@ -83,16 +91,16 @@ public class studio2
 		DIPS_HELPER( 0x0800, "B    TR", KEYCODE_B, CODE_NONE)
 		DIPS_HELPER( 0x8000, "F    TW", KEYCODE_F, CODE_NONE)
 		PORT_START
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
-	static struct GfxLayout studio2_charlayout =
-	{
+	static GfxLayout studio2_charlayout = new GfxLayout
+	(
 	        32,1,
 	        256,                                    /* 256 characters */
 	        1,                      /* 1 bits per pixel */
-	        { 0 },                  /* no bitplanes; 1 bit per pixel */
+	        new int[] { 0 },                  /* no bitplanes; 1 bit per pixel */
 	        /* x offsets */
-	        {
+	        new int[] {
 				0, 0, 0, 0,
 				1, 1, 1, 1,
 				2, 2, 2, 2,
@@ -103,13 +111,13 @@ public class studio2
 				7, 7, 7, 7
 	        },
 	        /* y offsets */
-	        { 0 },
+	        new int[] { 0 },
 	        1*8
-	};
+	);
 	
-	static struct GfxDecodeInfo studio2_gfxdecodeinfo[] = {
-		{ REGION_GFX1, 0x0000, &studio2_charlayout,                     0, 2 },
-	    { -1 } /* end of array */
+	static GfxDecodeInfo studio2_gfxdecodeinfo[] ={
+		new GfxDecodeInfo( REGION_GFX1, 0x0000, studio2_charlayout,                     0, 2 ),
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
 	static int studio2_frame_int(void)
@@ -317,18 +325,18 @@ public class studio2
 	    }
 	};
 	
-	ROM_START(studio2)
-		ROM_REGION(0x10000,REGION_CPU1, 0)
-		ROM_LOAD("studio2.rom", 0x0000, 0x800, 0xa494b339)
-		ROM_REGION(0x100,REGION_GFX1, 0)
-	ROM_END
+	static RomLoadPtr rom_studio2 = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x10000,REGION_CPU1, 0);
+		ROM_LOAD("studio2.rom", 0x0000, 0x800, 0xa494b339);
+		ROM_REGION(0x100,REGION_GFX1, 0);
+	ROM_END(); }}; 
 	
-	ROM_START(vip)
-		ROM_REGION(0x10000,REGION_CPU1, 0)
-		ROM_LOAD("monitor.rom", 0x8000, 0x200, 0x5be0a51f)
-		ROM_LOAD("chip8.rom", 0x8200, 0x200, 0x3e0f50f0)
-		ROM_REGION(0x100,REGION_GFX1, 0)
-	ROM_END
+	static RomLoadPtr rom_vip = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x10000,REGION_CPU1, 0);
+		ROM_LOAD("monitor.rom", 0x8000, 0x200, 0x5be0a51f);
+		ROM_LOAD("chip8.rom", 0x8200, 0x200, 0x3e0f50f0);
+		ROM_REGION(0x100,REGION_GFX1, 0);
+	ROM_END(); }}; 
 	
 	static int studio2_load_rom(int id)
 	{

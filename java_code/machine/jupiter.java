@@ -8,7 +8,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -214,7 +214,7 @@ public class jupiter
 			}
 			osd_fclose(file);
 		}
-		if (!done)
+		if (done == 0)
 		{
 			jupiter_exit_ace(id);
 			logerror("file not loaded\r\n");
@@ -295,7 +295,7 @@ public class jupiter
 			osd_fclose(file);
 		}
 	
-		if (!jupiter_data)
+		if (jupiter_data == 0)
 		{
 			jupiter_exit_tap(id);
 			logerror("file not loaded\r\n");

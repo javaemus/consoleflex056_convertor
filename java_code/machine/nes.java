@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -1152,7 +1152,7 @@ public class nes
 		{
 			logerror("NES: No extrainfo found\n");
 		}
-		if (!goodcrcinfo)
+		if (goodcrcinfo == 0)
 		{
 			osd_fread (romfile, &nes.prg_chunks, 1);
 			osd_fread (romfile, &nes.chr_chunks, 1);
@@ -1325,7 +1325,7 @@ public class nes
 		if (!device_filename(IO_FLOPPY,id))
 		{
 			/* The cart has passed, so this must fail if no image inserted */
-			if(!famicom_image_registered)
+			if (famicom_image_registered == 0)
 			{
 				logerror("No Cart OR Floppy Disk specified!\n");
 				return INIT_FAIL;

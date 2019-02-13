@@ -14,7 +14,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -36,18 +36,18 @@ public class spectrum
 	        frame_number = 0;
 	        flash_invert = 0;
 		spectrum_characterram = malloc(0x1800);
-	        if (!spectrum_characterram)
+	        if (spectrum_characterram == 0)
 			return 1;
 	
 		spectrum_colorram = malloc(0x300);
-	        if (!spectrum_colorram)
+	        if (spectrum_colorram == 0)
 	        {
 			free(spectrum_characterram);
 			return 1;
 		}
 	
 	        charsdirty = malloc(0x300);
-	        if (!charsdirty)
+	        if (charsdirty == 0)
 	        {
 			free(spectrum_colorram);
 			free(spectrum_characterram);

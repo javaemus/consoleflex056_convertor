@@ -2,11 +2,7 @@
 
 extern void uk101_init_machine(void);
 extern void uk101_stop_machine(void);
-extern READ_HANDLER( uk101_acia0_casin );
-extern READ_HANDLER( uk101_acia0_statin );
-extern READ_HANDLER( uk101_keyb_r );
-extern WRITE_HANDLER( uk101_keyb_w );
-extern int uk101_init_cassette(int id);
+extern extern extern extern extern int uk101_init_cassette(int id);
 extern void uk101_exit_cassette(int id);
 
 /* vidhrdw/uk101.c */

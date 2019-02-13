@@ -19,7 +19,7 @@
 */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -82,24 +82,24 @@ public class nes_mmc
 	
 	static int mapper_warning;
 	
-	WRITE_HANDLER( nes_low_mapper_w )
+	public static WriteHandlerPtr nes_low_mapper_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		if (mmc_write_low) (*mmc_write_low)(offset, data);
 		else
 		{
 			logerror("Unimplemented LOW mapper write, offset: %04x, data: %02x\n", offset, data);
 	#ifdef MAME_DEBUG
-			if (! mapper_warning)
+			if (mapper_warning == 0)
 			{
 				printf ("This game is writing to the low mapper area but no mapper is set. You may get better results by switching to a valid mapper.\n");
 				mapper_warning = 1;
 			}
 	#endif
 		}
-	}
+	} };
 	
 	/* Handle mapper reads from $4100-$5fff */
-	READ_HANDLER( nes_low_mapper_r )
+	public static ReadHandlerPtr nes_low_mapper_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		if (mmc_read_low)
 			return (*mmc_read_low)(offset);
@@ -107,7 +107,7 @@ public class nes_mmc
 			logerror("low mapper area read, addr: %04x\n", offset + 0x4100);
 	
 		return 0;
-	}
+	} };
 	
 	WRITE_HANDLER ( nes_mid_mapper_w )
 	{
@@ -118,7 +118,7 @@ public class nes_mmc
 		{
 			logerror("Unimplemented MID mapper write, offset: %04x, data: %02x\n", offset, data);
 	#ifdef MAME_DEBUG
-			if (! mapper_warning)
+			if (mapper_warning == 0)
 			{
 				printf ("This game is writing to the MID mapper area but no mapper is set. You may get better results by switching to a valid mapper or changing the battery flag for this ROM.\n");
 				mapper_warning = 1;
@@ -142,7 +142,7 @@ public class nes_mmc
 		{
 			logerror("Unimplemented mapper write, offset: %04x, data: %02x\n", offset, data);
 	#if 1
-			if (! mapper_warning)
+			if (mapper_warning == 0)
 			{
 				printf ("This game is writing to the mapper area but no mapper is set. You may get better results by switching to a valid mapper.\n");
 				mapper_warning = 1;
@@ -310,7 +310,7 @@ public class nes_mmc
 			nes_vram[i] = bank * 128 + 64*(i-6);
 	}
 	
-	static WRITE_HANDLER( mapper1_w )
+	public static WriteHandlerPtr mapper1_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		int i;
 		int reg;
@@ -387,7 +387,7 @@ public class nes_mmc
 					if (MMC1_extended == 2)
 					{
 						/* MMC1_SizeVrom_4k determines if we use the special 256k bank register */
-					 	if (!MMC1_SizeVrom_4k)
+					 	if (MMC1_SizeVrom_4k == 0)
 					 	{
 							/* Pick 1st or 4th 256k bank */
 							MMC1_extended_base = 0xc0000 * (MMC1_extended_bank & 0x01) + 0x10000;
@@ -433,7 +433,7 @@ public class nes_mmc
 					{
 	//					logerror("MMC1_SizeVrom_4k: %02x bank:%02x\n", MMC1_SizeVrom_4k, MMC1_reg);
 	
-						if (!MMC1_SizeVrom_4k)
+						if (MMC1_SizeVrom_4k == 0)
 						{
 							int bank = MMC1_reg & ((nes.chr_chunks << 1) - 1);
 	
@@ -490,7 +490,7 @@ public class nes_mmc
 				case 3:
 					/* Switching 1 32k bank of PRG ROM */
 					MMC1_reg &= 0x0f;
-					if (!MMC1_Size_16k)
+					if (MMC1_Size_16k == 0)
 					{
 						int bank = MMC1_reg & (nes.prg_chunks - 1);
 	
@@ -498,7 +498,7 @@ public class nes_mmc
 						MMC1_bank2 = bank * 0x4000 + 0x2000;
 						cpu_setbank (1, &nes.rom[MMC1_extended_base + MMC1_bank1]);
 						cpu_setbank (2, &nes.rom[MMC1_extended_base + MMC1_bank2]);
-						if (!MMC1_extended)
+						if (MMC1_extended == 0)
 						{
 							MMC1_bank3 = bank * 0x4000 + 0x4000;
 							MMC1_bank4 = bank * 0x4000 + 0x6000;
@@ -521,7 +521,7 @@ public class nes_mmc
 	
 							cpu_setbank (1, &nes.rom[MMC1_extended_base + MMC1_bank1]);
 							cpu_setbank (2, &nes.rom[MMC1_extended_base + MMC1_bank2]);
-							if (!MMC1_extended)
+							if (MMC1_extended == 0)
 							{
 								MMC1_bank3 = MMC1_High;
 								MMC1_bank4 = MMC1_High + 0x2000;
@@ -536,7 +536,7 @@ public class nes_mmc
 						{
 							int bank = MMC1_reg & (nes.prg_chunks - 1);
 	
-							if (!MMC1_extended)
+							if (MMC1_extended == 0)
 							{
 	
 								MMC1_bank1 = 0;
@@ -565,17 +565,17 @@ public class nes_mmc
 			}
 			MMC1_reg_count = 0;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper2_w )
+	public static WriteHandlerPtr mapper2_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		prg16_89ab (data);
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper3_w )
+	public static WriteHandlerPtr mapper3_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		chr8 (data);
-	}
+	} };
 	
 	static void mapper4_set_prg (void)
 	{
@@ -629,7 +629,7 @@ public class nes_mmc
 		return ret;
 	}
 	
-	static WRITE_HANDLER( mapper4_w )
+	public static WriteHandlerPtr mapper4_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		static UINT8 last_bank = 0xff;
 	
@@ -730,9 +730,9 @@ public class nes_mmc
 				logerror("mapper4_w uncaught: %04x value: %02x\n", offset + 0x8000, data);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper118_w )
+	public static WriteHandlerPtr mapper118_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		static UINT8 last_bank = 0xff;
 	
@@ -832,7 +832,7 @@ public class nes_mmc
 				logerror("mapper4_w uncaught: %04x value: %02x\n", offset + 0x8000, data);
 				break;
 		}
-	}
+	} };
 	
 	static int mapper5_irq (int scanline)
 	{
@@ -856,7 +856,7 @@ public class nes_mmc
 		return ret;
 	}
 	
-	static READ_HANDLER( mapper5_l_r )
+	public static ReadHandlerPtr mapper5_l_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int retVal;
 	
@@ -893,7 +893,7 @@ public class nes_mmc
 				return 0x00;
 				break;
 		}
-	}
+	} };
 	
 	static void mapper5_sync_vrom (int mode)
 	{
@@ -903,7 +903,7 @@ public class nes_mmc
 			nes_vram[i] = vrom_bank[0 + (mode * 8)] * 64;
 	}
 	
-	static WRITE_HANDLER( mapper5_l_w )
+	public static WriteHandlerPtr mapper5_l_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	//	static int vrom_next[4];
 		static int vrom_page_a;
@@ -1247,7 +1247,7 @@ public class nes_mmc
 	//					nes_vram[0] = data * 64;
 						nes_vram[4] = data * 64;
 	//					mapper5_sync_vrom(1);
-						if (!vrom_page_b)
+						if (vrom_page_b == 0)
 						{
 							vrom_page_a ^= 0x01;
 							vrom_page_b = 1;
@@ -1272,7 +1272,7 @@ public class nes_mmc
 	//					nes_vram[1] = data * 64;
 						nes_vram[5] = data * 64;
 	//					mapper5_sync_vrom(1);
-						if (!vrom_page_b)
+						if (vrom_page_b == 0)
 						{
 							vrom_page_a ^= 0x01;
 							vrom_page_b = 1;
@@ -1292,7 +1292,7 @@ public class nes_mmc
 	//					nes_vram[2] = data * 64;
 						nes_vram[6] = data * 64;
 	//					mapper5_sync_vrom(1);
-						if (!vrom_page_b)
+						if (vrom_page_b == 0)
 						{
 							vrom_page_a ^= 0x01;
 							vrom_page_b = 1;
@@ -1326,7 +1326,7 @@ public class nes_mmc
 	//					nes_vram[3] = data * 64;
 						nes_vram[7] = data * 64;
 	//					mapper5_sync_vrom(1);
-						if (!vrom_page_b)
+						if (vrom_page_b == 0)
 						{
 							vrom_page_a ^= 0x01;
 							vrom_page_b = 1;
@@ -1355,14 +1355,14 @@ public class nes_mmc
 				logerror("** MMC5 uncaught write, offset: %04x, data: %02x\n", offset + 0x4100, data);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper5_w )
+	public static WriteHandlerPtr mapper5_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		logerror("MMC5 uncaught high mapper w, %04x: %02x\n", offset, data);
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper7_w )
+	public static WriteHandlerPtr mapper7_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		if (data & 0x10)
 			ppu_mirror_high ();
@@ -1370,9 +1370,9 @@ public class nes_mmc
 			ppu_mirror_low ();
 	
 		prg32 (data);
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper8_w )
+	public static WriteHandlerPtr mapper8_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	#ifdef LOG_MMC
 		logerror("* Mapper 8 switch, vrom: %02x, rom: %02x\n", data & 0x07, (data >> 3));
@@ -1384,7 +1384,7 @@ public class nes_mmc
 		data = (data >> 3) & (nes.prg_chunks - 1);
 		cpu_setbank (1, &nes.rom[data * 0x4000 + 0x10000]);
 		cpu_setbank (2, &nes.rom[data * 0x4000 + 0x12000]);
-	}
+	} };
 	
 	#if 0
 	void mapper9_latch (int offset)
@@ -1403,7 +1403,7 @@ public class nes_mmc
 		}
 	}
 	
-	static WRITE_HANDLER( mapper9_w )
+	public static WriteHandlerPtr mapper9_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		switch (offset & 0x7000)
 		{
@@ -1438,7 +1438,7 @@ public class nes_mmc
 				logerror("MMC2 uncaught w: %04x:%02x\n", offset, data);
 				break;
 		}
-	}
+	} };
 	#endif
 	
 	static void mapper10_latch (offs_t offset)
@@ -1469,7 +1469,7 @@ public class nes_mmc
 		}
 	}
 	
-	static WRITE_HANDLER( mapper10_w )
+	public static WriteHandlerPtr mapper10_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		switch (offset & 0x7000)
 		{
@@ -1511,9 +1511,9 @@ public class nes_mmc
 				logerror("MMC4 uncaught w: %04x:%02x\n", offset, data);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper11_w )
+	public static WriteHandlerPtr mapper11_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	#ifdef LOG_MMC
 		logerror("* Mapper 11 switch, data: %02x\n", data);
@@ -1523,9 +1523,9 @@ public class nes_mmc
 	
 		/* Switch 32k prg bank */
 		prg32 (data & 0x0f);
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper15_w )
+	public static WriteHandlerPtr mapper15_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		int bank = (data & (nes.prg_chunks - 1)) * 0x4000;
 		int base = data & 0x80 ? 0x12000 : 0x10000;
@@ -1564,7 +1564,7 @@ public class nes_mmc
 				cpu_setbank (4, &nes.rom[bank + (base ^ 0x2000)]);
 	        	break;
 		}
-	}
+	} };
 	
 	static int bandai_irq (int scanline)
 	{
@@ -1585,7 +1585,7 @@ public class nes_mmc
 		return ret;
 	}
 	
-	static WRITE_HANDLER( mapper16_w )
+	public static WriteHandlerPtr mapper16_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		logerror ("mapper16 (mid and high) w, offset: %04x, data: %02x\n", offset, data);
 	
@@ -1623,9 +1623,9 @@ public class nes_mmc
 				logerror("** uncaught mapper 16 write, offset: %04x, data: %02x\n", offset, data);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper17_l_w )
+	public static WriteHandlerPtr mapper17_l_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		switch (offset)
 		{
@@ -1674,7 +1674,7 @@ public class nes_mmc
 				logerror("** uncaught mapper 17 write, offset: %04x, data: %02x\n", offset, data);
 				break;
 		}
-	}
+	} };
 	
 	static int jaleco_irq (int scanline)
 	{
@@ -1721,7 +1721,7 @@ public class nes_mmc
 	}
 	
 	
-	static WRITE_HANDLER( mapper18_w )
+	public static WriteHandlerPtr mapper18_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	//	static int irq;
 		static int bank_8000 = 0;
@@ -1921,7 +1921,7 @@ public class nes_mmc
 				logerror("Mapper 18 uncaught addr: %04x value: %02x\n", offset + 0x8000, data);
 				break;
 		}
-	}
+	} };
 	
 	static int namcot_irq (int scanline)
 	{
@@ -1937,7 +1937,7 @@ public class nes_mmc
 		return ret;
 	}
 	
-	static WRITE_HANDLER( mapper19_l_w )
+	public static WriteHandlerPtr mapper19_l_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		switch (offset & 0x1800)
 		{
@@ -1951,9 +1951,9 @@ public class nes_mmc
 				IRQ_enable = data & 0x80;
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper19_w )
+	public static WriteHandlerPtr mapper19_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		switch (offset & 0x7800)
 		{
@@ -2005,7 +2005,7 @@ public class nes_mmc
 				cpu_setbank (3, &nes.rom[0x2000 * (data) + 0x10000]);
 				break;
 		}
-	}
+	} };
 	
 	static int fds_irq (int scanline)
 	{
@@ -2139,7 +2139,7 @@ public class nes_mmc
 		return ret;
 	}
 	
-	static WRITE_HANDLER( konami_vrc2a_w )
+	public static WriteHandlerPtr konami_vrc2a_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		if (offset < 0x3000)
 		{
@@ -2239,9 +2239,9 @@ public class nes_mmc
 				logerror("konami_vrc2a_w uncaught offset: %04x value: %02x\n", offset, data);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( konami_vrc2b_w )
+	public static WriteHandlerPtr konami_vrc2b_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		UINT16 select;
 	
@@ -2397,9 +2397,9 @@ public class nes_mmc
 				logerror("konami_vrc2b_w uncaught offset: %04x value: %02x\n", offset, data);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( konami_vrc4_w )
+	public static WriteHandlerPtr konami_vrc4_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		switch (offset & 0x7007)
 		{
@@ -2562,9 +2562,9 @@ public class nes_mmc
 				logerror("konami_vrc4_w uncaught offset: %04x value: %02x\n", offset, data);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( konami_vrc6a_w )
+	public static WriteHandlerPtr konami_vrc6a_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	//	logerror("konami_vrc6_w offset: %04x, data: %02x, scanline: %d\n", offset, data, current_scanline);
 	
@@ -2640,10 +2640,10 @@ public class nes_mmc
 				logerror("konami_vrc6_w uncaught addr: %04x value: %02x\n", offset + 0x8000, data);
 				break;
 		}
-	}
+	} };
 	
 	
-	static WRITE_HANDLER( konami_vrc6b_w )
+	public static WriteHandlerPtr konami_vrc6b_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	//	logerror("konami_vrc6_w offset: %04x, data: %02x, scanline: %d\n", offset, data, current_scanline);
 	
@@ -2719,9 +2719,9 @@ public class nes_mmc
 				logerror("konami_vrc6_w uncaught addr: %04x value: %02x\n", offset + 0x8000, data);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper32_w )
+	public static WriteHandlerPtr mapper32_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		static int bankSel;
 	
@@ -2755,9 +2755,9 @@ public class nes_mmc
 				logerror("Uncaught mapper 32 write, addr: %04x value: %02x\n", offset + 0x8000, data);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper33_w )
+	public static WriteHandlerPtr mapper33_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	
 	//	logerror("mapper33_w offset: %04x, data: %02x, scanline: %d\n", offset, data, current_scanline);
@@ -2804,9 +2804,9 @@ public class nes_mmc
 				logerror("Uncaught mapper 33 write, addr: %04x value: %02x\n", offset + 0x8000, data);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper34_m_w )
+	public static WriteHandlerPtr mapper34_m_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		logerror("mapper34_m_w, offset: %04x, data: %02x\n", offset, data);
 	
@@ -2825,17 +2825,17 @@ public class nes_mmc
 				chr4_4 (data);
 				break;
 		}
-	}
+	} };
 	
 	
-	static WRITE_HANDLER( mapper34_w )
+	public static WriteHandlerPtr mapper34_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		/* This portion of the mapper is nearly identical to Mapper 7, except no one-screen mirroring */
 		/* Deadly Towers is really a Mapper 34 game - the demo screens look wrong using mapper 7. */
 		logerror("Mapper 34 w, offset: %04x, data: %02x\n", offset, data);
 	
 		prg32 (data);
-	}
+	} };
 	
 	static int mapper40_irq (int scanline)
 	{
@@ -2853,7 +2853,7 @@ public class nes_mmc
 		return ret;
 	}
 	
-	static WRITE_HANDLER( mapper40_w )
+	public static WriteHandlerPtr mapper40_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		logerror("mapper40_w, offset: %04x, data: %02x\n", offset, data);
 	
@@ -2871,9 +2871,9 @@ public class nes_mmc
 				prg8_cd (data);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper41_m_w )
+	public static WriteHandlerPtr mapper41_m_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	#ifdef LOG_MMC
 		logerror("mapper41_m_w, offset: %04x, data: %02x\n", offset, data);
@@ -2887,9 +2887,9 @@ public class nes_mmc
 		mapper41_chr &= ~0x0c;
 		mapper41_chr |= (offset & 0x18) >> 1;
 		prg32 (offset & 0x07);
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper41_w )
+	public static WriteHandlerPtr mapper41_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	#ifdef LOG_MMC
 		logerror("mapper41_w, offset: %04x, data: %02x\n", offset, data);
@@ -2901,14 +2901,14 @@ public class nes_mmc
 			mapper41_chr |= data & 0x03;
 			chr8(mapper41_chr);
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper64_m_w )
+	public static WriteHandlerPtr mapper64_m_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		logerror("mapper64_m_w, offset: %04x, data: %02x\n", offset, data);
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper64_w )
+	public static WriteHandlerPtr mapper64_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		static int cmd = 0;
 		static int chr = 0;
@@ -3068,7 +3068,7 @@ public class nes_mmc
 				logerror("Mapper 64 addr: %04x value: %02x\n", offset + 0x8000, data);
 				break;
 		}
-	}
+	} };
 	
 	static int irem_irq (int scanline)
 	{
@@ -3086,7 +3086,7 @@ public class nes_mmc
 	
 	
 	
-	static WRITE_HANDLER( mapper65_w )
+	public static WriteHandlerPtr mapper65_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		switch (offset & 0x7007)
 		{
@@ -3165,9 +3165,9 @@ public class nes_mmc
 				logerror("Mapper 65 addr: %04x value: %02x\n", offset + 0x8000, data);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper66_w )
+	public static WriteHandlerPtr mapper66_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	#ifdef LOG_MMC
 		logerror("* Mapper 66 switch, offset %04x, data: %02x\n", offset, data);
@@ -3175,7 +3175,7 @@ public class nes_mmc
 	
 		prg32 ((data & 0x30) >> 4);
 		chr8 (data & 0x03);
-	}
+	} };
 	
 	static int sunsoft_irq (int scanline)
 	{
@@ -3197,7 +3197,7 @@ public class nes_mmc
 	}
 	
 	
-	static WRITE_HANDLER( mapper67_w )
+	public static WriteHandlerPtr mapper67_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	//	logerror("mapper67_w, offset %04x, data: %02x\n", offset, data);
 		switch (offset & 0x7801)
@@ -3242,7 +3242,7 @@ public class nes_mmc
 				break;
 	
 		}
-	}
+	} };
 	
 	static void mapper68_mirror (int m68_mirror, int m0, int m1)
 	{
@@ -3282,7 +3282,7 @@ public class nes_mmc
 		}
 	}
 	
-	static WRITE_HANDLER( mapper68_w )
+	public static WriteHandlerPtr mapper68_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		static int m68_mirror;
 		static int m0, m1;
@@ -3325,9 +3325,9 @@ public class nes_mmc
 				break;
 	
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper69_w )
+	public static WriteHandlerPtr mapper69_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		static int cmd = 0;
 	
@@ -3392,9 +3392,9 @@ public class nes_mmc
 				logerror("mapper69_w uncaught %04x value: %02x\n", offset + 0x8000, data);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper70_w )
+	public static WriteHandlerPtr mapper70_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		logerror("mapper70_w offset %04x, data: %02x\n", offset, data);
 	
@@ -3412,24 +3412,24 @@ public class nes_mmc
 	//		ppu_mirror_v();
 			ppu_mirror_low();
 	#endif
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper71_m_w )
+	public static WriteHandlerPtr mapper71_m_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		logerror("mapper71_m_w offset: %04x, data: %02x\n", offset, data);
 	
 		prg16_89ab (data);
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper71_w )
+	public static WriteHandlerPtr mapper71_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		logerror("mapper71_w offset: %04x, data: %02x\n", offset, data);
 	
 		if (offset >= 0x4000)
 			prg16_89ab (data);
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper72_w )
+	public static WriteHandlerPtr mapper72_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		logerror("mapper72_w, offset %04x, data: %02x\n", offset, data);
 		/* This routine is busted */
@@ -3438,9 +3438,9 @@ public class nes_mmc
 	//	prg16_89ab (data & 0x0f);
 	//	prg16_89ab ((data & 0xf0) >> 4);
 	//	chr8 (data & 0x0f);
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper73_w )
+	public static WriteHandlerPtr mapper73_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		switch (offset & 0x7000)
 		{
@@ -3468,10 +3468,10 @@ public class nes_mmc
 				logerror("mapper73_w uncaught, offset %04x, data: %02x\n", offset, data);
 				break;
 		}
-	}
+	} };
 	
 	
-	static WRITE_HANDLER( mapper75_w )
+	public static WriteHandlerPtr mapper75_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		logerror("mapper75_w, offset: %04x, data: %02x\n", offset, data);
 		switch (offset & 0x7000)
@@ -3499,9 +3499,9 @@ public class nes_mmc
 				chr4_4 (data);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper77_w )
+	public static WriteHandlerPtr mapper77_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	
 	/* Mapper is busted */
@@ -3520,9 +3520,9 @@ public class nes_mmc
 	//			prg16_cdef (data);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper78_w )
+	public static WriteHandlerPtr mapper78_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		logerror("mapper78_w, offset: %04x, data: %02x\n", offset, data);
 		/* Switch 8k VROM bank */
@@ -3530,9 +3530,9 @@ public class nes_mmc
 	
 		/* Switch 16k ROM bank */
 		prg16_89ab (data & 0x0f);
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper79_l_w )
+	public static WriteHandlerPtr mapper79_l_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		logerror("mapper79_l_w: %04x:%02x\n", offset, data);
 	
@@ -3544,14 +3544,14 @@ public class nes_mmc
 			/* Select 32k ROM bank? */
 			prg32 ((data & 0x08) >> 3);
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper79_w )
+	public static WriteHandlerPtr mapper79_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		logerror("mapper79_w, offset: %04x, data: %02x\n", offset, data);
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper80_m_w )
+	public static WriteHandlerPtr mapper80_m_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		logerror("mapper80_m_w, offset: %04x, data: %02x\n", offset, data);
 	
@@ -3621,9 +3621,9 @@ public class nes_mmc
 				logerror("mapper80_m_w uncaught addr: %04x, value: %02x\n", offset + 0x6000, data);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper82_m_w )
+	public static WriteHandlerPtr mapper82_m_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		static int vrom_switch;
 	
@@ -3683,9 +3683,9 @@ public class nes_mmc
 				logerror("mapper82_m_w uncaught addr: %04x, value: %02x\n", offset + 0x6000, data);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( konami_vrc7_w )
+	public static WriteHandlerPtr konami_vrc7_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	//	logerror("konami_vrc7_w offset: %04x, data: %02x, scanline: %d\n", offset, data, current_scanline);
 	
@@ -3765,9 +3765,9 @@ public class nes_mmc
 				logerror("konami_vrc7_w uncaught addr: %04x value: %02x\n", offset + 0x8000, data);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper86_w )
+	public static WriteHandlerPtr mapper86_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		logerror("mapper86_w, offset: %04x, data: %02x\n", offset, data);
 		switch (offset)
@@ -3781,17 +3781,17 @@ public class nes_mmc
 	//			prg16_cdef (data >> 4);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper87_m_w )
+	public static WriteHandlerPtr mapper87_m_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		logerror("mapper87_m_w %04x:%02x\n", offset, data);
 	
 		/* TODO: verify */
 		chr8 (data >> 1);
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper91_m_w )
+	public static WriteHandlerPtr mapper91_m_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		logerror ("mapper91_m_w, offset: %04x, data: %02x\n", offset, data);
 	
@@ -3817,36 +3817,36 @@ public class nes_mmc
 				logerror("mapper91_m_w uncaught addr: %04x value: %02x\n", offset + 0x6000, data);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper93_m_w )
+	public static WriteHandlerPtr mapper93_m_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	#ifdef LOG_MMC
 		logerror("mapper93_m_w %04x:%02x\n", offset, data);
 	#endif
 	
 		prg16_89ab (data);
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper93_w )
+	public static WriteHandlerPtr mapper93_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	#ifdef LOG_MMC
 		logerror("mapper93_w %04x:%02x\n", offset, data);
 	#endif
 		/* The high nibble appears to be the same prg bank as */
 		/* was written to the mid-area mapper */
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper94_w )
+	public static WriteHandlerPtr mapper94_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	#ifdef LOG_MMC
 		logerror("mapper94_w %04x:%02x\n", offset, data);
 	#endif
 	
 		prg16_89ab (data >> 2);
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper95_w )
+	public static WriteHandlerPtr mapper95_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	#ifdef LOG_MMC
 		logerror("mapper95_w %04x:%02x\n", offset, data);
@@ -3865,27 +3865,27 @@ public class nes_mmc
 				prg8_ab (data >> 1);
 				break;
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper101_m_w )
+	public static WriteHandlerPtr mapper101_m_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	#ifdef LOG_MMC
 		logerror("mapper101_m_w %04x:%02x\n", offset, data);
 	#endif
 	
 		chr8 (data);
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper101_w )
+	public static WriteHandlerPtr mapper101_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	#ifdef LOG_MMC
 		logerror("mapper101_w %04x:%02x\n", offset, data);
 	#endif
 	
 		/* ??? */
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper225_w )
+	public static WriteHandlerPtr mapper225_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		int hi_bank;
 		int size_16;
@@ -3915,9 +3915,9 @@ public class nes_mmc
 			ppu_mirror_h();
 		else
 			ppu_mirror_v();
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper226_w )
+	public static WriteHandlerPtr mapper226_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		int hi_bank;
 		int size_16;
@@ -3957,9 +3957,9 @@ public class nes_mmc
 		}
 		else
 			prg32 (bank);
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper227_w )
+	public static WriteHandlerPtr mapper227_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		int hi_bank;
 		int size_32;
@@ -3972,7 +3972,7 @@ public class nes_mmc
 		hi_bank = offset & 0x04;
 		size_32 = offset & 0x01;
 		bank = ((offset & 0x78) >> 3) | ((offset & 0x0100) >> 4);
-		if (!size_32)
+		if (size_32 == 0)
 		{
 			bank <<= 1;
 			if (hi_bank)
@@ -3996,9 +3996,9 @@ public class nes_mmc
 			ppu_mirror_h();
 		else
 			ppu_mirror_v();
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper228_w )
+	public static WriteHandlerPtr mapper228_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		/* The address lines double as data */
 		/* --mPPppppPP-cccc */
@@ -4051,9 +4051,9 @@ public class nes_mmc
 		/* Now handle vrom banking */
 		chr = (data & 0x03) + ((offset & 0x0f) << 2);
 		chr8 (chr);
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper229_w )
+	public static WriteHandlerPtr mapper229_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 	#ifdef LOG_MMC
 		logerror ("mapper229_w, offset: %04x, data: %02x\n", offset, data);
@@ -4075,9 +4075,9 @@ public class nes_mmc
 			prg16_89ab (offset & 0x1f);
 			chr8 (offset);
 		}
-	}
+	} };
 	
-	static WRITE_HANDLER( mapper231_w )
+	public static WriteHandlerPtr mapper231_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		int bank;
 	
@@ -4088,7 +4088,7 @@ public class nes_mmc
 		bank = (data & 0x03) | ((data & 0x80) >> 5);
 		prg32 (bank);
 		chr8 ((data & 0x70) >> 4);
-	}
+	} };
 	
 	/*
 	// mapper_reset
@@ -4137,7 +4137,7 @@ public class nes_mmc
 				MMC1_extended_base = 0x10000;
 				MMC1_extended = ((nes.prg_chunks << 4) + nes.chr_chunks * 8) >> 9;
 	
-				if (!MMC1_extended)
+				if (MMC1_extended == 0)
 					/* Set it to the end of the prg rom */
 					MMC1_High = (nes.prg_chunks - 1) * 0x4000;
 				else

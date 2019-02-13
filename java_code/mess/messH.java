@@ -1,5 +1,5 @@
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package mess;
@@ -112,7 +112,11 @@ public class messH
 	 *	images from within the emulation. A driver might use this
 	 *	if both, OSD_FOPEN_RW and OSD_FOPEN_READ modes, failed.
 	 */
-	enum { OSD_FOPEN_READ, OSD_FOPEN_WRITE, OSD_FOPEN_RW, OSD_FOPEN_RW_CREATE };
+	public static final int OSD_FOPEN_READ = 0;
+	public static final int OSD_FOPEN_WRITE = 1;
+	public static final int OSD_FOPEN_RW = 2;
+	public static final int OSD_FOPEN_RW_CREATE = 3;
+	
 	
 	
 	#ifdef MAX_KEYS

@@ -23,7 +23,7 @@
 #define _F8_H
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package cpu.f8;
@@ -65,8 +65,6 @@ public class f8H
 	extern const char *f8_info(void *context, int regnum);
 	extern unsigned f8_dasm(char *buffer, unsigned pc);
 	
-	WRITE_HANDLER( f8_internal_w );
-	READ_HANDLER( f8_internal_r );
 	
 	#ifdef MAME_DEBUG
 	extern unsigned DasmF8( char *dst, unsigned pc );

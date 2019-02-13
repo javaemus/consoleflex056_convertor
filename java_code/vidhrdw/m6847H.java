@@ -4,7 +4,7 @@
 #define _M6847_H
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -87,25 +87,7 @@ public class m6847H
 	
 	/******************* 1-bit mode port interfaces *******************/
 	
-	READ_HANDLER( m6847_ag_r );
-	READ_HANDLER( m6847_as_r );
-	READ_HANDLER( m6847_intext_r );
-	READ_HANDLER( m6847_inv_r );
-	READ_HANDLER( m6847_css_r );
-	READ_HANDLER( m6847_gm2_r );
-	READ_HANDLER( m6847_gm1_r );
-	READ_HANDLER( m6847_gm0_r );
-	READ_HANDLER( m6847_hs_r );
-	READ_HANDLER( m6847_fs_r );
 	
-	WRITE_HANDLER( m6847_ag_w );
-	WRITE_HANDLER( m6847_as_w );
-	WRITE_HANDLER( m6847_intext_w );
-	WRITE_HANDLER( m6847_inv_w );
-	WRITE_HANDLER( m6847_css_w );
-	WRITE_HANDLER( m6847_gm2_w );
-	WRITE_HANDLER( m6847_gm1_w );
-	WRITE_HANDLER( m6847_gm0_w );
 	
 	#ifdef __cplusplus
 	}

@@ -7,7 +7,7 @@
            Christian Janoff  mepk@c64.org
 ***************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -66,11 +66,9 @@ public class c128
 		return 0xff;
 	}
 	
-	WRITE_HANDLER( c128_mmu8722_port_w );
-	READ_HANDLER( c128_mmu8722_port_r );
-	WRITE_HANDLER( c128_write_d000 )
+	public static WriteHandlerPtr c128_write_d000 = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
-		if (!c128_write_io) {
+		if (c128_write_io == 0) {
 			if (offset + 0xd000 >= c128_ram_top)
 				c64_memory[0xd000 + offset] = data;
 			else
@@ -109,9 +107,9 @@ public class c128
 				break;
 			}
 		}
-	}
+	} };
 	
-	static READ_HANDLER( c128_read_io )
+	public static ReadHandlerPtr c128_read_io  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		switch ((offset&0xf00)>>8) {
 		case 0:case 1: case 2: case 3:
@@ -134,14 +132,14 @@ public class c128
 			DBG_LOG (1, "io read", ("%.3x\n", offset));
 			return 0xff;
 		}
-	}
+	} };
 	
 	void c128_bankswitch_64 (int reset)
 	{
 		static int old, exrom, game;
 		int data, loram, hiram, charen;
 	
-		if (!c64mode)
+		if (c64mode == 0)
 			return;
 	
 		data = ((c64_port6510 & c64_ddr6510) | (c64_ddr6510 ^ 0xff)) & 7;
@@ -412,7 +410,7 @@ public class c128
 						{
 							cpu_setbank (12, c64_memory + 0xc000);
 						}
-					if (!MMU_IO_ON) {
+					if (MMU_IO_ON == 0) {
 						if (c128_ram_top > 0xd000)
 							{
 								cpu_setbank (13, c128_ram + 0xd000);
@@ -442,7 +440,7 @@ public class c128
 			else if (MMU_ROM_HI)
 				{
 					cpu_setbank (12, c128_editor);
-					if (!MMU_IO_ON) {
+					if (MMU_IO_ON == 0) {
 						cpu_setbank (13, c128_chargen);
 					}
 					cpu_setbank (14, c128_kernal);
@@ -451,7 +449,7 @@ public class c128
 			else if (MMU_INTERNAL_ROM_HI)
 				{
 					cpu_setbank (12, c128_internal_function);
-					if (!MMU_IO_ON) {
+					if (MMU_IO_ON == 0) {
 						cpu_setbank (13, c128_internal_function + 0x1000);
 					}
 					cpu_setbank (14, c128_internal_function + 0x2000);
@@ -460,7 +458,7 @@ public class c128
 			else					   /*if (MMU_EXTERNAL_ROM_HI) */
 				{
 					cpu_setbank (12, c128_external_function);
-					if (!MMU_IO_ON) {
+					if (MMU_IO_ON == 0) {
 						cpu_setbank (13, c128_external_function + 0x1000);
 					}
 					cpu_setbank (14, c128_external_function + 0x2000);
@@ -476,7 +474,7 @@ public class c128
 	static void c128_bankswitch (int reset)
 	{
 		if (mmu_cpu != MMU_CPU8502) {
-			if (!MMU_CPU8502)
+			if (MMU_CPU8502 == 0)
 				{
 					{
 						DBG_LOG (1, "switching to z80",
@@ -501,7 +499,7 @@ public class c128
 			mmu_cpu = MMU_CPU8502;
 			return;
 		}
-		if (!MMU_CPU8502) {
+		if (MMU_CPU8502 == 0) {
 			c128_bankswitch_z80();
 		} else {
 			c128_bankswitch_128(reset);
@@ -538,7 +536,7 @@ public class c128
 		c128_bankswitch (1);
 	}
 	
-	WRITE_HANDLER( c128_mmu8722_port_w )
+	public static WriteHandlerPtr c128_mmu8722_port_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		offset &= 0xf;
 		switch (offset)
@@ -574,9 +572,9 @@ public class c128
 		case 0xf:
 			break;
 		}
-	}
+	} };
 	
-	READ_HANDLER( c128_mmu8722_port_r )
+	public static ReadHandlerPtr c128_mmu8722_port_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		int data;
 	
@@ -587,9 +585,9 @@ public class c128
 			data = c128_mmu[offset] | 6;
 			if ( /*disk enable signal */ 0)
 				data &= ~8;
-			if (!c64_game)
+			if (c64_game == 0)
 				data &= ~0x10;
-			if (!c64_exrom)
+			if (c64_exrom == 0)
 				data &= ~0x20;
 			if (KEY_4080)
 				data &= ~0x80;
@@ -610,9 +608,9 @@ public class c128
 			data=c128_mmu[offset];
 		}
 		return data;
-	}
+	} };
 	
-	WRITE_HANDLER( c128_mmu8722_ff00_w )
+	public static WriteHandlerPtr c128_mmu8722_ff00_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		switch (offset)
 		{
@@ -632,66 +630,66 @@ public class c128
 			c128_bankswitch (0);
 			break;
 		}
-	}
+	} };
 	
-	READ_HANDLER( c128_mmu8722_ff00_r )
+	public static ReadHandlerPtr c128_mmu8722_ff00_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return c128_mmu[offset];
-	}
+	} };
 	
-	WRITE_HANDLER( c128_write_0000 )
+	public static WriteHandlerPtr c128_write_0000 = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		if (c128_ram!=NULL)
 			c128_ram[0x0000 + offset] = data;
-	}
+	} };
 	
-	WRITE_HANDLER( c128_write_1000 )
+	public static WriteHandlerPtr c128_write_1000 = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		if (c128_ram!=NULL)
 			c128_ram[0x1000 + offset] = data;
-	}
+	} };
 	
-	WRITE_HANDLER( c128_write_4000 )
+	public static WriteHandlerPtr c128_write_4000 = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		if (c128_ram!=NULL)
 			c128_ram[0x4000 + offset] = data;
-	}
+	} };
 	
-	WRITE_HANDLER( c128_write_8000 )
+	public static WriteHandlerPtr c128_write_8000 = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		if (c128_ram!=NULL)
 			c128_ram[0x8000 + offset] = data;
-	}
+	} };
 	
-	WRITE_HANDLER( c128_write_a000 )
+	public static WriteHandlerPtr c128_write_a000 = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		if (c128_ram!=NULL)
 			c128_ram[0xa000 + offset] = data;
-	}
+	} };
 	
-	WRITE_HANDLER( c128_write_e000 )
+	public static WriteHandlerPtr c128_write_e000 = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		if (offset + 0xe000 >= c128_ram_top)
 			c64_memory[0xe000 + offset] = data;
 		else if (c128_ram!=NULL)
 			c128_ram[0xe000 + offset] = data;
-	}
+	} };
 	
-	WRITE_HANDLER( c128_write_ff00 )
+	public static WriteHandlerPtr c128_write_ff00 = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
-		if (!c64mode)
+		if (c64mode == 0)
 			c128_mmu8722_ff00_w (offset, data);
 		else if (c128_ram!=NULL)
 			c64_memory[0xff00 + offset] = data;
-	}
+	} };
 	
-	WRITE_HANDLER( c128_write_ff05 )
+	public static WriteHandlerPtr c128_write_ff05 = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		if (offset + 0xff05 >= c128_ram_top)
 			c64_memory[0xff05 + offset] = data;
 		else if (c128_ram!=NULL)
 			c128_ram[0xff05 + offset] = data;
-	}
+	} };
 	
 	/*
 	 * only 14 address lines

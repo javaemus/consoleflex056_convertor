@@ -1,7 +1,7 @@
 /* This is a .D88 disc image format. */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -41,7 +41,7 @@ public class d88
 	
 		const char *name = device_filename(IO_FLOPPY, id);
 		/* do we have an image name ? */
-		if (!name)
+		if (name == 0)
 			return INIT_PASS;
 	
 		if (id < d88image_MAX_DRIVES)

@@ -7,7 +7,7 @@
 ******************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -425,14 +425,14 @@ public class atari
 			/* try to open the image read/write */
 			drv[id].mode = 1;
 			file = image_fopen(IO_FLOPPY, id, OSD_FILETYPE_IMAGE, OSD_FOPEN_RW);
-			if (!file)
+			if (file == 0)
 			{
 				/* if this fails, try to open it read only */
 				drv[id].mode = 0;
 				file = image_fopen(IO_FLOPPY, id, OSD_FILETYPE_IMAGE, OSD_FOPEN_READ);
 			}
 			/* still failed, so create a new image */
-			if (!file)
+			if (file == 0)
 			{
 				/* if this fails, try to open it read only */
 				drv[id].mode = 1;
@@ -461,7 +461,7 @@ public class atari
 	
 			ext = strrchr(device_filename(IO_FLOPPY,id), '.');
 	        /* no extension: assume XFD format (no header) */
-	        if (!ext)
+	        if (ext == 0)
 	        {
 	            drv[id].type = FORMAT_XFD;
 	            drv[id].header_skip = 0;

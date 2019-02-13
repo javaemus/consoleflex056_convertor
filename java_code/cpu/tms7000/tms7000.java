@@ -18,7 +18,7 @@
  *****************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package cpu.tms7000;
@@ -162,7 +162,7 @@ public class tms7000
 	#define CLR_NZCI 	pSR&=~(SR_N|SR_Z|SR_C|SR_I)
 	#define SET_C8(a)	pSR|=((a&0x0100)>>1)
 	#define SET_N8(a)	pSR|=((a&0x0080)>>1)
-	#define SET_Z(a)	if(!a)pSR|=SR_Z
+	#define SET_Z(a)	if (a == 0)pSR|=SR_Z
 	#define SET_Z8(a)	SET_Z((UINT8)a)
 	#define SET_Z16(a)	SET_Z((UINT8)a>>8)
 	#define GET_C		(pSR >> 7)
@@ -283,7 +283,7 @@ public class tms7000
 	
 		which = (which+1) % 16;
 		buffer[which][0] = '\0';
-		if( !context )
+		if (context == 0)
 			r = &tms7000;
 	
 		switch( regnum )
@@ -335,14 +335,14 @@ public class tms7000
 	{
 	}
 	
-	WRITE_HANDLER( tms7000_internal_w )
+	public static WriteHandlerPtr tms7000_internal_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
-	}
+	} };
 	
-	READ_HANDLER( tms7000_internal_r )
+	public static ReadHandlerPtr tms7000_internal_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		return 0xff;
-	}
+	} };
 	
 	
 	int tms7000_execute(int cycles)

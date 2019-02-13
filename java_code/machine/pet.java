@@ -4,7 +4,7 @@
     peter.trauner@jk.uni-linz.ac.at
 ***************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -74,10 +74,10 @@ public class pet
 		return data^0xff;
 	}
 	
-	static WRITE_HANDLER( pet_pia0_ca2_out )
+	public static WriteHandlerPtr pet_pia0_ca2_out = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		cbm_ieee_eoi_w(0, data);
-	}
+	} };
 	
 	static void pet_irq (int level)
 	{
@@ -171,12 +171,12 @@ public class pet
 	    pet_pia1_cb2_write,
 	};
 	
-	static WRITE_HANDLER( pet_address_line_11 )
+	public static WriteHandlerPtr pet_address_line_11 = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		DBG_LOG (1, "address line", ("%d\n", data));
 		if (data) pet_font|=1;
 		else pet_font&=~1;
-	}
+	} };
 	
 	/* userport, cassettes, rest ieee488
 	   ca1 userport
@@ -195,20 +195,20 @@ public class pet
 	   cb1 cassettes
 	   cb2 user port
 	 */
-	static READ_HANDLER( pet_via_port_b_r )
+	public static ReadHandlerPtr pet_via_port_b_r  = new ReadHandlerPtr() { public int handler(int offset)
 	{
 		UINT8 data=0;
 		if (cbm_ieee_ndac_r()) data|=1;
 		if (cbm_ieee_nrfd_r()) data|=0x40;
 		if (cbm_ieee_dav_r()) data|=0x80;
 		return data;
-	}
+	} };
 	
-	static WRITE_HANDLER( pet_via_port_b_w )
+	public static WriteHandlerPtr pet_via_port_b_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
 		cbm_ieee_nrfd_w(0, data&2);
 		cbm_ieee_atn_w(0, data&4);
-	}
+	} };
 	
 	
 	static struct via6522_interface pet_via={

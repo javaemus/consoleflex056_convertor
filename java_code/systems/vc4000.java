@@ -5,7 +5,7 @@
 ******************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -44,30 +44,38 @@ public class vc4000
 	}
 	
 	
-	static MEMORY_READ_START( vc4000_readmem )
-		{ 0x0000, 0x07ff, MRA_ROM },
-	{ 0x1e88, 0x1e8e, vc4000_key_r },
-		{ 0x1f00, 0x1fff, vc4000_video_r },
-	MEMORY_END
+	public static Memory_ReadAddress vc4000_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress( 0x0000, 0x07ff, MRA_ROM ),
+	new Memory_ReadAddress( 0x1e88, 0x1e8e, vc4000_key_r ),
+		new Memory_ReadAddress( 0x1f00, 0x1fff, vc4000_video_r ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( vc4000_writemem )
-		{ 0x0000, 0x07ff, MWA_ROM },
-		{ 0x1f00, 0x1fff, vc4000_video_w },
-	MEMORY_END
+	public static Memory_WriteAddress vc4000_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x0000, 0x07ff, MWA_ROM ),
+		new Memory_WriteAddress( 0x1f00, 0x1fff, vc4000_video_w ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static PORT_READ_START( vc4000_readport )
-	//{ S2650_CTRL_PORT,S2650_CTRL_PORT, },
-	//{ S2650_DATA_PORT,S2650_DATA_PORT, },
-	{ S2650_SENSE_PORT,S2650_SENSE_PORT, vc4000_vsync_r},
-	PORT_END
+	public static IO_ReadPort vc4000_readport[]={
+		new IO_ReadPort(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),
+	//new IO_ReadPort( S2650_CTRL_PORT,S2650_CTRL_PORT, ),
+	//new IO_ReadPort( S2650_DATA_PORT,S2650_DATA_PORT, ),
+	new IO_ReadPort( S2650_SENSE_PORT,S2650_SENSE_PORT, vc4000_vsync_r),
+		new IO_ReadPort(MEMPORT_MARKER, 0)
+	};
 	
-	static PORT_WRITE_START( vc4000_writeport )
-	PORT_END
+	public static IO_WritePort vc4000_writeport[]={
+		new IO_WritePort(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),
+		new IO_WritePort(MEMPORT_MARKER, 0)
+	};
 	
 	#define DIPS_HELPER(bit, name, keycode, r) \
-	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r)
+	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r);
 	
-	INPUT_PORTS_START( vc4000 )
+	static InputPortPtr input_ports_vc4000 = new InputPortPtr(){ public void handler() { 
 		PORT_START
 		DIPS_HELPER( 0x40, "Start", KEYCODE_F1, CODE_NONE)
 		DIPS_HELPER( 0x80, "Game Select", KEYCODE_F2, CODE_NONE)
@@ -104,13 +112,13 @@ public class vc4000
 	#ifndef ANALOG_HACK
 	    // shit, auto centering too slow, so only using 5 bits, and scaling at videoside
 	    PORT_START
-	PORT_ANALOGX(0x1ff,0x70,IPT_AD_STICK_X|IPF_CENTER,100,1,20,225,KEYCODE_LEFT,KEYCODE_RIGHT,JOYCODE_1_LEFT,JOYCODE_1_RIGHT)
+	PORT_ANALOGX(0x1ff,0x70,IPT_AD_STICK_X|IPF_CENTER,100,1,20,225,KEYCODE_LEFT,KEYCODE_RIGHT,JOYCODE_1_LEFT,JOYCODE_1_RIGHT);
 	    PORT_START
-	PORT_ANALOGX(0x1ff,0x70,IPT_AD_STICK_Y|IPF_CENTER,100,1,20,225,KEYCODE_UP,KEYCODE_DOWN,JOYCODE_1_UP,JOYCODE_1_DOWN)
+	PORT_ANALOGX(0x1ff,0x70,IPT_AD_STICK_Y|IPF_CENTER,100,1,20,225,KEYCODE_UP,KEYCODE_DOWN,JOYCODE_1_UP,JOYCODE_1_DOWN);
 	    PORT_START
-	PORT_ANALOGX(0x1ff,0x70,IPT_AD_STICK_X|IPF_CENTER|IPF_PLAYER2,100,1,20,225,KEYCODE_DEL,KEYCODE_PGDN,JOYCODE_2_LEFT,JOYCODE_2_RIGHT)
+	PORT_ANALOGX(0x1ff,0x70,IPT_AD_STICK_X|IPF_CENTER|IPF_PLAYER2,100,1,20,225,KEYCODE_DEL,KEYCODE_PGDN,JOYCODE_2_LEFT,JOYCODE_2_RIGHT);
 	    PORT_START
-	PORT_ANALOGX(0x1ff,0x70,IPT_AD_STICK_Y|IPF_CENTER|IPF_PLAYER2,100,1,20,225,KEYCODE_HOME,KEYCODE_END,JOYCODE_2_UP,JOYCODE_2_DOWN)
+	PORT_ANALOGX(0x1ff,0x70,IPT_AD_STICK_Y|IPF_CENTER|IPF_PLAYER2,100,1,20,225,KEYCODE_HOME,KEYCODE_END,JOYCODE_2_UP,JOYCODE_2_DOWN);
 	#else
 		PORT_START
 		DIPS_HELPER( 0x01, "Player 1/left", KEYCODE_LEFT, CODE_NONE)
@@ -122,16 +130,16 @@ public class vc4000
 		DIPS_HELPER( 0x40, "Player 2/down", KEYCODE_END, CODE_NONE)
 		DIPS_HELPER( 0x80, "Player 2/up", KEYCODE_HOME, CODE_NONE)
 	#endif
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
-	static struct GfxLayout vc4000_charlayout =
-	{
+	static GfxLayout vc4000_charlayout = new GfxLayout
+	(
 	        8,1,
 	        256,                                    /* 256 characters */
 	        1,                      /* 1 bits per pixel */
-	        { 0 },                  /* no bitplanes; 1 bit per pixel */
+	        new int[] { 0 },                  /* no bitplanes; 1 bit per pixel */
 	        /* x offsets */
-	        {
+	        new int[] {
 		    0,
 		    1,
 		    2,
@@ -142,13 +150,13 @@ public class vc4000
 		    7,
 	        },
 	        /* y offsets */
-	        { 0 },
+	        new int[] { 0 },
 	        1*8
-	};
+	);
 	
-	static struct GfxDecodeInfo vc4000_gfxdecodeinfo[] = {
-	    { REGION_GFX1, 0x0000, &vc4000_charlayout,                     0, 2 },
-	    { -1 } /* end of array */
+	static GfxDecodeInfo vc4000_gfxdecodeinfo[] ={
+	    new GfxDecodeInfo( REGION_GFX1, 0x0000, vc4000_charlayout,                     0, 2 ),
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
 	static int vc4000_frame_int(void)
@@ -242,10 +250,10 @@ public class vc4000
 		}
 	};
 	
-	ROM_START(vc4000)
-		ROM_REGION(0x8000,REGION_CPU1, 0)
-		ROM_REGION(0x100,REGION_GFX1, 0)
-	ROM_END
+	static RomLoadPtr rom_vc4000 = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x8000,REGION_CPU1, 0);
+		ROM_REGION(0x100,REGION_GFX1, 0);
+	ROM_END(); }}; 
 	
 	static int vc4000_load_rom(int id)
 	{

@@ -11,7 +11,7 @@
 */
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -56,7 +56,7 @@ public class svi318
 		if (f)
 		{
 			p = malloc (0x8000);
-			if (!p)
+			if (p == 0)
 			{
 				logerror ("malloc () failed!\n");
 				osd_fclose (f);
@@ -205,7 +205,7 @@ public class svi318
 	
 	WRITE_HANDLER (svi318_printer_w)
 		{
-	    if (!offset)
+	    if (offset == 0)
 			svi.prn_data = data;
 		else
 			{
@@ -384,7 +384,7 @@ public class svi318
 	
 	    /* adjust z80 cycles for the M1 wait state */
 	    z80_table = malloc (0x500);
-	    if (!z80_table)
+	    if (z80_table == 0)
 	        logerror ("Cannot malloc z80 cycle table, using default values\n");
 	    else
 	        {
@@ -584,7 +584,7 @@ public class svi318
 		if (caslen < 9) return -1;
 	
 	    casdata = (UINT8*)malloc (caslen);
-	    if (!casdata)
+	    if (casdata == 0)
 			{
 	       	logerror ("cas2wav: out of memory!\n");
 	       	return -1;

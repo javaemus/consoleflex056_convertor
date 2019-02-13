@@ -87,7 +87,7 @@ some significant differences, so unique component
 */
  
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package includes;
@@ -127,25 +127,9 @@ public class rriotH
 	READ_HANDLER  ( rriot_3_r );
 	WRITE_HANDLER ( rriot_3_w );
 	
-	READ_HANDLER( rriot_0_a_r );
-	READ_HANDLER( rriot_1_a_r );
-	READ_HANDLER( rriot_2_a_r );
-	READ_HANDLER( rriot_3_a_r );
 	
-	WRITE_HANDLER( rriot_0_a_w );
-	WRITE_HANDLER( rriot_1_a_w );
-	WRITE_HANDLER( rriot_2_a_w );
-	WRITE_HANDLER( rriot_3_a_w );
 	
-	READ_HANDLER( rriot_0_b_r );
-	READ_HANDLER( rriot_1_b_r );
-	READ_HANDLER( rriot_2_b_r );
-	READ_HANDLER( rriot_3_b_r );
 	
-	WRITE_HANDLER( rriot_0_b_w );
-	WRITE_HANDLER( rriot_1_b_w );
-	WRITE_HANDLER( rriot_2_b_w );
-	WRITE_HANDLER( rriot_3_b_w );
 	
 	#ifdef __cplusplus
 	}

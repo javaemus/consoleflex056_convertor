@@ -1,5 +1,5 @@
 ///*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package windows;
@@ -254,12 +254,12 @@ public class fileio
 			rompathv[rompathc++] = rompath_extra;
 		}
 	
-		if (!path)
+		if (path == 0)
 			path = malloc( strlen(rompath) + 1);
 		else
 			path = realloc( path, strlen(rompath) + 1);
 	
-		if( !path )
+		if (path == 0)
 		{
 			logerror("decompose_rom_path: failed to malloc!\n");
 			raise(SIGABRT);
@@ -273,7 +273,7 @@ public class fileio
 				rompathv = realloc (rompathv, (rompathc + 1) * sizeof(char *));
 			else
 				rompathv = malloc (sizeof(char *));
-			if( !rompathv )
+			if (rompathv == 0)
 				break;
 			rompathv[rompathc++] = token;
 			token = strtok (NULL, ";");
@@ -314,12 +314,12 @@ public class fileio
 		/* start with zero path components */
 		samplepathc = 0;
 	
-		if (!path)
+		if (path == 0)
 			path = malloc( strlen(samplepath) + 1);
 		else
 			path = realloc( path, strlen(samplepath) + 1);
 	
-		if( !path )
+		if (path == 0)
 		{
 			logerror("decompose_sample_path: failed to malloc!\n");
 			raise(SIGABRT);
@@ -333,7 +333,7 @@ public class fileio
 				samplepathv = realloc (samplepathv, (samplepathc + 1) * sizeof(char *));
 			else
 				samplepathv = malloc (sizeof(char *));
-			if( !samplepathv )
+			if (samplepathv == 0)
 				break;
 			samplepathv[samplepathc++] = token;
 			token = strtok (NULL, ";");
@@ -363,12 +363,12 @@ public class fileio
 		/* start with zero path components */
 		swpathc = 0;
 	
-		if (!path)
+		if (path == 0)
 			path = malloc( strlen(swpath) + 1);
 		else
 			path = realloc( path, strlen(swpath) + 1);
 	
-		if( !path )
+		if (path == 0)
 		{
 			logerror("decompose_swpath: failed to malloc!\n");
 			raise(SIGABRT);
@@ -382,7 +382,7 @@ public class fileio
 				swpathv = realloc (swpathv, (swpathc + 1) * sizeof(char *));
 			else
 				swpathv = malloc (sizeof(char *));
-			if( !swpathv )
+			if (swpathv == 0)
 				break;
 			swpathv[swpathc++] = token;
 			token = strtok (NULL, ";");
@@ -538,7 +538,7 @@ public class fileio
 	
 		f = (FakeFileHandle *) malloc (sizeof (FakeFileHandle));
 	
-		if( !f )
+		if (f == 0)
 		{
 			logerror("osd_fopen: failed to malloc FakeFileHandle!\n");
 			return 0;
@@ -591,7 +591,7 @@ public class fileio
 			{
 				const char *dir_name = pathv[indx];
 	
-				if( !found )
+				if (found == 0)
 				{
 					sprintf (name, "%s/%s", dir_name, gamename);
 					LOG(("Trying %s\n", name));
@@ -616,7 +616,7 @@ public class fileio
 					}
 				}
 	
-				if( !found )
+				if (found == 0)
 				{
 					/* try with a .zip extension */
 					sprintf (name, "%s/%s.zip", dir_name, gamename);
@@ -634,7 +634,7 @@ public class fileio
 					}
 				}
 	
-				if( !found )
+				if (found == 0)
 				{
 					/* try with a .zip directory (if ZipMagic is installed) */
 					sprintf (name, "%s/%s.zip", dir_name, gamename);
@@ -715,11 +715,11 @@ public class fileio
 						 * the name to a full zip name (i.e. a name with a zip path at the end
 						 */
 						z = openzip(name);
-						if (!z)
+						if (z == 0)
 							continue;
 	
 						ent = readzip(z);
-						if (!ent)
+						if (ent == 0)
 						{
 							closezip(z);
 							continue;
@@ -824,7 +824,7 @@ public class fileio
 	
 	
 		case OSD_FILETYPE_NVRAM:
-			if( !found )
+			if (found == 0)
 			{
 				sprintf (name, "%s/%s.nv", nvdir, gamename);
 				f->type = kPlainFile;
@@ -832,7 +832,7 @@ public class fileio
 				found = f->file != 0;
 			}
 	
-			if( !found )
+			if (found == 0)
 			{
 				/* try with a .zip directory (if ZipMagic is installed) */
 				sprintf (name, "%s.zip/%s.nv", nvdir, gamename);
@@ -841,7 +841,7 @@ public class fileio
 				found = f->file != 0;
 			}
 	
-			if( !found )
+			if (found == 0)
 			{
 				/* try with a .zif directory (if ZipFolders is installed) */
 				sprintf (name, "%s.zif/%s.nv", nvdir, gamename);
@@ -854,7 +854,7 @@ public class fileio
 		case OSD_FILETYPE_HIGHSCORE:
 			if( mame_highscore_enabled () )
 			{
-				if( !found )
+				if (found == 0)
 				{
 					sprintf (name, "%s/%s.hi", hidir, gamename);
 					f->type = kPlainFile;
@@ -862,7 +862,7 @@ public class fileio
 					found = f->file != 0;
 				}
 	
-				if( !found )
+				if (found == 0)
 				{
 					/* try with a .zip directory (if ZipMagic is installed) */
 					sprintf (name, "%s.zip/%s.hi", hidir, gamename);
@@ -871,7 +871,7 @@ public class fileio
 					found = f->file != 0;
 				}
 	
-				if( !found )
+				if (found == 0)
 				{
 					/* try with a .zif directory (if ZipFolders is installed) */
 					sprintf (name, "%s.zif/%s.hi", hidir, gamename);
@@ -888,7 +888,7 @@ public class fileio
 			f->file = fopen (name, openforwrite ? "wb" : "rb");
 			found = f->file != 0;
 	
-			if( !found )
+			if (found == 0)
 			{
 				/* try with a .zip directory (if ZipMagic is installed) */
 				sprintf (name, "%s.zip/%s.cfg", cfgdir, gamename);
@@ -897,7 +897,7 @@ public class fileio
 				found = f->file != 0;
 			}
 	
-			if( !found )
+			if (found == 0)
 			{
 				/* try with a .zif directory (if ZipFolders is installed) */
 				sprintf (name, "%s.zif/%s.cfg", cfgdir, gamename);
@@ -913,7 +913,7 @@ public class fileio
 			f->file = fopen (name, openforwrite ? "wb" : "rb");
 			found = f->file != 0;
 	
-			if( !found )
+			if (found == 0)
 			{
 				/* try with a .zip directory (if ZipMagic is installed) */
 				sprintf (name, "%s.zip/%s.cfg", inpdir, gamename);
@@ -922,7 +922,7 @@ public class fileio
 				found = f->file != 0;
 			}
 	
-			if( !found )
+			if (found == 0)
 			{
 				/* try with a .zif directory (if ZipFolders is installed) */
 				sprintf (name, "%s.zif/%s.cfg", inpdir, gamename);
@@ -931,7 +931,7 @@ public class fileio
 				found = f->file != 0;
 			}
 	
-			if( !openforwrite )
+			if (openforwrite == 0)
 			{
 				char file[256];
 				sprintf (file, "%s.inp", gamename);
@@ -955,14 +955,14 @@ public class fileio
 			sprintf (name, "%s/%s.sta", stadir, gamename);
 			f->file = fopen (name, openforwrite ? "wb" : "rb");
 			found = !(f->file == 0);
-			if( !found )
+			if (found == 0)
 			{
 				/* try with a .zip directory (if ZipMagic is installed) */
 				sprintf (name, "%s.zip/%s.sta", stadir, gamename);
 				f->file = fopen (name, openforwrite ? "wb" : "rb");
 				found = !(f->file == 0);
 			}
-			if( !found )
+			if (found == 0)
 			{
 				/* try with a .zif directory (if ZipFolders is installed) */
 				sprintf (name, "%s.zif/%s.sta", stadir, gamename);
@@ -982,7 +982,7 @@ public class fileio
 			f->type = kPlainFile;
 			f->file = fopen (name, openforwrite ? "wb" : "rb");
 			found = f->file != 0;
-			if( !found )
+			if (found == 0)
 			{
 				/* try with a .zip directory (if ZipMagic is installed) */
 				sprintf (name, "%s.zip/%s.png", artworkdir, filename);
@@ -991,7 +991,7 @@ public class fileio
 				found = f->file != 0;
 			}
 	
-			if( !found )
+			if (found == 0)
 			{
 				/* try with a .zif directory (if ZipFolders is installed) */
 				sprintf (name, "%s.zif/%s.png", artworkdir, filename);
@@ -1000,7 +1000,7 @@ public class fileio
 				found = f->file != 0;
 			}
 	
-			if( !found )
+			if (found == 0)
 			{
 				char file[256], *extension;
 				sprintf(file, "%s", filename);
@@ -1021,7 +1021,7 @@ public class fileio
 						found = 1;
 					}
 				}
-				if( !found )
+				if (found == 0)
 				{
 					sprintf(name, "%s/%s.zip", artworkdir, game);
 					LOG(("Trying %s in %s\n", file, name));
@@ -1048,7 +1048,7 @@ public class fileio
 	
 		case OSD_FILETYPE_SCREENSHOT:
 			/* only for writing */
-			if( !openforwrite )
+			if (openforwrite == 0)
 			{
 				logerror("osd_fopen: type %02x read not supported\n",filetype);
 				break;
@@ -1115,7 +1115,7 @@ public class fileio
 			logerror("osd_fopen(): unknown filetype %02x\n",filetype);
 		}
 	
-		if( !found )
+		if (found == 0)
 		{
 			free (f);
 			return 0;
@@ -1331,7 +1331,7 @@ public class fileio
 		FILE *f;
 	
 		f = fopen (file, "rb");
-		if( !f )
+		if (f == 0)
 			return -1;
 	
 		/* determine length of file */
@@ -1350,7 +1350,7 @@ public class fileio
 	
 		/* allocate space for entire file */
 		data = (unsigned char *) malloc (length);
-		if( !data )
+		if (data == 0)
 		{
 			fclose (f);
 			return -1;
@@ -1403,7 +1403,7 @@ public class fileio
 		{
 			const char *dir_name = rompathv[indx];
 	
-			if( !found )
+			if (found == 0)
 			{
 				sprintf (name, "%s/%s", dir_name, gamename);
 				if( cache_stat (name, &stat_buffer) == 0 && (stat_buffer.st_mode & S_IFDIR) )
@@ -1416,7 +1416,7 @@ public class fileio
 				}
 			}
 	
-			if( !found )
+			if (found == 0)
 			{
 				/* try with a .zip extension */
 				sprintf (name, "%s/%s.zip", dir_name, gamename);
@@ -1430,7 +1430,7 @@ public class fileio
 				}
 			}
 	
-			if( !found )
+			if (found == 0)
 			{
 				/* try with a .zif directory (if ZipFolders is installed) */
 				sprintf (name, "%s/%s.zif", dir_name, gamename);
@@ -1445,7 +1445,7 @@ public class fileio
 			}
 		}
 	
-		if( !found )
+		if (found == 0)
 			return -1;
 	
 		return 0;
@@ -1539,7 +1539,7 @@ public class fileio
 	{
 		char *c;
 	
-		if (!filename)
+		if (filename == 0)
 			return NULL;
 	
 		c = filename + strlen(filename);
@@ -1560,7 +1560,7 @@ public class fileio
 		char *c;
 		int found = 0;
 	
-		if (!filename)
+		if (filename == 0)
 			return NULL;
 	
 		if ( !( dirname = malloc(strlen(filename)+1) ) )
@@ -1584,7 +1584,7 @@ public class fileio
 		}
 	
 		/* did we find a path seperator? */
-		if (!found)
+		if (found == 0)
 			dirname[0]=0;
 	
 		return dirname;
@@ -1595,7 +1595,7 @@ public class fileio
 		char *newname;
 		char *c;
 	
-		if (!filename)
+		if (filename == 0)
 			return NULL;
 	
 		if ( !( newname = malloc(strlen(filename)+1) ) )

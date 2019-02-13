@@ -21,7 +21,7 @@
 #define _TMS7000_H
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package cpu.tms7000;
@@ -31,7 +31,9 @@ public class tms7000H
 	
 	enum { TMS7000_PC=1, TMS7000_SP, TMS7000_ST };
 	
-	enum { TMS7000_VCC, TMS7000_VSS };
+	public static final int TMS7000_VCC = 0;
+	public static final int TMS7000_VSS = 1;
+	
 	
 	extern int tms7000_icount;
 	
@@ -51,9 +53,7 @@ public class tms7000H
 	extern void tms7000_set_nmi_line(int state);
 	extern void tms7000_set_irq_line(int irqline, int state);
 	extern void tms7000_set_irq_callback(int (*callback)(int irqline));
-	extern WRITE_HANDLER( tms7000_internal_w );
-	extern READ_HANDLER( tms7000_internal_r );
-	extern int tms7000_execute(int cycles);
+	extern extern extern int tms7000_execute(int cycles);
 	extern unsigned tms7000_get_reg(int regnum);
 	extern void tms7000_set_mc_line( int value );
 	

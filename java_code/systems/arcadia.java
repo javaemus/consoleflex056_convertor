@@ -5,7 +5,7 @@
 ******************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -14,85 +14,93 @@ public class arcadia
 {
 	
 	
-	static MEMORY_READ_START( arcadia_readmem )
-	{ 0x0000, 0x0fff, MRA_ROM },
-	{ 0x1800, 0x1aff, arcadia_video_r },
-	{ 0x2000, 0x2fff, MRA_ROM },
-	MEMORY_END
+	public static Memory_ReadAddress arcadia_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+	new Memory_ReadAddress( 0x0000, 0x0fff, MRA_ROM ),
+	new Memory_ReadAddress( 0x1800, 0x1aff, arcadia_video_r ),
+	new Memory_ReadAddress( 0x2000, 0x2fff, MRA_ROM ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( arcadia_writemem )
-	//	{ 0x0000, 0x0fff, MWA_ROM },
-		{ 0x1800, 0x1aff, arcadia_video_w },
-	//	{ 0x2000, 0x2fff, MWA_ROM },
-	MEMORY_END
+	public static Memory_WriteAddress arcadia_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+	//	new Memory_WriteAddress( 0x0000, 0x0fff, MWA_ROM ),
+		new Memory_WriteAddress( 0x1800, 0x1aff, arcadia_video_w ),
+	//	new Memory_WriteAddress( 0x2000, 0x2fff, MWA_ROM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static PORT_READ_START( arcadia_readport )
-	//{ S2650_CTRL_PORT,S2650_CTRL_PORT, },
-	//{ S2650_DATA_PORT,S2650_DATA_PORT, },
-	{ S2650_SENSE_PORT,S2650_SENSE_PORT, arcadia_vsync_r},
-	PORT_END
+	public static IO_ReadPort arcadia_readport[]={
+		new IO_ReadPort(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),
+	//new IO_ReadPort( S2650_CTRL_PORT,S2650_CTRL_PORT, ),
+	//new IO_ReadPort( S2650_DATA_PORT,S2650_DATA_PORT, ),
+	new IO_ReadPort( S2650_SENSE_PORT,S2650_SENSE_PORT, arcadia_vsync_r),
+		new IO_ReadPort(MEMPORT_MARKER, 0)
+	};
 	
-	static PORT_WRITE_START( arcadia_writeport )
-	PORT_END
+	public static IO_WritePort arcadia_writeport[]={
+		new IO_WritePort(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),
+		new IO_WritePort(MEMPORT_MARKER, 0)
+	};
 	
 	#define DIPS_HELPER(bit, name, keycode, r) \
-	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r)
+	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r);
 	
-	INPUT_PORTS_START( arcadia )
+	static InputPortPtr input_ports_arcadia = new InputPortPtr(){ public void handler() { 
 		PORT_START
 		DIPS_HELPER( 0x01, "Start", KEYCODE_F1, CODE_NONE)
 		DIPS_HELPER( 0x02, "Option", KEYCODE_F2, CODE_NONE)
 		DIPS_HELPER( 0x04, DEF_STR(Difficulty), KEYCODE_F5, CODE_NONE)
 		PORT_START
-		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
+		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );
 		DIPS_HELPER( 0x08, "Player 1/Left 1", KEYCODE_1, CODE_NONE)
 		DIPS_HELPER( 0x04, "Player 1/Left 4", KEYCODE_4, KEYCODE_Q)
 		DIPS_HELPER( 0x02, "Player 1/Left 7", KEYCODE_7, KEYCODE_A)
 		DIPS_HELPER( 0x01, "Player 1/Left Clear", KEYCODE_BACKSPACE, KEYCODE_Z)
 		PORT_START
-		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
+		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );
 		DIPS_HELPER( 0x08, "Player 1/Left 2/Button", KEYCODE_2, KEYCODE_LCONTROL)
 		DIPS_HELPER( 0x04, "Player 1/Left 5", KEYCODE_5, KEYCODE_W)
 		DIPS_HELPER( 0x02, "Player 1/Left 8", KEYCODE_8, KEYCODE_S)
 		DIPS_HELPER( 0x01, "Player 1/Left 0", KEYCODE_0, KEYCODE_X)
 		PORT_START
-		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
+		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );
 		DIPS_HELPER( 0x08, "Player 1/Left 3", KEYCODE_3, CODE_NONE)
 		DIPS_HELPER( 0x04, "Player 1/Left 6", KEYCODE_6, KEYCODE_E)
 		DIPS_HELPER( 0x02, "Player 1/Left 9", KEYCODE_9, KEYCODE_D)
 		DIPS_HELPER( 0x01, "Player 1/Left Enter", KEYCODE_ENTER, KEYCODE_C)
 		PORT_START
-		PORT_BIT ( 0xff, 0xf0,	 IPT_UNUSED ) // used in palladium
+		PORT_BIT ( 0xff, 0xf0,	 IPT_UNUSED );// used in palladium
 		PORT_START
-		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
+		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );
 		DIPS_HELPER( 0x08, "Player 2/Right 1", KEYCODE_1_PAD, CODE_NONE)
 		DIPS_HELPER( 0x04, "Player 2/Right 4", KEYCODE_4_PAD, CODE_NONE)
 		DIPS_HELPER( 0x02, "Player 2/Right 7", KEYCODE_7_PAD, CODE_NONE)
 		DIPS_HELPER( 0x01, "Player 2/Right Clear", KEYCODE_DEL_PAD, CODE_NONE)
 		PORT_START
-		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
+		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );
 		DIPS_HELPER( 0x08, "Player 2/Right 2/Button", KEYCODE_2_PAD, KEYCODE_LALT)
 		DIPS_HELPER( 0x04, "Player 2/Right 5", KEYCODE_5_PAD, CODE_NONE)
 		DIPS_HELPER( 0x02, "Player 2/Right 8", KEYCODE_8_PAD, CODE_NONE)
 		DIPS_HELPER( 0x01, "Player 2/Right 0", KEYCODE_0_PAD, CODE_NONE)
 		PORT_START
-		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
+		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );
 		DIPS_HELPER( 0x08, "Player 2/Right 3", KEYCODE_3_PAD, CODE_NONE)
 		DIPS_HELPER( 0x04, "Player 2/Right 6", KEYCODE_6_PAD, CODE_NONE)
 		DIPS_HELPER( 0x02, "Player 2/Right 9", KEYCODE_9_PAD, CODE_NONE)
 		DIPS_HELPER( 0x01, "Player 2/Right ENTER", KEYCODE_ENTER_PAD, CODE_NONE)
 		PORT_START
-		PORT_BIT ( 0xff, 0xf0,	 IPT_UNUSED ) // used in palladium
+		PORT_BIT ( 0xff, 0xf0,	 IPT_UNUSED );// used in palladium
 	#if 0
 	    // shit, auto centering too slow, so only using 5 bits, and scaling at videoside
 	    PORT_START
-	PORT_ANALOGX(0x1ff,0x10,IPT_AD_STICK_X|IPF_CENTER,1,2000,0,0x1f,KEYCODE_LEFT,KEYCODE_RIGHT,JOYCODE_1_LEFT,JOYCODE_1_RIGHT)
+	PORT_ANALOGX(0x1ff,0x10,IPT_AD_STICK_X|IPF_CENTER,1,2000,0,0x1f,KEYCODE_LEFT,KEYCODE_RIGHT,JOYCODE_1_LEFT,JOYCODE_1_RIGHT);
 	    PORT_START
-	PORT_ANALOGX(0x1ff,0x10,IPT_AD_STICK_Y|IPF_CENTER,1,2000,0,0x1f,KEYCODE_UP,KEYCODE_DOWN,JOYCODE_1_UP,JOYCODE_1_DOWN)
+	PORT_ANALOGX(0x1ff,0x10,IPT_AD_STICK_Y|IPF_CENTER,1,2000,0,0x1f,KEYCODE_UP,KEYCODE_DOWN,JOYCODE_1_UP,JOYCODE_1_DOWN);
 	    PORT_START
-	PORT_ANALOGX(0x1ff,0x10,IPT_AD_STICK_X|IPF_CENTER|IPF_PLAYER2,100,10,0,0x1f,KEYCODE_DEL,KEYCODE_PGDN,JOYCODE_2_LEFT,JOYCODE_2_RIGHT)
+	PORT_ANALOGX(0x1ff,0x10,IPT_AD_STICK_X|IPF_CENTER|IPF_PLAYER2,100,10,0,0x1f,KEYCODE_DEL,KEYCODE_PGDN,JOYCODE_2_LEFT,JOYCODE_2_RIGHT);
 	    PORT_START
-	PORT_ANALOGX(0x1ff,0x10,IPT_AD_STICK_Y|IPF_CENTER|IPF_PLAYER2,100,10,0,0x1f,KEYCODE_HOME,KEYCODE_END,JOYCODE_2_UP,JOYCODE_2_DOWN)
+	PORT_ANALOGX(0x1ff,0x10,IPT_AD_STICK_Y|IPF_CENTER|IPF_PLAYER2,100,10,0,0x1f,KEYCODE_HOME,KEYCODE_END,JOYCODE_2_UP,JOYCODE_2_DOWN);
 	#else
 		PORT_START
 		DIPS_HELPER( 0x01, "Player 1/left", KEYCODE_LEFT, CODE_NONE)
@@ -104,57 +112,57 @@ public class arcadia
 		DIPS_HELPER( 0x40, "Player 2/down", KEYCODE_END, CODE_NONE)
 		DIPS_HELPER( 0x80, "Player 2/up", KEYCODE_HOME, CODE_NONE)
 	#endif
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
-	INPUT_PORTS_START( vcg )
+	static InputPortPtr input_ports_vcg = new InputPortPtr(){ public void handler() { 
 		PORT_START
 		DIPS_HELPER( 0x01, "Start", KEYCODE_F1, CODE_NONE)
 		DIPS_HELPER( 0x02, "Selector A", KEYCODE_F2, CODE_NONE)
 		DIPS_HELPER( 0x04, "Selector B", KEYCODE_F5, CODE_NONE)
 		PORT_START
-	PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED ) // some bits must be high
+	PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );// some bits must be high
 		DIPS_HELPER( 0x08, "Player 1/Left 1", KEYCODE_1, CODE_NONE)
 		DIPS_HELPER( 0x04, "Player 1/Left 4", KEYCODE_4, KEYCODE_Q)
 		DIPS_HELPER( 0x02, "Player 1/Left 7", KEYCODE_7, KEYCODE_A)
 		DIPS_HELPER( 0x01, "Player 1/Left Clear", KEYCODE_BACKSPACE, KEYCODE_Z)
 		PORT_START
-		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
+		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );
 		DIPS_HELPER( 0x08, "Player 1/Left 2/Button", KEYCODE_2, KEYCODE_LCONTROL)
 		DIPS_HELPER( 0x04, "Player 1/Left 5", KEYCODE_5, KEYCODE_W)
 		DIPS_HELPER( 0x02, "Player 1/Left 8", KEYCODE_8, KEYCODE_S)
 		DIPS_HELPER( 0x01, "Player 1/Left 0", KEYCODE_0, KEYCODE_X)
 		PORT_START
-		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
+		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );
 		DIPS_HELPER( 0x08, "Player 1/Left 3", KEYCODE_3, CODE_NONE)
 		DIPS_HELPER( 0x04, "Player 1/Left 6", KEYCODE_6, KEYCODE_E)
 		DIPS_HELPER( 0x02, "Player 1/Left 9", KEYCODE_9, KEYCODE_D)
 		DIPS_HELPER( 0x01, "Player 1/Left Enter", KEYCODE_ENTER, KEYCODE_C)
 		PORT_START
-		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
+		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );
 		DIPS_HELPER( 0x01, "Player 1/Left x1", KEYCODE_R, CODE_NONE)
 		DIPS_HELPER( 0x02, "Player 1/Left x2", KEYCODE_F, CODE_NONE)
 		DIPS_HELPER( 0x04, "Player 1/Left x3", KEYCODE_V, CODE_NONE)
 		DIPS_HELPER( 0x08, "Player 1/Left x4", KEYCODE_G, CODE_NONE)
 		PORT_START
-		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
+		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );
 		DIPS_HELPER( 0x08, "Player 2/Right 1", KEYCODE_1_PAD, CODE_NONE)
 		DIPS_HELPER( 0x04, "Player 2/Right 4", KEYCODE_4_PAD, CODE_NONE)
 		DIPS_HELPER( 0x02, "Player 2/Right 7", KEYCODE_7_PAD, CODE_NONE)
 		DIPS_HELPER( 0x01, "Player 2/Right Clear", KEYCODE_DEL_PAD, CODE_NONE)
 		PORT_START
-		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
+		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );
 		DIPS_HELPER( 0x08, "Player 2/Right 2/Button", KEYCODE_2_PAD, KEYCODE_LALT)
 		DIPS_HELPER( 0x04, "Player 2/Right 5", KEYCODE_5_PAD, CODE_NONE)
 		DIPS_HELPER( 0x02, "Player 2/Right 8", KEYCODE_8_PAD, CODE_NONE)
 		DIPS_HELPER( 0x01, "Player 2/Right 0", KEYCODE_0_PAD, CODE_NONE)
 		PORT_START
-		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
+		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );
 		DIPS_HELPER( 0x08, "Player 2/Right 3", KEYCODE_3_PAD, CODE_NONE)
 		DIPS_HELPER( 0x04, "Player 2/Right 6", KEYCODE_6_PAD, CODE_NONE)
 		DIPS_HELPER( 0x02, "Player 2/Right 9", KEYCODE_9_PAD, CODE_NONE)
 		DIPS_HELPER( 0x01, "Player 2/Right ENTER", KEYCODE_ENTER_PAD, CODE_NONE)
 		PORT_START
-		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED )
+		PORT_BIT ( 0xf0, 0xf0,	 IPT_UNUSED );
 		DIPS_HELPER( 0x01, "Player 2/Right x1", KEYCODE_ASTERISK, CODE_NONE)
 		DIPS_HELPER( 0x02, "Player 2/Right x2", KEYCODE_SLASH_PAD, CODE_NONE)
 		DIPS_HELPER( 0x04, "Player 2/Right x3", KEYCODE_MINUS_PAD, CODE_NONE)
@@ -162,13 +170,13 @@ public class arcadia
 	#if 0
 	    // shit, auto centering too slow, so only using 5 bits, and scaling at videoside
 	    PORT_START
-	PORT_ANALOGX(0x1ff,0x10,IPT_AD_STICK_X|IPF_CENTER,1,2000,0,0x1f,KEYCODE_LEFT,KEYCODE_RIGHT,JOYCODE_1_LEFT,JOYCODE_1_RIGHT)
+	PORT_ANALOGX(0x1ff,0x10,IPT_AD_STICK_X|IPF_CENTER,1,2000,0,0x1f,KEYCODE_LEFT,KEYCODE_RIGHT,JOYCODE_1_LEFT,JOYCODE_1_RIGHT);
 	    PORT_START
-	PORT_ANALOGX(0x1ff,0x10,IPT_AD_STICK_Y|IPF_CENTER,1,2000,0,0x1f,KEYCODE_UP,KEYCODE_DOWN,JOYCODE_1_UP,JOYCODE_1_DOWN)
+	PORT_ANALOGX(0x1ff,0x10,IPT_AD_STICK_Y|IPF_CENTER,1,2000,0,0x1f,KEYCODE_UP,KEYCODE_DOWN,JOYCODE_1_UP,JOYCODE_1_DOWN);
 	    PORT_START
-	PORT_ANALOGX(0x1ff,0x10,IPT_AD_STICK_X|IPF_CENTER|IPF_PLAYER2,100,10,0,0x1f,KEYCODE_DEL,KEYCODE_PGDN,JOYCODE_2_LEFT,JOYCODE_2_RIGHT)
+	PORT_ANALOGX(0x1ff,0x10,IPT_AD_STICK_X|IPF_CENTER|IPF_PLAYER2,100,10,0,0x1f,KEYCODE_DEL,KEYCODE_PGDN,JOYCODE_2_LEFT,JOYCODE_2_RIGHT);
 	    PORT_START
-	PORT_ANALOGX(0x1ff,0x10,IPT_AD_STICK_Y|IPF_CENTER|IPF_PLAYER2,100,10,0,0x1f,KEYCODE_HOME,KEYCODE_END,JOYCODE_2_UP,JOYCODE_2_DOWN)
+	PORT_ANALOGX(0x1ff,0x10,IPT_AD_STICK_Y|IPF_CENTER|IPF_PLAYER2,100,10,0,0x1f,KEYCODE_HOME,KEYCODE_END,JOYCODE_2_UP,JOYCODE_2_DOWN);
 	#else
 		PORT_START
 		DIPS_HELPER( 0x01, "Player 1/left", KEYCODE_LEFT, CODE_NONE)
@@ -180,16 +188,16 @@ public class arcadia
 		DIPS_HELPER( 0x40, "Player 2/down", KEYCODE_END, CODE_NONE)
 		DIPS_HELPER( 0x80, "Player 2/up", KEYCODE_HOME, CODE_NONE)
 	#endif
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
-	static struct GfxLayout arcadia_charlayout =
-	{
+	static GfxLayout arcadia_charlayout = new GfxLayout
+	(
 	        8,1,
 	        256,                                    /* 256 characters */
 	        1,                      /* 1 bits per pixel */
-	        { 0 },                  /* no bitplanes; 1 bit per pixel */
+	        new int[] { 0 },                  /* no bitplanes; 1 bit per pixel */
 	        /* x offsets */
-	        {
+	        new int[] {
 		    0,
 		    1,
 		    2,
@@ -200,13 +208,13 @@ public class arcadia
 		    7,
 	        },
 	        /* y offsets */
-	        { 0 },
+	        new int[] { 0 },
 	        1*8
-	};
+	);
 	
-	static struct GfxDecodeInfo arcadia_gfxdecodeinfo[] = {
-	    { REGION_GFX1, 0x0000, &arcadia_charlayout,                     0, 2 },
-	    { -1 } /* end of array */
+	static GfxDecodeInfo arcadia_gfxdecodeinfo[] ={
+	    new GfxDecodeInfo( REGION_GFX1, 0x0000, arcadia_charlayout,                     0, 2 ),
+	    new GfxDecodeInfo( -1 ) /* end of array */
 	};
 	
 	static int arcadia_frame_int(void)
@@ -284,15 +292,15 @@ public class arcadia
 		}
 	};
 	
-	ROM_START(arcadia)
-		ROM_REGION(0x8000,REGION_CPU1, 0)
-		ROM_REGION(0x100,REGION_GFX1, 0)
-	ROM_END
+	static RomLoadPtr rom_arcadia = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x8000,REGION_CPU1, 0);
+		ROM_REGION(0x100,REGION_GFX1, 0);
+	ROM_END(); }}; 
 	
-	ROM_START(vcg)
-		ROM_REGION(0x8000,REGION_CPU1, 0)
-		ROM_REGION(0x100,REGION_GFX1, 0)
-	ROM_END
+	static RomLoadPtr rom_vcg = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x8000,REGION_CPU1, 0);
+		ROM_REGION(0x100,REGION_GFX1, 0);
+	ROM_END(); }}; 
 	
 	static int arcadia_init_cart(int id)
 	{

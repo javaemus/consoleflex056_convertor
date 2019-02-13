@@ -98,7 +98,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -111,79 +111,83 @@ public class a2600
 	//#define USE_SCANLINE_WSYNC
 	
 	/* horrid memory mirroring ahead */
-	static MEMORY_READ_START( readmem )
+	public static Memory_ReadAddress readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
 	
-	    { 0x0000, 0x003F, a2600_TIA_r },
-	    { 0x0040, 0x007F, a2600_TIA_r },
-	    { 0x0080, 0x00FF, MRA_RAM     },
+	    new Memory_ReadAddress( 0x0000, 0x003F, a2600_TIA_r ),
+	    new Memory_ReadAddress( 0x0040, 0x007F, a2600_TIA_r ),
+	    new Memory_ReadAddress( 0x0080, 0x00FF, MRA_RAM     ),
 	
-	    { 0x0100, 0x013F, a2600_TIA_r },
-	    { 0x0140, 0x017F, a2600_TIA_r },
-	    { 0x0180, 0x01FF, MRA_RAM     },
+	    new Memory_ReadAddress( 0x0100, 0x013F, a2600_TIA_r ),
+	    new Memory_ReadAddress( 0x0140, 0x017F, a2600_TIA_r ),
+	    new Memory_ReadAddress( 0x0180, 0x01FF, MRA_RAM     ),
 	
-	    { 0x0200, 0x023F, a2600_TIA_r },
-	    { 0x0240, 0x027F, a2600_TIA_r },
+	    new Memory_ReadAddress( 0x0200, 0x023F, a2600_TIA_r ),
+	    new Memory_ReadAddress( 0x0240, 0x027F, a2600_TIA_r ),
 	
-	    { 0x0300, 0x033F, a2600_TIA_r },
-	    { 0x0340, 0x037F, a2600_TIA_r },
-	    { 0x0280, 0x0297, a2600_riot_r },   /* RIOT reads for a2600 */
+	    new Memory_ReadAddress( 0x0300, 0x033F, a2600_TIA_r ),
+	    new Memory_ReadAddress( 0x0340, 0x037F, a2600_TIA_r ),
+	    new Memory_ReadAddress( 0x0280, 0x0297, a2600_riot_r ),   /* RIOT reads for a2600 */
 	
-	    { 0x1000, 0x17FF, MRA_ROM     },
-	    { 0x1800, 0x1FDF, MRA_ROM     },
-	    { 0x1FE0, 0x1FFF, a2600_bs_r  },    /* for bankswitching */
-	    { 0xF000, 0xF7FF, MRA_ROM     },
-	    { 0xF800, 0xFFDF, MRA_ROM     },
-	    { 0xFFE0, 0xFFF9, a2600_bs_r  },
-	    { 0xFFFA, 0xFFFF, MRA_ROM     },
-	MEMORY_END
+	    new Memory_ReadAddress( 0x1000, 0x17FF, MRA_ROM     ),
+	    new Memory_ReadAddress( 0x1800, 0x1FDF, MRA_ROM     ),
+	    new Memory_ReadAddress( 0x1FE0, 0x1FFF, a2600_bs_r  ),    /* for bankswitching */
+	    new Memory_ReadAddress( 0xF000, 0xF7FF, MRA_ROM     ),
+	    new Memory_ReadAddress( 0xF800, 0xFFDF, MRA_ROM     ),
+	    new Memory_ReadAddress( 0xFFE0, 0xFFF9, a2600_bs_r  ),
+	    new Memory_ReadAddress( 0xFFFA, 0xFFFF, MRA_ROM     ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( writemem )
-	    { 0x0000, 0x003F, a2600_TIA_w },
-	    { 0x0040, 0x007F, a2600_TIA_w },
-	    { 0x0080, 0x00FF, MWA_RAM  },
+	public static Memory_WriteAddress writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+	    new Memory_WriteAddress( 0x0000, 0x003F, a2600_TIA_w ),
+	    new Memory_WriteAddress( 0x0040, 0x007F, a2600_TIA_w ),
+	    new Memory_WriteAddress( 0x0080, 0x00FF, MWA_RAM  ),
 	
-	    { 0x0100, 0x013F, a2600_TIA_w },
-	    { 0x0140, 0x017F, a2600_TIA_w },
-	    { 0x0180, 0x01FF, MWA_RAM  },
+	    new Memory_WriteAddress( 0x0100, 0x013F, a2600_TIA_w ),
+	    new Memory_WriteAddress( 0x0140, 0x017F, a2600_TIA_w ),
+	    new Memory_WriteAddress( 0x0180, 0x01FF, MWA_RAM  ),
 	
-	    { 0x0200, 0x023F, a2600_TIA_w },
-	    { 0x0240, 0x027F, a2600_TIA_w },
+	    new Memory_WriteAddress( 0x0200, 0x023F, a2600_TIA_w ),
+	    new Memory_WriteAddress( 0x0240, 0x027F, a2600_TIA_w ),
 	
-	    { 0x0280, 0x0297, a2600_riot_w },   /* RIOT writes for a2600 */
+	    new Memory_WriteAddress( 0x0280, 0x0297, a2600_riot_w ),   /* RIOT writes for a2600 */
 	
-	    { 0x0300, 0x033F, a2600_TIA_w },
-	    { 0x0340, 0x037F, a2600_TIA_w },
+	    new Memory_WriteAddress( 0x0300, 0x033F, a2600_TIA_w ),
+	    new Memory_WriteAddress( 0x0340, 0x037F, a2600_TIA_w ),
 	
-	    { 0x1000, 0x17FF, MWA_ROM  },
-	    { 0x1800, 0x1FFF, MWA_ROM  },   /* ROM mirror for 2k images */
-	    { 0xF000, 0xF7FF, MWA_ROM  },
-	    { 0xF800, 0xFFFF, MWA_ROM  },   /* ROM mirror for 2k images */
-	MEMORY_END
+	    new Memory_WriteAddress( 0x1000, 0x17FF, MWA_ROM  ),
+	    new Memory_WriteAddress( 0x1800, 0x1FFF, MWA_ROM  ),   /* ROM mirror for 2k images */
+	    new Memory_WriteAddress( 0xF000, 0xF7FF, MWA_ROM  ),
+	    new Memory_WriteAddress( 0xF800, 0xFFFF, MWA_ROM  ),   /* ROM mirror for 2k images */
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
 	
-	INPUT_PORTS_START( a2600 )
+	static InputPortPtr input_ports_a2600 = new InputPortPtr(){ public void handler() { 
 	
 	
 	    PORT_START /* SWCHA 0x280 RIOT */
-	    PORT_BIT ( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER2 )
-	    PORT_BIT ( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2 )
-	    PORT_BIT ( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2 )
-	    PORT_BIT ( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 )
-	    PORT_BIT ( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_UP)
-	    PORT_BIT ( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN)
-	    PORT_BIT ( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT)
-	    PORT_BIT ( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT)
+	    PORT_BIT ( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER2 );
+	    PORT_BIT ( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2 );
+	    PORT_BIT ( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2 );
+	    PORT_BIT ( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 );
+	    PORT_BIT ( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_UP);
+	    PORT_BIT ( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN);
+	    PORT_BIT ( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT);
+	    PORT_BIT ( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT);
 	
 	    PORT_START /* SWACNT 0x281 RIOT */
-	    PORT_BIT ( 0x00, IP_ACTIVE_HIGH, IPT_UNKNOWN)
+	    PORT_BIT ( 0x00, IP_ACTIVE_HIGH, IPT_UNKNOWN);
 	
 	    PORT_START /* SWCHB 0x282 RIOT */
-	    PORT_BITX( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN, "Reset", KEYCODE_R, IP_JOY_DEFAULT)
-	    PORT_BITX( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN, "Start", KEYCODE_S, IP_JOY_DEFAULT)
-	    PORT_BIT ( 0x04, IP_ACTIVE_LOW, IPT_UNUSED)
-	    PORT_BITX( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN, "Color/BW", KEYCODE_C, IP_JOY_DEFAULT)
+	    PORT_BITX( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN, "Reset", KEYCODE_R, IP_JOY_DEFAULT);
+	    PORT_BITX( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN, "Start", KEYCODE_S, IP_JOY_DEFAULT);
+	    PORT_BIT ( 0x04, IP_ACTIVE_LOW, IPT_UNUSED);
+	    PORT_BITX( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN, "Color/BW", KEYCODE_C, IP_JOY_DEFAULT);
 	
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	
 	static unsigned char palette[] =
@@ -825,9 +829,9 @@ public class a2600
 	{
 	}
 	
-	ROM_START(a2600)
-	    ROM_REGION(0x20000, REGION_CPU1,0)        /* 6502 memory */
-	ROM_END
+	static RomLoadPtr rom_a2600 = new RomLoadPtr(){ public void handler(){ 
+	    ROM_REGION(0x20000, REGION_CPU1,0);       /* 6502 memory */
+	ROM_END(); }}; 
 	
 	static const struct IODevice io_a2600[] =
 	{

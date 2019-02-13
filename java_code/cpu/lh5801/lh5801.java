@@ -18,7 +18,7 @@
  *
  *****************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package cpu.lh5801;
@@ -350,7 +350,7 @@ public class lh5801
 	
 		which = ++which % 16;
 		buffer[which][0] = '\0';
-		if( !context )
+		if (context == 0)
 			r = &lh5801;
 	
 		switch( regnum )

@@ -3,7 +3,7 @@
 ******************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package systems;
@@ -91,60 +91,68 @@ public class mk1
 	    if (!(mk1_f8[1]&8)) mk1_led[3]=mk1_f8[0];
 	}
 	
-	static MEMORY_READ_START( mk1_readmem )
-		{ 0x0000, 0x07ff, MRA_ROM },
-		{ 0x1800, 0x18ff, MRA_RAM },
-	MEMORY_END
+	public static Memory_ReadAddress mk1_readmem[]={
+		new Memory_ReadAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_ReadAddress( 0x0000, 0x07ff, MRA_ROM ),
+		new Memory_ReadAddress( 0x1800, 0x18ff, MRA_RAM ),
+		new Memory_ReadAddress(MEMPORT_MARKER, 0)
+	};
 	
-	static MEMORY_WRITE_START( mk1_writemem )
-		{ 0x0000, 0x07ff, MWA_ROM },
-		{ 0x1800, 0x18ff, MWA_RAM },
-	MEMORY_END
+	public static Memory_WriteAddress mk1_writemem[]={
+		new Memory_WriteAddress(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_MEM | MEMPORT_WIDTH_8),
+		new Memory_WriteAddress( 0x0000, 0x07ff, MWA_ROM ),
+		new Memory_WriteAddress( 0x1800, 0x18ff, MWA_RAM ),
+		new Memory_WriteAddress(MEMPORT_MARKER, 0)
+	};
 	
 	
-	static PORT_READ_START( mk1_readport )
-	{ 0x0, 0x1, mk1_f8_r },
-	{ 0xc, 0xf, f3853_r },
-	PORT_END
+	public static IO_ReadPort mk1_readport[]={
+		new IO_ReadPort(MEMPORT_MARKER, MEMPORT_DIRECTION_READ | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),
+	new IO_ReadPort( 0x0, 0x1, mk1_f8_r ),
+	new IO_ReadPort( 0xc, 0xf, f3853_r ),
+		new IO_ReadPort(MEMPORT_MARKER, 0)
+	};
 	
-	static PORT_WRITE_START( mk1_writeport )
-	{ 0x0, 0x1, mk1_f8_w },
-	{ 0xc, 0xf, f3853_w },
-	PORT_END
+	public static IO_WritePort mk1_writeport[]={
+		new IO_WritePort(MEMPORT_MARKER, MEMPORT_DIRECTION_WRITE | MEMPORT_TYPE_IO | MEMPORT_WIDTH_8),
+	new IO_WritePort( 0x0, 0x1, mk1_f8_w ),
+	new IO_WritePort( 0xc, 0xf, f3853_w ),
+		new IO_WritePort(MEMPORT_MARKER, 0)
+	};
 	
 	#define DIPS_HELPER(bit, name, keycode, r) \
-	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r)
+	   PORT_BITX(bit, IP_ACTIVE_HIGH, IPT_KEYBOARD, name, keycode, r);
 	
-	INPUT_PORTS_START( mk1 )
+	static InputPortPtr input_ports_mk1 = new InputPortPtr(){ public void handler() { 
 		PORT_START
-		PORT_DIPNAME ( 0x01, 0x01, "Switch")
-		PORT_DIPSETTING(  0, "L" )
-		PORT_DIPSETTING(  1, "S" )
+		PORT_DIPNAME ( 0x01, 0x01, "Switch");
+		PORT_DIPSETTING(  0, "L" );
+		PORT_DIPSETTING(  1, "S" );
 		PORT_START
-		PORT_BIT ( 0x0f, 0x0,	 IPT_UNUSED )
+		PORT_BIT ( 0x0f, 0x0,	 IPT_UNUSED );
 		DIPS_HELPER( 0x80, "White A    King", KEYCODE_A, CODE_NONE)
 		DIPS_HELPER( 0x40, "White B    Queen", KEYCODE_B, CODE_NONE)
 		DIPS_HELPER( 0x20, "White C    Bishop", KEYCODE_C, CODE_NONE)
 		DIPS_HELPER( 0x10, "White D    PLAY", KEYCODE_D, CODE_NONE)
 		PORT_START
-		PORT_BIT ( 0x0f, 0x0,	 IPT_UNUSED )
+		PORT_BIT ( 0x0f, 0x0,	 IPT_UNUSED );
 		DIPS_HELPER( 0x80, "White E    Knight", KEYCODE_E, CODE_NONE)
 		DIPS_HELPER( 0x40, "White F    Castle", KEYCODE_F, CODE_NONE)
 		DIPS_HELPER( 0x20, "White G    Pawn", KEYCODE_G, CODE_NONE)
 		DIPS_HELPER( 0x10, "White H    md", KEYCODE_H, CODE_NONE)
 		PORT_START
-		PORT_BIT ( 0x0f, 0x0,	 IPT_UNUSED )
+		PORT_BIT ( 0x0f, 0x0,	 IPT_UNUSED );
 		DIPS_HELPER( 0x80, "Black 1    King", KEYCODE_1, CODE_NONE)
 		DIPS_HELPER( 0x40, "Black 2    Queen", KEYCODE_2, CODE_NONE)
 		DIPS_HELPER( 0x20, "Black 3    Bishop", KEYCODE_3, CODE_NONE)
 		DIPS_HELPER( 0x10, "Black 4    fp", KEYCODE_4, CODE_NONE)
 		PORT_START
-		PORT_BIT ( 0x0f, 0x0,	 IPT_UNUSED )
+		PORT_BIT ( 0x0f, 0x0,	 IPT_UNUSED );
 		DIPS_HELPER( 0x80, "Black 5    Knight", KEYCODE_5, CODE_NONE)
 		DIPS_HELPER( 0x40, "Black 6    Castle", KEYCODE_6, CODE_NONE)
 		DIPS_HELPER( 0x20, "Black 7    Pawn", KEYCODE_7, CODE_NONE)
 		DIPS_HELPER( 0x10, "Black 8    ep", KEYCODE_8, CODE_NONE)
-	INPUT_PORTS_END
+	INPUT_PORTS_END(); }}; 
 	
 	static int mk1_frame_int(void)
 	{
@@ -193,10 +201,10 @@ public class mk1
 	    }
 	};
 	
-	ROM_START(mk1)
-		ROM_REGION(0x10000,REGION_CPU1,0)
-		ROM_LOAD("82c210-1", 0x0000, 0x800, 0x278f7bf3)
-	ROM_END
+	static RomLoadPtr rom_mk1 = new RomLoadPtr(){ public void handler(){ 
+		ROM_REGION(0x10000,REGION_CPU1,0);
+		ROM_LOAD("82c210-1", 0x0000, 0x800, 0x278f7bf3);
+	ROM_END(); }}; 
 	
 	static void mk1_interrupt(UINT16 addr, bool level)
 	{

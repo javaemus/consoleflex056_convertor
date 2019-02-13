@@ -6,7 +6,7 @@
 
 ***************************************************************************/
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package machine;
@@ -298,7 +298,7 @@ public class vc20tape
 		FILE *fp;
 	
 		fp = (FILE*)osd_fopen (Machine->gamedrv->name, device_filename(image_type,image_id), OSD_FILETYPE_IMAGE, 0);
-		if (!fp)
+		if (fp == 0)
 		{
 			logerror("tape %s file not found\n", device_filename(image_type,image_id));
 			return;
@@ -436,7 +436,7 @@ public class vc20tape
 		int i;
 	
 		fp = (FILE*)osd_fopen (Machine->gamedrv->name, device_filename(image_type,image_id), OSD_FILETYPE_IMAGE, 0);
-		if (!fp)
+		if (fp == 0)
 		{
 			logerror("tape %s file not found\n", device_filename(image_type,image_id));
 			return;

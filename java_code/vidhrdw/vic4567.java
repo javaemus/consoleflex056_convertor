@@ -23,13 +23,13 @@ static struct {
 	int palette_dirty;
 } vic3;
 
-WRITE_HANDLER( vic3_palette_w )
+public static WriteHandlerPtr vic3_palette_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 {
 	if (offset<0x100) vic3.palette[offset].red=data;
 	else if (offset<0x200) vic3.palette[offset&0xff].green=data;
 	else vic3.palette[offset&0xff].blue=data;
 	vic3.palette_dirty=1;
-}
+} };
 
 extern void vic4567_init (int pal, int (*dma_read) (int),
 						  int (*dma_read_color) (int), void (*irq) (int),
@@ -191,7 +191,7 @@ static void vic3_drawlines (int first, int last)
 	if (first < 0)
 		first = 0;
 
-	if (!SCREENON)
+	if (SCREENON == 0)
 	{
 /*		if (Machine->color_depth == 8)
 		{

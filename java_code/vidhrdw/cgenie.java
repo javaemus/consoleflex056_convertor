@@ -7,7 +7,7 @@
 ***************************************************************************/
 
 /*
- * ported to v0.37b7
+ * ported to v0.56
  * using automatic conversion tool v0.01
  */ 
 package vidhrdw;
@@ -42,17 +42,17 @@ public class cgenie
 	        return 1;
 	
 	    dlybitmap = bitmap_alloc_depth(Machine->drv->screen_width,Machine->drv->screen_height,Machine->scrbitmap->depth);
-		if( !dlybitmap )
+		if (dlybitmap == 0)
 			return 1;
 	
 	    cleanbuffer = (UINT8*)malloc(64 * 32 * 8);
-		if( !cleanbuffer )
+		if (cleanbuffer == 0)
 			return 1;
 		memset(cleanbuffer, 0, 64 * 32 * 8);
 	
 	
 		colorbuffer = (UINT8*)malloc(64 * 32 * 8);
-		if( !colorbuffer )
+		if (colorbuffer == 0)
 			return 1;
 		memset(colorbuffer, 0, 64 * 32 * 8);
 	
